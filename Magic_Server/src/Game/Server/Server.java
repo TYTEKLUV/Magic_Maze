@@ -1,7 +1,5 @@
 package Game.Server;
 
-import Game.Client.Client;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -70,5 +68,18 @@ public class Server extends Thread {
         for (ClientHandler aClientList : clientList) {
             aClientList.sayCommand(text);
         }
+    }
+
+    public String kickClient(String nickname) throws IOException {
+        String result = "";
+        int index = clientsNickname.indexOf(nickname);
+        if (index == -1) {
+            result = nickname + " not found";
+        } else {
+            clientList.get(clientsNickname.indexOf(nickname)).turnOff();
+            clientDisconnect(nickname, clientsIP.get(index), clientList.get(index));
+            result = nickname + " kicking...";
+        }
+        return result;
     }
 }

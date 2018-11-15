@@ -11,7 +11,7 @@ public class ClientStarter extends Application {
 
     private int serverPort = 4444;
     private Client client;
-    boolean work = true;
+    private boolean work = true;
     private String nickname;
 
     @Override
@@ -28,19 +28,20 @@ public class ClientStarter extends Application {
 
         commandHandler(input);
 
-//        input.close();
-//        System.exit(0);
+        System.out.println("--------------");
+        System.out.println("Client stopped");
+        System.exit(0);
     }
 
     private void commandHandler(Scanner input) throws IOException {
         while (work) {
             String command = input.next();
             switch (command) {
-                default:
-                    System.out.println("OS: command not found");
+                case "connect":
+                    client = new Client(serverPort, nickname);
+                    client.start();
                     break;
                 case "close":
-//                    work = false;
                     client.turnOff();
                     break;
                 case "ip":
@@ -52,14 +53,12 @@ public class ClientStarter extends Application {
                 case "m":
                     client.makeMove();
                     break;
-                case "connect":
-                    client = new Client(serverPort, nickname);
-                    client.start();
-                    break;
                 case "exit":
-                    System.out.println("--------------");
-                    System.out.println("Client stopped");
-                    System.exit(0);
+                    input.close();
+                    work = false;
+                    break;
+                default:
+                    System.out.println("OS: command not found");
                     break;
             }
         }

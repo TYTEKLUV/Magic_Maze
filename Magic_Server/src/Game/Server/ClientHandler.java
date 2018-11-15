@@ -59,4 +59,8 @@ public class ClientHandler implements Runnable {
         out.writeUTF("OS: " + text);
         out.flush();
     }
+
+    public void turnOff() throws IOException {
+        client.close();
+    }
 }

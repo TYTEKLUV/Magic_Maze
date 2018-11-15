@@ -10,9 +10,7 @@ import java.util.List;
 
 public class Client extends Thread {
 
-    private String found = "";
     private int serverPort;
-    private int clientCount = 0;
     private Socket client;
     private String nickname;
     private DataOutputStream out;
@@ -70,18 +68,15 @@ public class Client extends Thread {
         for (int j = 254; j < 255; j++) {
             for (int i = 254; i < 255; i++) {
 //                final String iIPv4 = "192.168." + j + "." + i;
-              final String iIPv4 = "192.168.137.223";
+                final String iIPv4 = "localhost";
                 System.out.println("searching " + iIPv4);
 
                 Thread thread = new Thread(() -> {
                     try {
                         InetAddress ip = InetAddress.getByName(iIPv4);
-//                        if (!ip.isReachable(2)) {
-//                            return;
-//                        }
-                        Socket socket = new Socket();
-                        SocketAddress address = new InetSocketAddress(ip, serverPort);
-                        socket.connect(address, 1);
+                        Socket socket = new Socket(ip, serverPort);
+//                        SocketAddress address = new InetSocketAddress(ip, serverPort);
+//                        socket.connect(address, 1);
 
                         InputStream sout = socket.getInputStream();
                         DataInputStream in = new DataInputStream(sout);
@@ -90,7 +85,6 @@ public class Client extends Thread {
 
 //                        while (!((fromServer = in.readUTF()).equals(""))) {
                         if (fromServer.equals("OS: Welcome")) {
-                            found = iIPv4;
                             client = socket;
                             System.out.println("OmegaServer found : " + iIPv4);
 
@@ -99,8 +93,6 @@ public class Client extends Thread {
                     } catch (IOException ignored) {
                     }
                 });
-
-
                 pool.add(thread);
                 thread.start();
             }

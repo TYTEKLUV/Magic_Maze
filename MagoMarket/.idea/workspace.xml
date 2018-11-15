@@ -4,12 +4,16 @@
     <list default="true" id="8b557564-7c38-4ddb-9d1f-add7478406cc" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/../Magic_Server/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Magic_Server/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Magic_Server/out/production/Magic_Server/Game/Client/Client.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Magic_Server/out/production/Magic_Server/Game/Client/Client.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Magic_Server/out/production/Magic_Server/META-INF/Magic_Server.kotlin_module" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Magic_Server/out/production/Magic_Server/Game/Client/ClientStarter.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Magic_Server/out/production/Magic_Server/Game/Client/ClientStarter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Magic_Server/out/production/Magic_Server/Game/Server/ClientHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Magic_Server/out/production/Magic_Server/Game/Server/ClientHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Magic_Server/out/production/Magic_Server/Game/Server/OmegaServer.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Magic_Server/out/production/Magic_Server/Game/Server/OmegaServer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Magic_Server/out/production/Magic_Server/Game/Server/Server.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Magic_Server/out/production/Magic_Server/Game/Server/Server.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Magic_Server/src/Game/Client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Magic_Server/src/Game/Client/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Magic_Server/src/Game/Client/ClientStarter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Magic_Server/src/Game/Client/ClientStarter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Magic_Server/src/Game/Server/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Magic_Server/src/Game/Server/ClientHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Magic_Server/src/Game/Server/OmegaServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Magic_Server/src/Game/Server/OmegaServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Magic_Server/src/Game/Server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Magic_Server/src/Game/Server/Server.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MagoMarket/View/FieldEditor.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MagoMarket/View/FieldEditor.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MagoMarket/res/1с.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/res/cards.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/res/cards.txt" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -70,11 +74,20 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="cards.txt" pinned="false" current-in-tab="true">
+      <file leaf-file-name="cards.txt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/res/cards.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="772">
-              <caret line="106" column="10" selection-start-line="106" selection-start-column="10" selection-end-line="106" selection-end-column="10" />
+            <state relative-caret-position="517">
+              <caret line="91" column="20" lean-forward="true" selection-start-line="91" selection-start-column="20" selection-end-line="91" selection-end-column="20" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="workspace.xml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="374">
+              <caret line="22" column="13" lean-forward="true" selection-start-line="22" selection-start-column="13" selection-end-line="22" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -374,7 +387,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="65757000" />
+    <option name="totallyTimeSpent" value="66162000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -450,13 +463,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/Controller/GameWindow.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="34" column="40" selection-start-line="34" selection-start-column="40" selection-end-line="34" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Model/Card.java" />
     <entry file="file://$PROJECT_DIR$/src/Controller/GameWindow.java" />
     <entry file="file://$PROJECT_DIR$/src/Model/CanvasListener.java" />
@@ -569,8 +575,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/res/cards.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="772">
-          <caret line="106" column="10" selection-start-line="106" selection-start-column="10" selection-end-line="106" selection-end-column="10" />
+        <state relative-caret-position="517">
+          <caret line="91" column="20" lean-forward="true" selection-start-line="91" selection-start-column="20" selection-end-line="91" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="22" column="13" lean-forward="true" selection-start-line="22" selection-start-column="13" selection-end-line="22" selection-end-column="13" />
         </state>
       </provider>
     </entry>
