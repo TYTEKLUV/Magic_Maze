@@ -10,15 +10,17 @@ import java.util.Scanner;
 public class OmegaServer extends Application {
     private int serverPort = 4444;
     private Server server;
-    boolean work = true;
-    String[] commandsList =
+    private boolean work = true;
+    private String[] commandsList =
             {"close         - close server",
             "ip            - show server ip",
             "clients       - show current server clients",
-            "say <message> - send message to clients"};
+            "say <message> - send message to clients",
+            "kick <client> - kick client from server"};
 
     @Override
     public void start(Stage primaryStage) throws IOException {
+        Scanner input = new Scanner(System.in);
 
         server = new Server(serverPort);
         server.start();
@@ -26,24 +28,22 @@ public class OmegaServer extends Application {
         System.out.println("Server started");
         System.out.println("--------------");
 
-        Scanner input = new Scanner(System.in);
+        commandHandler(input);
 
+        System.out.println("--------------");
+        System.out.println("Server stopped");
+
+        System.exit(0);
+    }
+
+    private void commandHandler(Scanner input) throws IOException {
         while (work) {
             String command = input.next();
             switch (command) {
-                default:
-                    System.out.println("OS: command not found");
-                    break;
                 case "help":
                     for (String aCommandsList : commandsList) {
                         System.out.println("OS: " + aCommandsList);
                     }
-                    break;
-                case "close":
-                    work = false;
-                    server.turnOff();
-                    System.out.println("--------------");
-                    System.out.println("Server stopped");
                     break;
                 case "ip":
                     System.out.println("OS: server ip = " + InetAddress.getLocalHost().getHostAddress());
@@ -54,10 +54,18 @@ public class OmegaServer extends Application {
                 case "say":
                     server.sayCommand(input.next());
                     break;
+                case "kick":
+                    System.out.println(server.kickClient(input.next()));
+                    break;
+                case "close":
+                    work = false;
+                    server.turnOff();
+                    input.close();
+                    break;
+                default:
+                    System.out.println("OS: command not found");
+                    break;
             }
         }
-
-        input.close();
-        System.exit(0);
     }
 }
