@@ -2,40 +2,57 @@ package Controller;
 
 import Model.Card;
 import Model.Chip;
-import Model.Click;
+import Model.Pane;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class GameWindow {
 
     @FXML
-    Button cardMaker;
-    @FXML
     AnchorPane pane;
+    @FXML
+    Button newCard;
 
-    ArrayList<Card> cards = new ArrayList<>();
-    ArrayList<Chip> chips = new ArrayList<>();
+    private ArrayList<Card> cards = new ArrayList<>();
+    private ArrayList<Chip> chips = new ArrayList<>();
+    private boolean isMoveCard = false;
+    private int moveCardId;
 
     @FXML
     void initialize () throws FileNotFoundException {
         createCards(1);
         createChip();
         create();
-        pane.addEventFilter(MouseEvent.MOUSE_RELEASED, new Click(this));
+        pane.addEventFilter(MouseEvent.MOUSE_RELEASED, new Pane(this));
+        pane.addEventFilter(MouseEvent.MOUSE_MOVED, new Pane(this));
+        newCard.setOnMouseClicked(this::addNewCard);
+    }
+
+    private void addNewCard(MouseEvent event){
+        isMoveCard = true;
+        int i = 0;
+        int j = 0;
+        while ((cards.get(i).isUsed()) || (j != cards.size())) {
+            if (i + 1  != cards.size())
+                i++;
+            j++;
+        }
+        if (i != cards.size()) {
+            moveCardId = i;
+            getCards().get(getMoveCard()).setLayoutX(event.getSceneX() - getCards().get(0).getImage().getWidth()/2);
+            getCards().get(getMoveCard()).setLayoutY(event.getSceneY() - getCards().get(0).getImage().getHeight()/2);
+            pane.getChildren().add(cards.get(i));
+        }
+
     }
 
     private void createChip () {
@@ -65,7 +82,7 @@ public class GameWindow {
                     mas[j][k] = input.nextInt();
                 }
             }
-            Card card = new Card(mas, "res/pic/cards/" + String.valueOf(i) + ".png");
+            Card card = new Card(mas, "res/pic/cards/" + String.valueOf(i) + ".png", false);
             card.setImage(new Image(card.getUrl(), 300, 300, true, false));
             card.setLayoutX(pane.getPrefWidth()/2 - 150);
             card.setLayoutY(pane.getPrefHeight()/2 - 150);
@@ -76,6 +93,7 @@ public class GameWindow {
 
     private void create() {
         pane.getChildren().add(cards.get(0));
+        cards.get(0).setUsed(true);
         for (int i = 0; i < 4; i ++) {
             pane.getChildren().add(chips.get(i));
         }
@@ -104,4 +122,18 @@ public class GameWindow {
     public ArrayList<Chip> getChips() {
         return chips;
     }
+
+    public boolean isMoveCard() {
+        return isMoveCard;
+    }
+
+    public void setMoveCard(boolean moveCard) {
+        this.isMoveCard = moveCard;
+    }
+
+    public int getMoveCard(){
+        return moveCardId;
+    }
+
+
 }

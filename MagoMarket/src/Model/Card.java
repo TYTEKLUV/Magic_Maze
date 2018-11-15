@@ -7,12 +7,13 @@ public class Card extends ImageView {
     int wall[][];
     int door[][];
     String url;
+    boolean isUsed;
 
-    public Card(int floor[][], String url) {
+    public Card(int floor[][], String url, boolean isUsed) {
         super();
         this.floor = floor;
-        this.wall = wall;
         this.url = url;
+        this.isUsed = isUsed;
     }
 
     public int[][] getFloor() {
@@ -25,5 +26,13 @@ public class Card extends ImageView {
 
     public String getUrl() {
         return url;
+    }
+
+    public boolean isUsed() {
+        return isUsed;
+    }
+
+    public void setUsed(boolean used) {
+        isUsed = used;
     }
 }
