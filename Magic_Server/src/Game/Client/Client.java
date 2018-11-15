@@ -67,10 +67,10 @@ public class Client extends Thread {
 //
 //        }
 
-        for (int j = 1; j < 255; j++) {
-            for (int i = 1; i < 255; i++) {
-                final String iIPv4 = "192.168." + j + "." + i;
-//              final String iIPv4 = "localhost";
+        for (int j = 254; j < 255; j++) {
+            for (int i = 254; i < 255; i++) {
+//                final String iIPv4 = "192.168." + j + "." + i;
+              final String iIPv4 = "192.168.137.223";
                 System.out.println("searching " + iIPv4);
 
                 Thread thread = new Thread(() -> {
