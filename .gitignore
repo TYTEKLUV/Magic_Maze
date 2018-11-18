@@ -125,5 +125,5 @@ Thumbs.db
 /ios-moe/xcode/native/
 
 #Custom
-MagoMarket/.idea/
-Magic_Server/.idea/
+/MagoMarket/.idea/
+/Magic_Server/.idea/
