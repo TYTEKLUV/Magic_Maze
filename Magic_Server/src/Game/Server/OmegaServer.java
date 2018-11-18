@@ -13,14 +13,14 @@ public class OmegaServer extends Application {
     private boolean work = true;
     private String[] commandsList =
             {"close         - close server",
-            "ip            - show server ip",
-            "clients       - show current server clients",
-            "say <message> - send message to clients",
-            "kick <client> - kick client from server"};
+                    "ip            - show server ip",
+                    "clients       - show current server clients",
+                    "say <message> - send message to clients",
+                    "kick <client> - kick client from server"};
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        Scanner input = new Scanner(System.in);
+        Scanner console = new Scanner(System.in);
 
         server = new Server(serverPort);
         server.start();
@@ -28,7 +28,9 @@ public class OmegaServer extends Application {
         System.out.println("Server started");
         System.out.println("--------------");
 
-        commandHandler(input);
+        while (work) {
+            commandHandler(console);
+        }
 
         System.out.println("--------------");
         System.out.println("Server stopped");
@@ -36,36 +38,44 @@ public class OmegaServer extends Application {
         System.exit(0);
     }
 
-    private void commandHandler(Scanner input) throws IOException {
-        while (work) {
-            String command = input.next();
-            switch (command) {
-                case "help":
-                    for (String aCommandsList : commandsList) {
-                        System.out.println("OS: " + aCommandsList);
-                    }
-                    break;
-                case "ip":
-                    System.out.println("OS: server ip = " + InetAddress.getLocalHost().getHostAddress());
-                    break;
-                case "clients":
-                    System.out.println(server.getClients());
-                    break;
-                case "say":
-                    server.sayCommand(input.next());
-                    break;
-                case "kick":
+    private void commandHandler(Scanner console) throws IOException {
+        String line = console.nextLine();
+        Scanner input = new Scanner(line);
+        String command = input.next();
+        switch (command) {
+            case "help":
+                for (String aCommandsList : commandsList) {
+                    System.out.println("OS: " + aCommandsList);
+                }
+                break;
+            case "ip":
+                System.out.println("OS: server ip = " + InetAddress.getLocalHost().getHostAddress());
+                break;
+            case "clients":
+                System.out.println(server.getClients());
+                break;
+            case "say":
+                if (input.hasNext()) {
+                    server.sayCommand(input.nextLine().substring(1));
+                } else {
+                    System.out.println("enter message [say <message>]");
+                }
+                break;
+            case "kick":
+                if (input.hasNext()) {
                     System.out.println(server.kickClient(input.next()));
-                    break;
-                case "close":
-                    work = false;
-                    server.turnOff();
-                    input.close();
-                    break;
-                default:
-                    System.out.println("OS: command not found");
-                    break;
-            }
+                } else {
+                    System.out.println("enter client nickname [kick <nickname>]");
+                }
+                break;
+            case "close":
+                work = false;
+                server.turnOff();
+                input.close();
+                break;
+            default:
+                System.out.println("OS: command not found");
+                break;
         }
     }
 }

@@ -42,9 +42,9 @@ public class Server extends Thread {
     }
 
     public String getClients() {
-        StringBuilder result = new StringBuilder("OS:      count = " + clientCount);
+        StringBuilder result = new StringBuilder("OS: [Count = " + clientCount + "]");
         for (int i = 0; i < clientsIP.size(); i++) {
-            result.append("\n").append("OS: ").append(i + 1).append(": ").append(clientsIP.get(i)).append(" [").append(clientsNickname.get(i)).append("]");
+            result.append("\n").append("OS: ").append(i + 1).append(": ").append(clientsIP.get(i).substring(1)).append(" [").append(clientsNickname.get(i)).append("]");
         }
         return result.toString();
     }
@@ -71,7 +71,7 @@ public class Server extends Thread {
     }
 
     public String kickClient(String nickname) throws IOException {
-        String result = "";
+        String result;
         int index = clientsNickname.indexOf(nickname);
         if (index == -1) {
             result = nickname + " not found";
