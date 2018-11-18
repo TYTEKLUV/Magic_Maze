@@ -35,7 +35,7 @@ public class CanvasListener implements EventHandler<MouseEvent> {
 
     private void mouseClicked (MouseEvent event) {
         switch (CanvasListener.type) {
-            case "floor" :
+            case "map" :
                 drawFloor(event, g);
                 break;
             case "wall" :
@@ -47,17 +47,16 @@ public class CanvasListener implements EventHandler<MouseEvent> {
     private void drawFloor (MouseEvent event, GraphicsContext g) {
         double x = Math.ceil(event.getX()/60);
         double y = Math.ceil(event.getY()/60);
-        System.out.println((int)x + " " + (int)y);
         g.setStroke(Color.WHITE);
         g.setLineWidth(2);
         g.strokeRect(x * 60 - 60 + 6, y * 60 - 60 + 6, 60, 60);
-        if (activeCard.floor[(int)x - 1][(int)y - 1] == 0) {
+        if (activeCard.map[(int)x - 1][(int)y - 1] == 0) {
             g.setFill(Color.rgb(74, 74, 74));
-            activeCard.floor[(int)x - 1][(int)y - 1] = 1;
+            activeCard.map[(int)x - 1][(int)y - 1] = 1;
         }
         else {
             g.setFill(Color.rgb(76, 93, 99));
-            activeCard.floor[(int)x - 1][(int)y - 1] = 0;
+            activeCard.map[(int)x - 1][(int)y - 1] = 0;
         }
         g.fillRect(x * 60 - 60 +  7, y * 60 - 60 + gridW + 6, 58, 58);
     }
@@ -65,7 +64,6 @@ public class CanvasListener implements EventHandler<MouseEvent> {
     private void drawWall (MouseEvent event, GraphicsContext g) {
         double x = Math.ceil(event.getX()/60 * 100) / 100;
         double y = Math.ceil(event.getY()/60 * 100) / 100;
-        System.out.println(x + " " + y);
         if (y > Math.floor(y) + 0.5) {
             g.setStroke(Color.WHITE);
             g.setLineWidth(2);

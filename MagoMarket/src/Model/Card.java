@@ -3,25 +3,24 @@ package Model;
 import javafx.scene.image.ImageView;
 
 public class Card extends ImageView {
-    int floor[][];
-    int wall[][];
-    int door[][];
+    int map[][];
+    int bridges;
     String url;
-    boolean isUsed;
+    boolean isUsed = false;
 
-    public Card(int floor[][], String url, boolean isUsed) {
+    public Card(int map[][], String url, int bridges) {
         super();
-        this.floor = floor;
+        this.map = map;
         this.url = url;
         this.isUsed = isUsed;
     }
 
-    public int[][] getFloor() {
-        return floor;
+    public int[][] getMap() {
+        return map;
     }
 
-    public int[][] getWall() {
-        return wall;
+    public void setMap(int[][] map) {
+        this.map = map;
     }
 
     public String getUrl() {
