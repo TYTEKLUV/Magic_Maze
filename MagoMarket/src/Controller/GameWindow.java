@@ -3,7 +3,6 @@ package Controller;
 import Model.Card;
 import Model.Chip;
 import Model.Pane;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -24,11 +23,13 @@ public class GameWindow {
 
     private ArrayList<Card> cards = new ArrayList<>();
     private ArrayList<Chip> chips = new ArrayList<>();
+    private ArrayList<Integer> loupes = new ArrayList<>();
     private boolean isMoveCard = false;
     private int moveCardId;
+    private int closestLoupeId;
 
     @FXML
-    void initialize () throws FileNotFoundException {
+    void initialize() throws FileNotFoundException {
         createCards(1);
         createChip();
         create();
@@ -37,56 +38,68 @@ public class GameWindow {
         newCard.setOnMouseClicked(this::addNewCard);
     }
 
-    private void addNewCard(MouseEvent event){
-        isMoveCard = true;
-        int i = 0;
-        int j = 0;
-        while ((cards.get(i).isUsed()) || (j != cards.size())) {
-            if (i + 1  != cards.size())
-                i++;
-            j++;
+    private void addNewCard(MouseEvent event) {
+        int n = 0;
+        loupes.clear();
+        for (int i = 0; i < 4; i++) {
+           if (chips.get(i).isOnLoupe) {
+               loupes.add(i);
+               n ++;
+           }
         }
-        if (i != cards.size()) {
-            moveCardId = i;
-            getCards().get(getMoveCard()).setLayoutX(event.getSceneX() - getCards().get(0).getImage().getWidth()/2);
-            getCards().get(getMoveCard()).setLayoutY(event.getSceneY() - getCards().get(0).getImage().getHeight()/2);
-            pane.getChildren().add(cards.get(i));
+        if (n > 0) {
+            isMoveCard = true;
+            int i = 0;
+            int j = 0;
+            while ((cards.get(i).isUsed()) && (j != cards.size())) {
+                if ((i + 1) != cards.size())
+                    i++;
+                j++;
+            }
+            if (i != cards.size()) {
+                moveCardId = i;
+                cards.get(i).setUsed(true);
+                getCards().get(getMoveCard()).setLayoutX(event.getSceneX() - getCards().get(0).getImage().getWidth() / 2);
+                getCards().get(getMoveCard()).setLayoutY(event.getSceneY() - getCards().get(0).getImage().getHeight() / 2);
+                pane.getChildren().add(cards.get(i));
+
+            }
         }
 
     }
 
-    private void createChip () {
-        for (int i = 1; i <= 4; i ++) {
-            Chip chip = new Chip(false);
-            chip.setImage(new Image("res/pic/mag" + i +".png", 45, 45, true, true));
+    private void createChip() {
+        for (int i = 1; i <= 4; i++) {
+            Chip chip = new Chip(this);
+            chip.setImage(new Image("res/pic/mag" + i + ".png", 45, 45, true, true));
             chips.add(chip);
         }
-        double step = cards.get(0).getImage().getWidth()/4;
-        chips.get(0).setLayoutX(cards.get(0).getLayoutX() + step*2 + step/2 - chips.get(0).getImage().getWidth()/2);
-        chips.get(0).setLayoutY(cards.get(0).getLayoutY() + step*2 + step/2 - chips.get(0).getImage().getHeight()/2);
-        chips.get(1).setLayoutX(cards.get(0).getLayoutX() + step*2 + step/2 - chips.get(0).getImage().getWidth()/2);
-        chips.get(1).setLayoutY(cards.get(0).getLayoutY() + step*1 + step/2 - chips.get(0).getImage().getHeight()/2);
-        chips.get(2).setLayoutX(cards.get(0).getLayoutX() + step*1 + step/2 - chips.get(0).getImage().getWidth()/2);
-        chips.get(2).setLayoutY(cards.get(0).getLayoutY() + step*1 + step/2 - chips.get(0).getImage().getHeight()/2);
-        chips.get(3).setLayoutX(cards.get(0).getLayoutX() + step*1 + step/2 - chips.get(0).getImage().getWidth()/2);
-        chips.get(3).setLayoutY(cards.get(0).getLayoutY() + step*2 + step/2 - chips.get(0).getImage().getHeight()/2);
+        double step = cards.get(0).getImage().getWidth() / 4;
+        chips.get(0).setLayoutX(cards.get(0).getLayoutX() + step * 2 + step / 2 - chips.get(0).getImage().getWidth() / 2);
+        chips.get(0).setLayoutY(cards.get(0).getLayoutY() + step * 2 + step / 2 - chips.get(0).getImage().getHeight() / 2);
+        chips.get(1).setLayoutX(cards.get(0).getLayoutX() + step * 2 + step / 2 - chips.get(0).getImage().getWidth() / 2);
+        chips.get(1).setLayoutY(cards.get(0).getLayoutY() + step * 1 + step / 2 - chips.get(0).getImage().getHeight() / 2);
+        chips.get(2).setLayoutX(cards.get(0).getLayoutX() + step * 1 + step / 2 - chips.get(0).getImage().getWidth() / 2);
+        chips.get(2).setLayoutY(cards.get(0).getLayoutY() + step * 1 + step / 2 - chips.get(0).getImage().getHeight() / 2);
+        chips.get(3).setLayoutX(cards.get(0).getLayoutX() + step * 1 + step / 2 - chips.get(0).getImage().getWidth() / 2);
+        chips.get(3).setLayoutY(cards.get(0).getLayoutY() + step * 2 + step / 2 - chips.get(0).getImage().getHeight() / 2);
     }
 
-    private void createCards (int level) throws FileNotFoundException {
+    private void createCards(int level) throws FileNotFoundException {
         Scanner input = new Scanner(new FileReader("src/res/cards.txt"));
         boolean f = false;
-        int mas[][] = new int[4][4];
-        for (int i = 1; i <= 2; i ++) {
-            for (int j = 0; j < 4; j ++) {
-                for (int k = 0; k < 4; k ++) {
+        for (int i = 1; i <= 3; i++) {
+            int mas[][] = new int[7][7];
+            for (int j = 0; j < 7; j++) {
+                for (int k = 0; k < 7; k++) {
                     mas[j][k] = input.nextInt();
                 }
             }
-            Card card = new Card(mas, "res/pic/cards/" + String.valueOf(i) + ".png", false);
+            int bridges = input.nextInt();
+            Card card = new Card(mas, "res/pic/cards/" + String.valueOf(i) + ".png", bridges);
             card.setImage(new Image(card.getUrl(), 300, 300, true, false));
-            card.setLayoutX(pane.getPrefWidth()/2 - 150);
-            card.setLayoutY(pane.getPrefHeight()/2 - 150);
-            System.out.println(card.getFitWidth()/2);
+            card.setLayoutX(pane.getPrefWidth() / 2 - 150);
+            card.setLayoutY(pane.getPrefHeight() / 2 - 150);
             cards.add(card);
         }
     }
@@ -94,13 +107,13 @@ public class GameWindow {
     private void create() {
         pane.getChildren().add(cards.get(0));
         cards.get(0).setUsed(true);
-        for (int i = 0; i < 4; i ++) {
+        for (int i = 0; i < 4; i++) {
             pane.getChildren().add(chips.get(i));
         }
     }
+
     @FXML
     void click(MouseEvent event) {
-        System.out.println(event.getX() + " " + event.getY());
 //        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../View/CardEditor.fxml"));
 //        Parent root1 = null;
 //        try {
@@ -123,6 +136,10 @@ public class GameWindow {
         return chips;
     }
 
+    public ArrayList<Integer> getLoupes() {
+        return loupes;
+    }
+
     public boolean isMoveCard() {
         return isMoveCard;
     }
@@ -131,9 +148,19 @@ public class GameWindow {
         this.isMoveCard = moveCard;
     }
 
-    public int getMoveCard(){
+    public int getMoveCard() {
         return moveCardId;
     }
 
+    public AnchorPane getPane() {
+        return pane;
+    }
 
+    public int getClosestLoupeId() {
+        return closestLoupeId;
+    }
+
+    public void setClosestLoupeId(int closestLoupeId) {
+        this.closestLoupeId = closestLoupeId;
+    }
 }

@@ -8,7 +8,6 @@ public class Pane implements EventHandler<MouseEvent> {
 
     private GameWindow gameWindow;
 
-
     public Pane(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
     }
@@ -17,7 +16,7 @@ public class Pane implements EventHandler<MouseEvent> {
         switch (String.valueOf(event.getEventType())) {
             case "MOUSE_RELEASED":
                 if(gameWindow.isMoveCard()){
-                    gameWindow.setMoveCard(false);
+                    moveReleased(event);
                 }
                 else mouseReleased(event);
                 break;
@@ -29,22 +28,84 @@ public class Pane implements EventHandler<MouseEvent> {
     }
 
     private void  mouseMoved(MouseEvent event) {
+        double min = gameWindow.getPane().getPrefWidth();
+        double x = 0, y = 0;
+        gameWindow.setClosestLoupeId(-1);
+        for (int i = 0; i < gameWindow.getLoupes().size(); i ++) {
+            int chipId = gameWindow.getLoupes().get(i);
+            x = gameWindow.getChips().get(chipId).getLayoutX();
+            y = gameWindow.getChips().get(chipId).getLayoutY();
+            double length = Math.sqrt(Math.pow((event.getX() - x), 2) + Math.pow((event.getY() - y), 2));
+            if (length < min) {
+                min = length;
+                gameWindow.setClosestLoupeId(chipId);
+            }
+        }
+        String pos = String.valueOf((int)gameWindow.getChips().get(     gameWindow.getClosestLoupeId()).getPosition().x) + String.valueOf((int)gameWindow.getChips().get(               gameWindow.getClosestLoupeId()).getPosition().y);
+        switch (pos) {
+            case "31":
+                x = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getLayoutX() + gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getImage().getWidth()/4;
+                y = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getLayoutY() - gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getImage().getWidth();
+                gameWindow.getCards().set(gameWindow.getMoveCard(), rotateMap(gameWindow.getCards().get(gameWindow.getMoveCard())));
+
+                break;
+            case "43":
+                x = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getLayoutX() + gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getImage().getWidth();
+                y = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getLayoutY() + gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getImage().getWidth()/4;
+                break;
+            case "24":
+                x = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getLayoutX() - gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getImage().getWidth()/4;
+                y = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getLayoutY() + gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getImage().getWidth();
+                break;
+            case "12":
+                x = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getLayoutX() - gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getImage().getWidth();
+                y = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getLayoutY() - gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getImage().getWidth()/4;
+                break;
+        }
         gameWindow.getCards().get(gameWindow.getMoveCard()).setLayoutX(event.getX() - gameWindow.getCards().get(0).getImage().getWidth()/2);
+        gameWindow.getCards().get(gameWindow.getMoveCard()).setLayoutX(x);
         gameWindow.getCards().get(gameWindow.getMoveCard()).setLayoutY(event.getY() - gameWindow.getCards().get(0).getImage().getHeight()/2);
+        gameWindow.getCards().get(gameWindow.getMoveCard()).setLayoutY(y);
+
+    }
+
+    private Card rotateMap (Card card) {
+        int[][] map = new int[7][7];
+        for (int i = 0; i < 7; i++) {
+            for (int j = 0; j < 7; j++) {
+                map[i][j] = card.getMap()[6-j][i];
+            }
+        }
+        card.setMap(map);
+        card.setRotate(card.getRotate()+90);
+        return card;
+    }
+    private void  moveReleased (MouseEvent event) {
+        Point point = gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getPosition();
+        System.out.println("cl " + gameWindow.getClosestLoupeId());
+        System.out.println(((int)(point.y - 1)*2) + " " + ((int)(point.x - 1)*2));
+        gameWindow.getChips().get(gameWindow.getClosestLoupeId()).isOnLoupe = false;
+        gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getMap()[((int)point.y - 1)*2][((int)point.x - 1)*2] = 10;
+        gameWindow.setMoveCard(false);
     }
     private void mouseReleased (MouseEvent event) {
         boolean f = false;
+        if (gameWindow.isMoveCard()) {
+
+        }
         for (int i = 0; i < 4; i ++) {
             Chip chip = gameWindow.getChips().get(i);
             if(chip.isSelected){
                 f = true;
-                Point point = getPosition(event);
+                Point point = chip.getPosition(event, false);
                 if ((point.y >= 0) && (point.x >= 0)) {
                     gameWindow.getChips().get(i).setLayoutX(point.x);
                     gameWindow.getChips().get(i).setLayoutY(point.y);
                     gameWindow.getChips().get(i).toFront();
+                    gameWindow.getChips().get(i).whereAreUNow(event);
+
                 }
-                chip.isSelected = false;
+                gameWindow.getChips().get(i).isSelected = false;
             }
         }
         if (!f) {
@@ -52,37 +113,9 @@ public class Pane implements EventHandler<MouseEvent> {
                 Chip chip = gameWindow.getChips().get(i);
                 if((event.getX() > chip.getLayoutX()) && (event.getX() < chip.getLayoutX() + chip.getImage().getWidth()) && (event.getY() > chip.getLayoutY()) && (event.getY() < chip.getLayoutY() + chip.getImage().getHeight())) {
                     chip.isSelected = true;
-                    System.out.println("true");
                 }
             }
         }
-    }
-    private Point getPosition (MouseEvent event) {
-       double x = -1, y = -1;
-       int n = getCardId(event);
-       if (n >= 0) {
-           Card card = gameWindow.getCards().get(n);
-           double width = card.getImage().getWidth()/4;
-           System.out.println("w " + width/4);
-           x = Math.ceil((event.getX() - card.getLayoutX())/(width));
-           y = Math.ceil((event.getY() - card.getLayoutY())/(width));
-           System.out.println(gameWindow.getChips().get(0).getImage().getWidth());
-           x = card.getLayoutX() + x*width - width + (Math.floor(width/2) - Math.floor(gameWindow.getChips().get(0).getImage().getWidth()/2));
-           y = card.getLayoutY() + y*width - width + (Math.floor(width/2) - Math.floor(gameWindow.getChips().get(0).getImage().getWidth()/2));
-
-       }
-       return new Point(x, y);
-    }
-
-    private int getCardId (MouseEvent event) {
-        int n = -1;
-        for(int i = 0; i < gameWindow.getCards().size(); i ++) {
-            Card card = gameWindow.getCards().get(i);
-            if ((event.getX() > card.getLayoutX()) && (event.getX() < card.getLayoutX() + card.getImage().getWidth()) && (event.getY() > card.getLayoutY()) && (event.getY() < card.getLayoutY() + card.getImage().getHeight())) {
-                n = i;
-            }
-        }
-        return n;
     }
 
 }

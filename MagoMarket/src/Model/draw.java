@@ -18,8 +18,6 @@ public class draw implements EventHandler<KeyEvent> {
 
     @Override
     public void handle(KeyEvent event) {
-        System.out.println(event.getCode());
-        System.out.println(event.getCode());
         switch (String.valueOf(event.getCode())) {
             case "LEFT":
                 x -= 60;

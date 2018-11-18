@@ -17,8 +17,8 @@ public class CardEditorButtonListener implements EventHandler<MouseEvent> {
     @Override
     public void handle(MouseEvent event) {
         switch (type) {
-            case "floor":
-                CanvasListener.type = "floor";
+            case "map":
+                CanvasListener.type = "map";
                 break;
             case "wall":
                 CanvasListener.type = "wall";
