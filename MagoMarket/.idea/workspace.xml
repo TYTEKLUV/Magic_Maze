@@ -16,7 +16,7 @@
         <entry file="file://$PROJECT_DIR$/src/Model/Card.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="304">
-              <caret line="23" column="5" lean-forward="true" selection-start-line="23" selection-start-column="5" selection-end-line="23" selection-end-column="5" />
+              <caret line="23" column="5" selection-start-line="23" selection-start-column="5" selection-end-line="23" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -54,11 +54,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Pane.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Pane.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Model/Pane.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="413">
-              <caret line="47" column="251" selection-start-line="47" selection-start-column="251" selection-end-line="47" selection-end-column="251" />
+            <state relative-caret-position="-99">
+              <caret line="41" column="13" lean-forward="true" selection-start-line="41" selection-start-column="13" selection-end-line="41" selection-end-column="13" />
               <folding>
                 <element signature="method#moveReleased#0;class#Pane#0" />
                 <element signature="method#mouseReleased#0;class#Pane#0" />
@@ -67,11 +67,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Chip.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Chip.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Model/Chip.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="445">
-              <caret line="86" column="24" lean-forward="true" selection-start-line="86" selection-start-column="24" selection-end-line="86" selection-end-column="24" />
+            <state relative-caret-position="1344">
+              <caret line="86" column="24" selection-start-line="86" selection-start-column="24" selection-end-line="86" selection-end-column="24" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -181,11 +181,6 @@
             <path>
               <item name="MagoMarket" type="b2602c69:ProjectViewProjectNode" />
               <item name="MagoMarket" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="MagoMarket" type="b2602c69:ProjectViewProjectNode" />
-              <item name="MagoMarket" type="462c0819:PsiDirectoryNode" />
-              <item name=".idea" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="MagoMarket" type="b2602c69:ProjectViewProjectNode" />
@@ -372,12 +367,12 @@
       <workItem from="1542265156685" duration="2665000" />
       <workItem from="1542351353648" duration="2747000" />
       <workItem from="1542436978563" duration="8481000" />
-      <workItem from="1542497883673" duration="17953000" />
+      <workItem from="1542497883673" duration="18452000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="92607000" />
+    <option name="totallyTimeSpent" value="93106000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="2576" height="1056" extended-state="7" />
@@ -393,11 +388,11 @@
       <window_info anchor="right" id="Maven Projects" order="3" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.48767886" visible="true" weight="0.16666667" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.48767886" visible="true" weight="0.16666667" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.09300477" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.09300477" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49761525" weight="0.16013072" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -927,20 +922,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Model/Chip.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="445">
-          <caret line="86" column="24" lean-forward="true" selection-start-line="86" selection-start-column="24" selection-end-line="86" selection-end-column="24" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Model/Card.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="304">
-          <caret line="23" column="5" lean-forward="true" selection-start-line="23" selection-start-column="5" selection-end-line="23" selection-end-column="5" />
+          <caret line="23" column="5" selection-start-line="23" selection-start-column="5" selection-end-line="23" selection-end-column="5" />
         </state>
       </provider>
     </entry>
@@ -977,11 +962,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Model/Pane.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="413">
-          <caret line="47" column="251" selection-start-line="47" selection-start-column="251" selection-end-line="47" selection-end-column="251" />
+        <state relative-caret-position="-99">
+          <caret line="41" column="13" lean-forward="true" selection-start-line="41" selection-start-column="13" selection-end-line="41" selection-end-column="13" />
           <folding>
             <element signature="method#moveReleased#0;class#Pane#0" />
             <element signature="method#mouseReleased#0;class#Pane#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Model/Chip.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1344">
+          <caret line="86" column="24" selection-start-line="86" selection-start-column="24" selection-end-line="86" selection-end-column="24" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
