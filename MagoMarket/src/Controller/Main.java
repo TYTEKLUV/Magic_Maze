@@ -20,7 +20,5 @@ public class Main extends Application {
         primaryStage.setResizable(true);
         //primaryStage.setMinWidth(878);
         primaryStage.show();
-        System.out.println("test");
-        System.out.println("Privet Sonya");
     }
 }
