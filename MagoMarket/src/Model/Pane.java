@@ -46,19 +46,30 @@ public class Pane implements EventHandler<MouseEvent> {
             case "31":
                 x = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getLayoutX() + gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getImage().getWidth()/4;
                 y = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getLayoutY() - gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getImage().getWidth();
+                while (gameWindow.getCards().get(gameWindow.getMoveCard()).getMap()[6][2] != 20) {
                     gameWindow.getCards().set(gameWindow.getMoveCard(), rotateMap(gameWindow.getCards().get(gameWindow.getMoveCard())));
+                }
                 break;
             case "43":
                 x = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getLayoutX() + gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getImage().getWidth();
                 y = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getLayoutY() + gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getImage().getWidth()/4;
+                while (gameWindow.getCards().get(gameWindow.getMoveCard()).getMap()[2][0] != 20) {
+                    gameWindow.getCards().set(gameWindow.getMoveCard(), rotateMap(gameWindow.getCards().get(gameWindow.getMoveCard())));
+                }
                 break;
             case "24":
                 x = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getLayoutX() - gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getImage().getWidth()/4;
                 y = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getLayoutY() + gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getImage().getWidth();
+                while (gameWindow.getCards().get(gameWindow.getMoveCard()).getMap()[0][4] != 20) {
+                    gameWindow.getCards().set(gameWindow.getMoveCard(), rotateMap(gameWindow.getCards().get(gameWindow.getMoveCard())));
+                }
                 break;
             case "12":
                 x = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getLayoutX() - gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getImage().getWidth();
                 y = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getLayoutY() - gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getImage().getWidth()/4;
+                while (gameWindow.getCards().get(gameWindow.getMoveCard()).getMap()[4][6] != 20) {
+                    gameWindow.getCards().set(gameWindow.getMoveCard(), rotateMap(gameWindow.getCards().get(gameWindow.getMoveCard())));
+                }
                 break;
         }
         gameWindow.getCards().get(gameWindow.getMoveCard()).setLayoutX(event.getX() - gameWindow.getCards().get(0).getImage().getWidth()/2);
@@ -81,8 +92,6 @@ public class Pane implements EventHandler<MouseEvent> {
     }
     private void  moveReleased (MouseEvent event) {
         Point point = gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getPosition();
-        System.out.println("cl " + gameWindow.getClosestLoupeId());
-        System.out.println(((int)(point.y - 1)*2) + " " + ((int)(point.x - 1)*2));
         gameWindow.getChips().get(gameWindow.getClosestLoupeId()).isOnLoupe = false;
         gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getMap()[((int)point.y - 1)*2][((int)point.x - 1)*2] = 10;
         gameWindow.setMoveCard(false);

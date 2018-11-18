@@ -25,8 +25,7 @@ public class Chip extends ImageView {
         x = (point.x - 1) * 2;
         y = (point.y - 1) * 2;
         int z = gameWindow.getCards().get(getCardId(event)).getMap()[(int)y][(int)x];
-        System.out.println("z " + z);
-        if ((z >= 21)&&(z <= 24)){
+        if (String.valueOf(z).equals(String.valueOf(2) + String.valueOf(gameWindow.getChips().indexOf(this) + 1))){
             isOnLoupe   = true;
         } else {
             if ((z >= 51)&&(z <= 54)) {
@@ -84,7 +83,6 @@ public class Chip extends ImageView {
             double width = card.getImage().getWidth()/4;
             x = Math.ceil((event.getX() - card.getLayoutX())/(width));
             y = Math.ceil((event.getY() - card.getLayoutY())/(width));
-            System.out.println(x + " y " + y);
             if (!isInCard) {
                 x = card.getLayoutX() + x * width - width + (Math.floor(width / 2) - Math.floor(gameWindow.getChips().get(0).getImage().getWidth() / 2));
                 y = card.getLayoutY() + y * width - width + (Math.floor(width / 2) - Math.floor(gameWindow.getChips().get(0).getImage().getWidth() / 2));
