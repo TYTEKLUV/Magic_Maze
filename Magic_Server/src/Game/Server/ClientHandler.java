@@ -36,12 +36,6 @@ public class ClientHandler implements Runnable {
                 String entry = in.readUTF();
                 System.out.println(nickname + ": " + entry);
             }
-
-            System.out.println(nickname + " disconnected");
-
-            in.close();
-            out.close();
-
         } catch (IOException e) {
             mainServer.clientDisconnect(nickname, ip, this);
             System.out.println(nickname + " disconnected");
