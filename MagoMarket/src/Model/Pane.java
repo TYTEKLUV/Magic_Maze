@@ -90,12 +90,15 @@ public class Pane implements EventHandler<MouseEvent> {
         card.setRotate(card.getRotate()+90);
         return card;
     }
+
     private void  moveReleased (MouseEvent event) {
         Point point = gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getPosition();
         gameWindow.getChips().get(gameWindow.getClosestLoupeId()).isOnLoupe = false;
-        gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getMap()[((int)point.y - 1)*2][((int)point.x - 1)*2] = 10;
+        int n = Integer.parseInt("20" + String.valueOf(gameWindow.getMoveCard()));
+        gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getMap()[((int)point.y - 1)*2][((int)point.x - 1)*2] = n;
         gameWindow.setMoveCard(false);
     }
+
     private void mouseReleased (MouseEvent event) {
         boolean f = false;
         if (gameWindow.isMoveCard()) {
@@ -105,15 +108,19 @@ public class Pane implements EventHandler<MouseEvent> {
             Chip chip = gameWindow.getChips().get(i);
             if(chip.isSelected){
                 f = true;
+//                System.out.println(isFloorIsEmpty(chip.getPosition()));
                 Point point = chip.getPosition(event, false);
-                if ((point.y >= 0) && (point.x >= 0)) {
-                    gameWindow.getChips().get(i).setLayoutX(point.x);
-                    gameWindow.getChips().get(i).setLayoutY(point.y);
-                    gameWindow.getChips().get(i).toFront();
-                    gameWindow.getChips().get(i).whereAreUNow(event);
+                //if (!isFloorIsEmpty(chip.getPosition(event, true)))
+                if (isChipCanBeMoved(event, chip.getPosition(), chip.getPosition(event, true), chip))
+                    if ((point.y >= 0) && (point.x >= 0)) {
+                        gameWindow.getChips().get(i).setLayoutX(point.x);
+                        gameWindow.getChips().get(i).setLayoutY(point.y);
+                        gameWindow.getChips().get(i).toFront();
+                        gameWindow.getChips().get(i).whereAreUNow(event);
 
-                }
-                gameWindow.getChips().get(i).isSelected = false;
+                    }
+                    gameWindow.getChips().get(i).isSelected = false;
+
             }
         }
         if (!f) {
@@ -124,6 +131,64 @@ public class Pane implements EventHandler<MouseEvent> {
                 }
             }
         }
+    }
+
+    private boolean isFloorIsEmpty (Point point, Chip chip) {
+        boolean f = true;
+        for (int i = 0; i < 4; i++) {
+            if ((gameWindow.getChips().get(i).getPosition().x == point.x)&&(gameWindow.getChips().get(i).getPosition().y == point.y)&&(gameWindow.getChips().get(i).getCardId() == chip.getCardId())) {
+                f = false;
+            }
+        }
+        return f;
+    }
+
+    private boolean isChipCanBeMoved (MouseEvent event, Point start, Point end, Chip chip) {
+        boolean f = false;
+        if (isFloorIsEmpty(end, chip)) {
+            double dx = (Math.abs(end.x - start.x));
+            double dy = (Math.abs(end.y - start.y));
+            Point minPoint = start;
+            if ((end.x < start.x)||(end.y < start.y)){
+                minPoint = end;
+            }
+            if ((dx == 0)&&(dy == 1)&&(chip.getCardId() == chip.getCardId(event))) {
+                if (gameWindow.getCards().get(chip.getCardId(event)).getMap()[(int)(minPoint.y - 1) * 2 + 1][(int)(minPoint.x  - 1) * 2] != 0) {
+                    f = true;
+                }
+            }
+            else
+            if ((dx == 1)&&(dy == 0)&&(chip.getCardId() == chip.getCardId(event))) {
+                if (gameWindow.getCards().get(chip.getCardId(event)).getMap()[(int)(minPoint.y - 1) * 2][(int)(minPoint.x  - 1) * 2 + 1] != 0) {
+                    f = true;
+                }
+            }
+            else {
+                int ind = Integer.parseInt("3" + String.valueOf(gameWindow.getChips().indexOf(chip) + 1));
+                if (gameWindow.getCards().get(chip.getCardId(event)).getMap()[(int)(end.y - 1) * 2][(int)(end.x - 1) * 2] == ind) {
+                    f = true;
+                }
+                else
+                if (gameWindow.getCards().get(chip.getCardId(event)).getMap()[(int)(end.y - 1) * 2][(int)(end.x - 1) * 2] == 20) {
+                    int n = Integer.parseInt("20" + String.valueOf(chip.getCardId(event)));
+                    System.out.println("n " + n);
+                    if (gameWindow.getCards().get(chip.getCardId()).getMap()[(int)(start.y - 1) * 2][(int)(start.x - 1) * 2] == n) {
+                        f = true;
+                    }
+                }
+                else {
+                    int n = Integer.parseInt("20" + String.valueOf(chip.getCardId()));
+                    if (gameWindow.getCards().get(chip.getCardId(event)).getMap()[(int) (end.y - 1) * 2][(int) (end.x - 1) * 2] == n) {
+                        if (gameWindow.getCards().get(chip.getCardId()).getMap()[(int)(start.y - 1) * 2][(int)(start.x - 1) * 2] == 20) {
+                            f = true;
+                        }
+                    }
+                }
+                System.out.println();
+                System.out.println("place" + gameWindow.getCards().get(chip.getCardId(event)).getMap()[(int)(end.y - 1) * 2][(int)(end.x - 1) * 2]);
+            }
+        }
+        return f;
     }
 
 }

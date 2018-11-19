@@ -56,7 +56,7 @@ public class GameWindow {
                     i++;
                 j++;
             }
-            if (i != cards.size()) {
+            if (j != cards.size()) {
                 moveCardId = i;
                 cards.get(i).setUsed(true);
                 getCards().get(getMoveCard()).setLayoutX(event.getSceneX() - getCards().get(0).getImage().getWidth() / 2);
@@ -88,7 +88,7 @@ public class GameWindow {
     private void createCards(int level) throws FileNotFoundException {
         Scanner input = new Scanner(new FileReader("src/res/cards.txt"));
         boolean f = false;
-        for (int i = 1; i <= 3; i++) {
+        for (int i = 1; i <= 4; i++) {
             int mas[][] = new int[7][7];
             for (int j = 0; j < 7; j++) {
                 for (int k = 0; k < 7; k++) {

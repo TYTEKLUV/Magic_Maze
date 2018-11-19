@@ -66,7 +66,6 @@ public class Chip extends ImageView {
         return n;
     }
 
-
     Point getPosition() {
         double x, y;
         double width = gameWindow.getCards().get(0).getImage().getWidth()/4;
@@ -75,6 +74,7 @@ public class Chip extends ImageView {
         y = Math.ceil((getLayoutY() - r + width - gameWindow.getCards().get(getCardId()).getLayoutY()) / width);
         return new Point(x, y);
     }
+
     Point getPosition(MouseEvent event, boolean isInCard) { //in card
         double x = -1, y = -1;
         int n = getCardId(event);

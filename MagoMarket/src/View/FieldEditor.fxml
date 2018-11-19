@@ -5,6 +5,6 @@
 
 <AnchorPane id="pane" fx:id="pane" onMouseClicked="#click" prefHeight="779.0" prefWidth="1266.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.GameWindow">
    <children>
-      <Button id="newCard" fx:id="newCard" layoutX="1103.0" layoutY="710.0" mnemonicParsing="false" stylesheets="@../Styles/FieldEditor.css" text="Новая карта" />
+      <Button id="newCard" fx:id="newCard" layoutX="1140.0" layoutY="14.0" mnemonicParsing="false" stylesheets="@../Styles/FieldEditor.css" text="Новая карта" />
    </children>
 </AnchorPane>
