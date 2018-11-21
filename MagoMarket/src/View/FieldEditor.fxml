@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="pane" fx:id="pane" onMouseClicked="#click" prefHeight="779.0" prefWidth="1266.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.GameWindow">
+
+<AnchorPane onMouseClicked="#click" prefHeight="719.0" prefWidth="1373.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.GameWindow">
    <children>
-      <Button id="newCard" fx:id="newCard" layoutX="1140.0" layoutY="14.0" mnemonicParsing="false" stylesheets="@../Styles/FieldEditor.css" text="Новая карта" />
+      <ImageView fitHeight="724.0" fitWidth="1373.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <image>
+            <Image url="@../res/pic/window/gameFon.png" />
+         </image>
+      </ImageView>
+      <ScrollPane layoutX="122.0" layoutY="29.0" prefHeight="666.0" prefWidth="967.0" style="-fx-background-color: #413843;" stylesheets="@../Styles/FieldEditor.css">
+         <content>
+            <AnchorPane id="pane" fx:id="pane" pickOnBounds="false" prefHeight="663.0" prefWidth="964.0" snapToPixel="false" style="-fx-background-color: transparent;" styleClass="scroll-pane" stylesheets="@../Styles/FieldEditor.css" />
+         </content>
+      </ScrollPane>
+      <Button id="newCard" fx:id="newCard" layoutX="1141.0" layoutY="52.0" mnemonicParsing="false" stylesheets="@../Styles/FieldEditor.css" text="Новая карта" />
    </children>
 </AnchorPane>
