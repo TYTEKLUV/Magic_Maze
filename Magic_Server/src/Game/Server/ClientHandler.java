@@ -5,7 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-public class ClientHandler implements Runnable {
+public class ClientHandler extends Thread {
 
     private Socket client;
     private Server mainServer;

@@ -63,7 +63,12 @@ public class OmegaServer extends Application {
                 break;
             case "kick":
                 if (input.hasNext()) {
-                    System.out.println(server.kickClient(input.next()));
+                    String next = input.next();
+                    if (next.equals("all")) {
+                        System.out.println(server.kickAllClient());
+                    } else {
+                        System.out.println(server.kickClient(next));
+                    }
                 } else {
                     System.out.println("OS: enter client nickname [kick <nickname>]");
                 }

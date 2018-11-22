@@ -9,21 +9,16 @@ import java.util.concurrent.Executors;
 
 public class Server extends Thread {
 
-    private ExecutorService executeIt = Executors.newFixedThreadPool(2);
-    private ArrayList<ClientHandler> clientList = new ArrayList<>();
+    private ExecutorService executeIt = Executors.newFixedThreadPool(4);
     private int serverPort;
     private int clientCount = 0;
     private ServerSocket server;
+    private ArrayList<ClientHandler> clientList = new ArrayList<>();
     private ArrayList<String> clientsIP = new ArrayList<>();
     private ArrayList<String> clientsNickname = new ArrayList<>();
 
     public Server(int serverPort) {
         this.serverPort = serverPort;
-    }
-
-    public void turnOff() throws IOException {
-        executeIt.shutdown();
-        server.close();
     }
 
     @Override
@@ -41,6 +36,11 @@ public class Server extends Thread {
         }
     }
 
+    public void turnOff() throws IOException {
+        executeIt.shutdown();
+        server.close();
+    }
+
     public String getClients() {
         StringBuilder result = new StringBuilder("OS: [Count = " + clientCount + "]");
         for (int i = 0; i < clientsIP.size(); i++) {
@@ -56,14 +56,6 @@ public class Server extends Thread {
         clientCount--;
     }
 
-    public ArrayList<String> getClientsIP() {
-        return clientsIP;
-    }
-
-    public ArrayList<String> getClientsNickname() {
-        return clientsNickname;
-    }
-
     public void sayCommand(String text) throws IOException {
         for (ClientHandler aClientList : clientList) {
             aClientList.sayCommand(text);
@@ -76,10 +68,24 @@ public class Server extends Thread {
         if (index == -1) {
             result = nickname + " not found";
         } else {
-            clientList.get(clientsNickname.indexOf(nickname)).turnOff();
-            clientDisconnect(nickname, clientsIP.get(index), clientList.get(index));
             result = nickname + " kicking...";
+            clientList.get(index).turnOff();
         }
         return result;
+    }
+
+    public String kickAllClient() throws IOException {
+        while (clientsNickname.size() > 0) {
+            kickClient(clientsNickname.get(0));
+        }
+        return "Complete";
+    }
+
+    public ArrayList<String> getClientsIP() {
+        return clientsIP;
+    }
+
+    public ArrayList<String> getClientsNickname() {
+        return clientsNickname;
     }
 }

@@ -27,7 +27,7 @@ public class ClientStarter extends Application {
         System.out.println("Client started");
         System.out.println("--------------");
 
-        commandHandler(new Scanner("nick Random_is"));
+        commandHandler(new Scanner("nick"));
 
         commandHandler(new Scanner("connect"));
 
