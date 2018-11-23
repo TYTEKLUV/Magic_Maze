@@ -43,7 +43,8 @@ public class Client extends Thread {
             System.out.println("connection complete");
 
             while (!client.isClosed()) {
-                System.out.println(in.readUTF());
+                String text = in.readUTF();
+                System.out.println(text);
             }
         } catch (Exception e) {
             System.out.println("disconnect from server");
@@ -52,6 +53,11 @@ public class Client extends Thread {
 
     public void turnOff() throws IOException {
         client.close();
+    }
+
+    public void repeatAnswer(String text) throws IOException {
+        out.writeUTF(text);
+        out.flush();
     }
 
     public void makeAction() throws IOException {

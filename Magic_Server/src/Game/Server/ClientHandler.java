@@ -29,7 +29,6 @@ public class ClientHandler extends Thread {
             out.flush();
 
             setClientParams();
-
             System.out.println(nickname + " connected");
 
             while (!client.isClosed()) {
@@ -37,24 +36,29 @@ public class ClientHandler extends Thread {
                 System.out.println(nickname + ": " + entry);
             }
         } catch (IOException e) {
-            mainServer.clientDisconnect(nickname, ip, this);
-            System.out.println(nickname + " disconnected");
+            mainServer.clientDisconnect(this);
         }
     }
 
     private void setClientParams() throws IOException {
         nickname = in.readUTF();
-        mainServer.getClientsNickname().add(nickname);
         ip = client.getRemoteSocketAddress().toString();
-        mainServer.getClientsIP().add(ip);
     }
 
-    public void sayCommand(String text) throws IOException {
+    public void say(String text) throws IOException {
         out.writeUTF("OS: " + text);
         out.flush();
     }
 
     public void turnOff() throws IOException {
         client.close();
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public String getIp() {
+        return ip;
     }
 }

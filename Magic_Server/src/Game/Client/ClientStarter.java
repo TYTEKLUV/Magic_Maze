@@ -17,7 +17,7 @@ public class ClientStarter extends Application {
             {"close         - close server",
                     "ip            - show server ip",
                     "clients       - show current server clients",
-                    "say <message> - send message to clients",
+                    "sayToAllClients <message> - send message to clients",
                     "kick <client> - kick client from server"};
 
     @Override
@@ -27,7 +27,7 @@ public class ClientStarter extends Application {
         System.out.println("Client started");
         System.out.println("--------------");
 
-        commandHandler(new Scanner("nick"));
+        commandHandler(new Scanner("nick rar"));
 
         commandHandler(new Scanner("connect"));
 
