@@ -6,13 +6,12 @@ public class Card extends ImageView {
     int map[][];
     int bridges;
     String url;
-    boolean isUsed = false;
+    boolean isUsed;
 
     public Card(int map[][], String url, int bridges) {
         super();
         this.map = map;
         this.url = url;
-        this.isUsed = isUsed;
     }
 
     public int[][] getMap() {

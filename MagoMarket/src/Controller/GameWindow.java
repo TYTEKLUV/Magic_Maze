@@ -33,7 +33,7 @@ public class GameWindow {
         createCards(1);
         createChip();
         create();
-        pane.addEventFilter(MouseEvent.MOUSE_RELEASED, new Pane(this));
+        pane.addEventFilter(MouseEvent.MOUSE_CLICKED, new Pane(this));
         pane.addEventFilter(MouseEvent.MOUSE_MOVED, new Pane(this));
         newCard.setOnMouseClicked(this::addNewCard);
     }
@@ -87,7 +87,6 @@ public class GameWindow {
 
     private void createCards(int level) throws FileNotFoundException {
         Scanner input = new Scanner(new FileReader("src/res/cards.txt"));
-        boolean f = false;
         for (int i = 1; i <= 4; i++) {
             int mas[][] = new int[7][7];
             for (int j = 0; j < 7; j++) {

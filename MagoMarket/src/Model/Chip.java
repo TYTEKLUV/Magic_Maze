@@ -40,8 +40,6 @@ public class Chip extends ImageView {
                 }
             }
         }
-
-
     }
 
     public int getCardId(MouseEvent event) {
