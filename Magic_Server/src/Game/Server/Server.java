@@ -9,21 +9,13 @@ import java.util.concurrent.Executors;
 
 public class Server extends Thread {
 
-    private ExecutorService executeIt = Executors.newFixedThreadPool(2);
-    private ArrayList<ClientHandler> clientList = new ArrayList<>();
+    private ExecutorService executeIt = Executors.newFixedThreadPool(4);
     private int serverPort;
-    private int clientCount = 0;
     private ServerSocket server;
-    private ArrayList<String> clientsIP = new ArrayList<>();
-    private ArrayList<String> clientsNickname = new ArrayList<>();
+    private ArrayList<ClientHandler> clientList = new ArrayList<>();
 
     public Server(int serverPort) {
         this.serverPort = serverPort;
-    }
-
-    public void turnOff() throws IOException {
-        executeIt.shutdown();
-        server.close();
     }
 
     @Override
@@ -35,51 +27,63 @@ public class Server extends Thread {
                 ClientHandler cH = new ClientHandler(client, this);
                 clientList.add(cH);
                 executeIt.execute(cH);
-                clientCount++;
             }
         } catch (Exception ignored) {
         }
     }
 
+    public void turnOff() throws IOException {
+        executeIt.shutdown();
+        server.close();
+    }
+
     public String getClients() {
-        StringBuilder result = new StringBuilder("OS: [Count = " + clientCount + "]");
-        for (int i = 0; i < clientsIP.size(); i++) {
-            result.append("\n").append("OS: ").append(i + 1).append(": ").append(clientsIP.get(i).substring(1)).append(" [").append(clientsNickname.get(i)).append("]");
+        StringBuilder result = new StringBuilder("OS: [Count = " + clientList.size() + "]");
+        for (int i = 0; i < clientList.size(); i++) {
+            result.append("\n").append("OS: ").append(i + 1).append(": ").append(clientList.get(i).getIp().substring(1)).append(" [").append(clientList.get(i).getNickname()).append("]");
         }
         return result.toString();
     }
 
-    public void clientDisconnect(String nickname, String ip, ClientHandler cH) {
-        clientsNickname.remove(nickname);
+    public void clientDisconnect(ClientHandler cH) {
         clientList.remove(cH);
-        clientsIP.remove(ip);
-        clientCount--;
+        System.out.println(cH.getNickname() + " disconnected");
     }
 
-    public ArrayList<String> getClientsIP() {
-        return clientsIP;
-    }
-
-    public ArrayList<String> getClientsNickname() {
-        return clientsNickname;
-    }
-
-    public void sayCommand(String text) throws IOException {
+    public void sayToAll(String text) throws IOException {
         for (ClientHandler aClientList : clientList) {
-            aClientList.sayCommand(text);
+            aClientList.say(text);
         }
     }
 
-    public String kickClient(String nickname) throws IOException {
-        String result;
-        int index = clientsNickname.indexOf(nickname);
+    public boolean kick(int index) throws IOException {
+        boolean result;
         if (index == -1) {
-            result = nickname + " not found";
+            result = false;
         } else {
-            clientList.get(clientsNickname.indexOf(nickname)).turnOff();
-            clientDisconnect(nickname, clientsIP.get(index), clientList.get(index));
-            result = nickname + " kicking...";
+            clientList.get(index).turnOff();
+            result = true;
         }
         return result;
+    }
+
+    public String kick(String nickname) throws IOException {
+        int index = -1;
+        for (int i = 0; i < clientList.size(); i++) {
+            if (clientList.get(i).getNickname().equals(nickname)) {
+                index = i;
+                break;
+            }
+        }
+        return kick(index) ? (nickname + " not found") : (nickname + " kicking...");
+    }
+
+    public String kickAll() throws IOException {
+        int n = clientList.size();
+        for (int i = n - 1; i >= 0; i--) {
+            kick(i);
+        }
+        //TODO Сделать проверку на отключение всех клиентов перед Complete
+        return "Complete";
     }
 }

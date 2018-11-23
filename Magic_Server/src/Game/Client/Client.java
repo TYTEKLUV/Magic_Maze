@@ -5,9 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 
 public class Client extends Thread {
 
@@ -17,6 +15,9 @@ public class Client extends Thread {
     private DataOutputStream out;
     private DataInputStream in;
     private String presetIP = "";
+    private ArrayList<Socket> threadSockets = new ArrayList<>();
+    private List<Thread> pool = new ArrayList<>();
+
 
     public Client(int serverPort, String nickname) {
         this.serverPort = serverPort;
@@ -42,7 +43,8 @@ public class Client extends Thread {
             System.out.println("connection complete");
 
             while (!client.isClosed()) {
-                System.out.println(in.readUTF());
+                String text = in.readUTF();
+                System.out.println(text);
             }
         } catch (Exception e) {
             System.out.println("disconnect from server");
@@ -51,6 +53,11 @@ public class Client extends Thread {
 
     public void turnOff() throws IOException {
         client.close();
+    }
+
+    public void repeatAnswer(String text) throws IOException {
+        out.writeUTF(text);
+        out.flush();
     }
 
     public void makeAction() throws IOException {
@@ -63,8 +70,7 @@ public class Client extends Thread {
         out.flush();
     }
 
-    private void searchServerIP() throws UnknownHostException {
-        List<Thread> pool = new ArrayList<>();
+    private void searchServerIP() throws UnknownHostException, InterruptedException {
         boolean preset = !presetIP.equals("");
         int searchStart;
         String localIP;
@@ -85,28 +91,13 @@ public class Client extends Thread {
 
         for (int i = searchStart; i < 256; i++) {
             final String iIPv4 = preset ? localIP : localIP + i;
-
             System.out.println("searching " + iIPv4);
 
-            Thread thread = new Thread(() -> {
-                try {
-                    InetAddress ip = InetAddress.getByName(iIPv4);
-                    Socket socket = new Socket(ip, serverPort);
+            Socket socket = new Socket();
 
-                    DataInputStream in = new DataInputStream(socket.getInputStream());
+            threadSockets.add(socket);
 
-                    String fromServer = in.readUTF();
-
-                    if (fromServer.equals("OS: Welcome")) {
-                        client = socket;
-                        System.out.println("OmegaServer found: " + iIPv4);
-
-                    }
-                } catch (IOException ignored) {
-                } 
-            });
-            pool.add(thread);
-            thread.start();
+            createSearchThread(iIPv4, socket, preset);
         }
         for (Thread aThread : pool) {
             try {
@@ -118,10 +109,41 @@ public class Client extends Thread {
         }
     }
 
+    private void createSearchThread(String iIPv4, Socket socket, Boolean preset) {
+        Thread thread = new Thread(() -> {
+            try {
+                InetAddress ip = InetAddress.getByName(iIPv4);
+
+                socket.connect(new InetSocketAddress(ip, serverPort));
+
+                DataInputStream in = new DataInputStream(socket.getInputStream());
+
+                String fromServer = in.readUTF();
+
+                if (fromServer.equals("OS: Welcome")) {
+                    while ((threadSockets.size() != 255) && !preset) {
+                        System.out.println("size " + threadSockets.size());
+                    }
+                    threadSockets.remove(socket);
+                    for (Socket threadSocket : threadSockets) {
+                        threadSocket.close();
+                    }
+
+                    client = socket;
+                    System.out.println("OmegaServer found: " + iIPv4);
+
+                }
+            } catch (IOException ignored) {
+            }
+        });
+        pool.add(thread);
+        thread.start();
+    }
+
     private String getipMask(String ip) {
         int l = 0;
         int pCount = 0;
-        while (pCount < 3){
+        while (pCount < 3) {
             if (String.valueOf(ip.charAt(l + pCount)).equals(".")) pCount++;
             else l++;
         }
