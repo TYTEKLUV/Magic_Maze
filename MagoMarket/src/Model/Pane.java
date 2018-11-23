@@ -2,6 +2,7 @@ package Model;
 
 import Controller.GameWindow;
 import javafx.event.EventHandler;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 
 public class Pane implements EventHandler<MouseEvent> {
@@ -119,7 +120,9 @@ public class Pane implements EventHandler<MouseEvent> {
                         gameWindow.getChips().get(i).whereAreUNow(event);
 
                     }
-                    gameWindow.getChips().get(i).isSelected = false;
+                    chip.isSelected = false;
+                    chip.setImage(new Image(chip.url, 45, 45, true, true));
+
 
             }
         }
@@ -128,6 +131,7 @@ public class Pane implements EventHandler<MouseEvent> {
                 Chip chip = gameWindow.getChips().get(i);
                 if((event.getX() > chip.getLayoutX()) && (event.getX() < chip.getLayoutX() + chip.getImage().getWidth()) && (event.getY() > chip.getLayoutY()) && (event.getY() < chip.getLayoutY() + chip.getImage().getHeight())) {
                     chip.isSelected = true;
+                    chip.setImage(new Image(chip.urlSelected, 45, 45, true, true));
                 }
             }
         }

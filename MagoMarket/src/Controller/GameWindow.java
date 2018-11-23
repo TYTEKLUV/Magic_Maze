@@ -70,8 +70,8 @@ public class GameWindow {
 
     private void createChip() {
         for (int i = 1; i <= 4; i++) {
-            Chip chip = new Chip(this);
-            chip.setImage(new Image("res/pic/mag" + i + ".png", 45, 45, true, true));
+            Chip chip = new Chip("res/pic/mag" + i + ".png","res/pic/mag"+ i + i +".png", this);
+            chip.setImage(new Image(chip.url, 45, 45, true, true));
             chips.add(chip);
         }
         double step = cards.get(0).getImage().getWidth() / 4;

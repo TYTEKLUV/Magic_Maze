@@ -11,9 +11,13 @@ public class Chip extends ImageView {
     public boolean  isOnExit   = false;
     public  boolean  isOnWeapon = false;
     GameWindow gameWindow;
+    public String urlSelected;
+    public String url;
 
-    public Chip(GameWindow gameWindow) {
+    public Chip(String url, String urlSelected, GameWindow gameWindow) {
        this.gameWindow = gameWindow;
+       this.url = url;
+       this.urlSelected = urlSelected;
     }
 
     public void whereAreUNow (MouseEvent event) {
