@@ -5,12 +5,12 @@ import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 
-public class Pane implements EventHandler<MouseEvent> {
+public class PaneHandler implements EventHandler<MouseEvent> {
 
     private GameWindow gameWindow;
     private Game game = new Game();
 
-    public Pane(GameWindow gameWindow) {
+    public PaneHandler(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
     }
     @Override

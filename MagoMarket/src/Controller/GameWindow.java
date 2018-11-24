@@ -2,12 +2,22 @@ package Controller;
 
 import Model.Card;
 import Model.Chip;
-import Model.Pane;
+import Model.PaneHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -17,10 +27,11 @@ import java.util.Scanner;
 public class GameWindow {
 
     @FXML
-    AnchorPane pane;
+    AnchorPane root;
     @FXML
     Button newCard;
 
+    private Pane pane;
     private ArrayList<Card> cards = new ArrayList<>();
     private ArrayList<Chip> chips = new ArrayList<>();
     private ArrayList<Integer> loupes = new ArrayList<>();
@@ -30,11 +41,17 @@ public class GameWindow {
 
     @FXML
     void initialize() throws FileNotFoundException {
+        Scale scale = new Scale(root, 1373, 724);
+        root.getChildren().add(scale);
+        scale.toBack();
+
+        pane = scale.getScalePane();
+
         createCards(1);
         createChip();
         create();
-        pane.addEventFilter(MouseEvent.MOUSE_CLICKED, new Pane(this));
-        pane.addEventFilter(MouseEvent.MOUSE_MOVED, new Pane(this));
+        pane.addEventFilter(MouseEvent.MOUSE_CLICKED, new PaneHandler(this));
+        pane.addEventFilter(MouseEvent.MOUSE_MOVED, new PaneHandler(this));
         newCard.setOnMouseClicked(this::addNewCard);
     }
 
@@ -97,8 +114,8 @@ public class GameWindow {
             int bridges = input.nextInt();
             Card card = new Card(mas, "res/pic/cards/" + String.valueOf(i) + ".png", bridges);
             card.setImage(new Image(card.getUrl(), 300, 300, true, false));
-            card.setLayoutX(pane.getPrefWidth() / 2 - 150);
-            card.setLayoutY(pane.getPrefHeight() / 2 - 150);
+            card.setLayoutX(((Scale) pane.getParent()).WIDTH/2f - 150);
+            card.setLayoutY(((Scale) pane.getParent()).HEIGHT/2f - 150);
             cards.add(card);
         }
     }
@@ -151,7 +168,7 @@ public class GameWindow {
         return moveCardId;
     }
 
-    public AnchorPane getPane() {
+    public Pane getPane() {
         return pane;
     }
 
@@ -161,5 +178,91 @@ public class GameWindow {
 
     public void setClosestLoupeId(int closestLoupeId) {
         this.closestLoupeId = closestLoupeId;
+    }
+
+    public static Region createContent() {
+        double width = 1000;
+        double height = 1000;
+
+        Canvas canvas = new Canvas(width, height);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+
+        gc.setFill(Color.LIGHTGREY);
+        gc.fillRect(0, 0, width, height);
+
+        gc.setStroke(Color.BLUE);
+        gc.beginPath();
+
+        for (int i = 50; i < width; i += 50) {
+            gc.moveTo(i, 0);
+            gc.lineTo(i, height);
+        }
+
+        for (int i = 50; i < height; i += 50) {
+            gc.moveTo(0, i);
+            gc.lineTo(width, i);
+        }
+        gc.stroke();
+
+        javafx.scene.layout.Pane content = new javafx.scene.layout.Pane(
+                new Circle(50, 50, 20),
+                new Circle(120, 90, 20, Color.RED),
+                new Circle(200, 70, 20, Color.GREEN)
+        );
+
+        StackPane result = new StackPane(canvas, content);
+        result.setAlignment(Pos.TOP_LEFT);
+
+        class DragData {
+            double startX;
+            double startY;
+            double startLayoutX;
+            double startLayoutY;
+            Node dragTarget;
+        }
+
+        DragData dragData = new DragData();
+
+        content.setOnMousePressed(evt -> {
+            if (evt.getTarget() != content) {
+                // initiate drag gesture, if a child of content receives the
+                // event to prevent ScrollPane from panning.
+                evt.consume();
+                evt.setDragDetect(true);
+
+            }
+        });
+
+        content.setOnDragDetected(evt -> {
+            Node n = (Node) evt.getTarget();
+            if (n != content) {
+                // set start paremeters
+                while (n.getParent() != content) {
+                    n = n.getParent();
+                }
+                dragData.startX = evt.getX();
+                dragData.startY = evt.getY();
+                dragData.startLayoutX = n.getLayoutX();
+                dragData.startLayoutY = n.getLayoutY();
+                dragData.dragTarget = n;
+                n.startFullDrag();
+                evt.consume();
+            }
+        });
+
+        // stop dragging when mouse is released
+        content.setOnMouseReleased(evt -> dragData.dragTarget = null);
+
+        content.setOnMouseDragged(evt -> {
+            if (dragData.dragTarget != null) {
+                // move dragged node
+                dragData.dragTarget.setLayoutX(evt.getX() + dragData.startLayoutX - dragData.startX);
+                dragData.dragTarget.setLayoutY(evt.getY() + dragData.startLayoutY - dragData.startY);
+                Point2D p = new Point2D(evt.getX(), evt.getY());
+                evt.consume();
+            }
+        });
+
+        return result;
     }
 }

@@ -66,7 +66,7 @@ class Game {
         double x = 0, y = 0;
         gameWindow.setClosestLoupeId(-1);
         findClosestLoupe(event, gameWindow);
-        String pos = String.valueOf((int)gameWindow.getChips().get(     gameWindow.getClosestLoupeId()).getPosition().x) + String.valueOf((int)gameWindow.getChips().get(               gameWindow.getClosestLoupeId()).getPosition().y);
+        String pos = String.valueOf((int)gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getPosition().x) + String.valueOf((int)gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getPosition().y);
         switch (pos) {
             case "31":
                 x = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getLayoutX() + gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getImage().getWidth()/4;
