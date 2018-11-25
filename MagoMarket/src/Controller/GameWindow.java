@@ -2,7 +2,7 @@ package Controller;
 
 import Model.Card;
 import Model.Chip;
-import Model.Pane;
+import Model.PaneHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -17,10 +17,11 @@ import java.util.Scanner;
 public class GameWindow {
 
     @FXML
-    AnchorPane pane;
+    AnchorPane root;
     @FXML
     Button newCard;
 
+    private Pane pane;
     public int cardsCount = 6;
     private ArrayList<Card> cards = new ArrayList<>();
     private ArrayList<Chip> chips = new ArrayList<>();
@@ -31,11 +32,17 @@ public class GameWindow {
 
     @FXML
     void initialize() throws FileNotFoundException {
+        Scale scale = new Scale(root, 1373, 724);
+        root.getChildren().add(scale);
+        scale.toBack();
+
+        pane = scale.getScalePane();
+
         createCards(1);
         createChip();
         create();
-        pane.addEventFilter(MouseEvent.MOUSE_CLICKED, new Pane(this));
-        pane.addEventFilter(MouseEvent.MOUSE_MOVED, new Pane(this));
+        pane.addEventFilter(MouseEvent.MOUSE_CLICKED, new PaneHandler(this));
+        pane.addEventFilter(MouseEvent.MOUSE_MOVED, new PaneHandler(this));
         newCard.setOnMouseClicked(this::addNewCard);
     }
 
@@ -98,8 +105,8 @@ public class GameWindow {
             int bridges = input.nextInt();
             Card card = new Card(mas, "res/pic/cards/" + String.valueOf(i) + ".png", bridges);
             card.setImage(new Image(card.getUrl(), 300, 300, true, false));
-            card.setLayoutX(pane.getPrefWidth() / 2 - 150);
-            card.setLayoutY(pane.getPrefHeight() / 2 - 150);
+            card.setLayoutX(((Scale) pane.getParent()).WIDTH/2f - 150);
+            card.setLayoutY(((Scale) pane.getParent()).HEIGHT/2f - 150);
             cards.add(card);
         }
     }
@@ -152,7 +159,7 @@ public class GameWindow {
         return moveCardId;
     }
 
-    public AnchorPane getPane() {
+    public Pane getPane() {
         return pane;
     }
 
