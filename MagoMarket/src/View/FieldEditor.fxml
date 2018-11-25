@@ -1,21 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Rectangle2D?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 
-<AnchorPane fx:id="root" onMouseClicked="#click" prefHeight="719.0" prefWidth="1373.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.GameWindow">
+<AnchorPane fx:id="root" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#click" prefHeight="720.0" prefWidth="1280.0" snapToPixel="false" stylesheets="@../Styles/FieldEditor.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.GameWindow">
    <children>
-      <ImageView fitHeight="724.0" fitWidth="1449.0" pickOnBounds="true" preserveRatio="true" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <image>
-            <Image url="@../res/pic/window/gameFon.png" />
-         </image>
-         <viewport>
-            <Rectangle2D />
-         </viewport>
-      </ImageView>
-      <Button id="newCard" fx:id="newCard" layoutX="1141.0" layoutY="52.0" mnemonicParsing="false" stylesheets="@../Styles/FieldEditor.css" text="Новая карта" />
+      <Pane fx:id="newCard" layoutX="1192.0" layoutY="449.0" prefHeight="80.0" prefWidth="80.0" styleClass="btn1" AnchorPane.rightAnchor="8.0">
+         <children>
+            <ImageView fitHeight="80.0" fitWidth="80.0" pickOnBounds="true">
+               <image>
+                  <Image url="@../res/pic/window/2.png" />
+               </image>
+            </ImageView>
+         </children>
+      </Pane>
+      <Pane layoutX="1189.0" layoutY="192.0" prefHeight="248.0" prefWidth="80.0" styleClass="btn4" AnchorPane.rightAnchor="11.0">
+         <children>
+            <ImageView fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../res/pic/window/1.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="80.0" fitWidth="80.0" layoutY="57.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
+               <image>
+                  <Image url="@../res/pic/window/1.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="80.0" fitWidth="80.0" layoutY="115.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../res/pic/window/2.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="80.0" fitWidth="80.0" layoutX="1.0" layoutY="172.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../res/pic/window/4.png" />
+               </image>
+            </ImageView>
+         </children>
+      </Pane>
    </children>
 </AnchorPane>

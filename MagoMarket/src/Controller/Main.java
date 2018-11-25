@@ -12,13 +12,12 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("../View/FieldEditor.fxml"));
-        //primaryStage.initStyle(StageStyle.UNDECORATED);
-        Scene scene = new Scene(root, Color.TRANSPARENT);
-        primaryStage.setMinWidth(scene.getWidth());
-        primaryStage.setMinHeight(scene.getHeight());
+        //primaryStage.initStyle(StageStyle.TRANSPARENT);
+        Scene scene = new Scene(root, 1280, 720);
         primaryStage.setScene(scene);
         primaryStage.setResizable(true);
-        //primaryStage.setMinWidth(878);
+        primaryStage.setMinWidth(1280);
+        primaryStage.setMinHeight(720);
         primaryStage.show();
     }
 }

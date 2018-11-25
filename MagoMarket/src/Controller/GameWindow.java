@@ -1,8 +1,6 @@
 package Controller;
 
-import Model.Card;
-import Model.Chip;
-import Model.PaneHandler;
+import Model.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -18,14 +16,15 @@ import java.util.Scanner;
 public class GameWindow {
 
     @FXML
-    AnchorPane root;
+    public AnchorPane root;
     @FXML
-    Button newCard;
+    public Pane newCard;
 
     private Pane pane;
-    public int cardsCount = 6;
-    private ArrayList<Card> cards = new ArrayList<>();
-    private ArrayList<Chip> chips = new ArrayList<>();
+    private int cardsCount = 6;
+    private ArrayList <Card> cards = new ArrayList<>();
+    private ArrayList <Chip> chips = new ArrayList<>();
+    private ArrayList <Player> players = new ArrayList<>();
     private ArrayList<Integer> loupes = new ArrayList<>();
     private boolean isMoveCard = false;
     private int moveCardId;
@@ -33,18 +32,45 @@ public class GameWindow {
 
     @FXML
     void initialize() throws FileNotFoundException {
-        Scale scale = new Scale(root, 1373, 724);
+        root.setMinSize(1280, 720);
+        Scale scale = new Scale(root, 1280, 720);
         root.getChildren().add(scale);
         scale.toBack();
 
         pane = scale.getScalePane();
 
+        createPlayers();
         createCards(1);
         createChip();
         create();
         pane.addEventFilter(MouseEvent.MOUSE_CLICKED, new PaneHandler(this));
         pane.addEventFilter(MouseEvent.MOUSE_MOVED, new PaneHandler(this));
         newCard.setOnMouseClicked(this::addNewCard);
+    }
+
+    private void createPlayers () {
+        int count = 4;
+        players.clear();
+        for (int i = 0; i < count; i ++) {
+            Factory factory = new Factory();
+            players = factory.chooseActions(count);
+        }
+
+    }
+
+
+
+    public int getNotUsedCard () {
+        int i = 0;
+        int j = 0;
+        while ((cards.get(i).isUsed()) && (j != cards.size())) {
+            if ((i + 1) != cards.size())
+                i++;
+            j++;
+        }
+        //i = j == cards.size() ? -1 : i;
+        if (j == cards.size()) { i = -1; }
+        return i;
     }
 
     private void addNewCard(MouseEvent event) {
@@ -57,21 +83,15 @@ public class GameWindow {
            }
         }
         if (n > 0) {
-            isMoveCard = true;
-            int i = 0;
-            int j = 0;
-            while ((cards.get(i).isUsed()) && (j != cards.size())) {
-                if ((i + 1) != cards.size())
-                    i++;
-                j++;
-            }
-            if (j != cards.size()) {
+            int i = getNotUsedCard();
+            if (i != -1) {
                 moveCardId = i;
+                isMoveCard = true;
                 cards.get(i).setUsed(true);
                 getCards().get(getMoveCard()).setLayoutX(event.getSceneX() - getCards().get(0).getImage().getWidth() / 2);
                 getCards().get(getMoveCard()).setLayoutY(event.getSceneY() - getCards().get(0).getImage().getHeight() / 2);
                 pane.getChildren().add(cards.get(i));
-
+                newCard.setDisable(true);
             }
         }
 

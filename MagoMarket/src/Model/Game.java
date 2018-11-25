@@ -24,40 +24,36 @@ class Game {
             if ((end.x < start.x)||(end.y < start.y)){
                 minPoint = end;
             }
-            if ((dx == 0)&&(dy == 1)&&(chip.getCardId() == chip.getCardId(event))) {
-                if (gameWindow.getCards().get(chip.getCardId(event)).getMap()[(int)(minPoint.y - 1) * 2 + 1][(int)(minPoint.x  - 1) * 2] != 0) {
-                    f = true;
-                }
-            }
-            else
-            if ((dx == 1)&&(dy == 0)&&(chip.getCardId() == chip.getCardId(event))) {
-                if (gameWindow.getCards().get(chip.getCardId(event)).getMap()[(int)(minPoint.y - 1) * 2][(int)(minPoint.x  - 1) * 2 + 1] != 0) {
-                    f = true;
-                }
-            }
-            else {
-                int ind = Integer.parseInt("3" + String.valueOf(gameWindow.getChips().indexOf(chip) + 1));
-                if (gameWindow.getCards().get(chip.getCardId(event)).getMap()[(int)(end.y - 1) * 2][(int)(end.x - 1) * 2] == ind) {
-                    f = true;
-                }
-                else
-                if ((gameWindow.getCards().get(chip.getCardId(event)).getMap()[(int)(end.y - 1) * 2][(int)(end.x - 1) * 2] == 20)) {
-                    int n = Integer.parseInt("20" + String.valueOf(chip.getCardId(event)));
-                    System.out.println("n " + n);
-                    if (gameWindow.getCards().get(chip.getCardId()).getMap()[(int)(start.y - 1) * 2][(int)(start.x - 1) * 2] == n) {
+            if ((minPoint.x != -1)&&(minPoint.y != -1)) {
+                if ((dx == 0) && (dy == 1) && (chip.getCardId() == chip.getCardId(event))) {
+                    if (gameWindow.getCards().get(chip.getCardId(event)).getMap()[(int) (minPoint.y - 1) * 2 + 1][(int) (minPoint.x - 1) * 2] != 0) {
                         f = true;
                     }
-                }
-                else {
-                    int n = Integer.parseInt("20" + String.valueOf(chip.getCardId()));
-                    if (gameWindow.getCards().get(chip.getCardId(event)).getMap()[(int) (end.y - 1) * 2][(int) (end.x - 1) * 2] == n) {
-                        if (gameWindow.getCards().get(chip.getCardId()).getMap()[(int)(start.y - 1) * 2][(int)(start.x - 1) * 2] == 20) {
+                } else if ((dx == 1) && (dy == 0) && (chip.getCardId() == chip.getCardId(event))) {
+                    if (gameWindow.getCards().get(chip.getCardId(event)).getMap()[(int) (minPoint.y - 1) * 2][(int) (minPoint.x - 1) * 2 + 1] != 0) {
+                        f = true;
+                    }
+                } else {
+                    int ind = Integer.parseInt("3" + String.valueOf(gameWindow.getChips().indexOf(chip) + 1));
+                    if (gameWindow.getCards().get(chip.getCardId(event)).getMap()[(int) (end.y - 1) * 2][(int) (end.x - 1) * 2] == ind) {
+                        f = true;
+                    } else if ((gameWindow.getCards().get(chip.getCardId(event)).getMap()[(int) (end.y - 1) * 2][(int) (end.x - 1) * 2] == 20)) {
+                        int n = Integer.parseInt("20" + String.valueOf(chip.getCardId(event)));
+                        System.out.println("n " + n);
+                        if (gameWindow.getCards().get(chip.getCardId()).getMap()[(int) (start.y - 1) * 2][(int) (start.x - 1) * 2] == n) {
                             f = true;
                         }
+                    } else {
+                        int n = Integer.parseInt("20" + String.valueOf(chip.getCardId()));
+                        if (gameWindow.getCards().get(chip.getCardId(event)).getMap()[(int) (end.y - 1) * 2][(int) (end.x - 1) * 2] == n) {
+                            if (gameWindow.getCards().get(chip.getCardId()).getMap()[(int) (start.y - 1) * 2][(int) (start.x - 1) * 2] == 20) {
+                                f = true;
+                            }
+                        }
                     }
+                    System.out.println();
+                    System.out.println("place" + gameWindow.getCards().get(chip.getCardId(event)).getMap()[(int) (end.y - 1) * 2][(int) (end.x - 1) * 2]);
                 }
-                System.out.println();
-                System.out.println("place" + gameWindow.getCards().get(chip.getCardId(event)).getMap()[(int)(end.y - 1) * 2][(int)(end.x - 1) * 2]);
             }
         }
         return f;

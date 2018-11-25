@@ -23,7 +23,10 @@ public class Scale extends AnchorPane {
         
         scalePane.setPrefWidth(WIDTH);
         scalePane.setPrefHeight(HEIGHT);
-
+        setTopAnchor(this, (double)0);
+        setBottomAnchor(this, (double)0);
+        setLeftAnchor(this, (double)0);
+        setRightAnchor(this, (double)0);
         getChildren().add(scalePane);
 
         setStyle("-fx-background-color: #9a977c"); //Синий #4b6d90, Фиолетовый #413843
@@ -36,16 +39,16 @@ public class Scale extends AnchorPane {
         root.setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case W:
-                    scalePane.setLayoutY(scalePane.getLayoutY() - 10);
-                    break;
-                case S:
                     scalePane.setLayoutY(scalePane.getLayoutY() + 10);
                     break;
+                case S:
+                    scalePane.setLayoutY(scalePane.getLayoutY() - 10);
+                    break;
                 case A:
-                    scalePane.setLayoutX(scalePane.getLayoutX() - 10);
+                    scalePane.setLayoutX(scalePane.getLayoutX() + 10);
                     break;
                 case D:
-                    scalePane.setLayoutX(scalePane.getLayoutX() + 10);
+                    scalePane.setLayoutX(scalePane.getLayoutX() - 10);
                     break;
             }
         });

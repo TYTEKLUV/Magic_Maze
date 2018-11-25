@@ -39,6 +39,10 @@ public class PaneHandler implements EventHandler<MouseEvent> {
         int n = Integer.parseInt("20" + String.valueOf(gameWindow.getMoveCard()));
         gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getMap()[((int)point.y - 1)*2][((int)point.x - 1)*2] = n;
         gameWindow.setMoveCard(false);
+        if (gameWindow.getNotUsedCard() != -1) {
+            gameWindow.newCard.setDisable(false);
+            gameWindow.root.requestFocus();
+        }
     }
 
     private void mouseReleased (MouseEvent event) {
@@ -47,9 +51,10 @@ public class PaneHandler implements EventHandler<MouseEvent> {
             Chip chip = gameWindow.getChips().get(i);
             if(chip.isSelected){
                 f = true;
+                Point pointCard = chip.getPosition(event, true);
                 Point point = chip.getPosition(event, false);
                 if (game.isChipCanBeMoved(event, chip.getPosition(), chip.getPosition(event, true), chip, gameWindow))
-                    if ((point.y >= 0) && (point.x >= 0)) {
+                    if ((pointCard.y != -1) && (pointCard.x != -1)) {
                         gameWindow.getChips().get(i).setLayoutX(point.x);
                         gameWindow.getChips().get(i).setLayoutY(point.y);
                         gameWindow.getChips().get(i).toFront();
