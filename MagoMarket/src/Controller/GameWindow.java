@@ -2,7 +2,6 @@ package Controller;
 
 import Model.*;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -18,13 +17,14 @@ public class GameWindow {
     @FXML
     public AnchorPane root;
     @FXML
-    public Pane newCard;
+    public Pane newCard, pane1;
+
 
     private Pane pane;
     private int cardsCount = 6;
     private ArrayList <Card> cards = new ArrayList<>();
     private ArrayList <Chip> chips = new ArrayList<>();
-    private ArrayList <Player> players = new ArrayList<>();
+    private ArrayList <Role> roles = new ArrayList<>();
     private ArrayList<Integer> loupes = new ArrayList<>();
     private boolean isMoveCard = false;
     private int moveCardId;
@@ -36,9 +36,8 @@ public class GameWindow {
         Scale scale = new Scale(root, 1280, 720);
         root.getChildren().add(scale);
         scale.toBack();
-
+        pane1.toBack();
         pane = scale.getScalePane();
-
         createPlayers();
         createCards(1);
         createChip();
@@ -46,20 +45,23 @@ public class GameWindow {
         pane.addEventFilter(MouseEvent.MOUSE_CLICKED, new PaneHandler(this));
         pane.addEventFilter(MouseEvent.MOUSE_MOVED, new PaneHandler(this));
         newCard.setOnMouseClicked(this::addNewCard);
+
     }
 
     private void createPlayers () {
         int count = 4;
-        players.clear();
-        for (int i = 0; i < count; i ++) {
-            Factory factory = new Factory();
-            players = factory.chooseActions(count);
+        roles.clear();
+        Factory factory = new Factory();
+        roles = factory.chooseActions(count);
+        for(int i = 0; i < roles.size(); i ++){
+            pane.getChildren().add(roles.get(i).getPane());
         }
-
     }
 
+    private void addActionsCards () {
+       // pane.getChildren().add(new Pane);
 
-
+    }
     public int getNotUsedCard () {
         int i = 0;
         int j = 0;
@@ -68,7 +70,6 @@ public class GameWindow {
                 i++;
             j++;
         }
-        //i = j == cards.size() ? -1 : i;
         if (j == cards.size()) { i = -1; }
         return i;
     }
@@ -88,6 +89,7 @@ public class GameWindow {
                 moveCardId = i;
                 isMoveCard = true;
                 cards.get(i).setUsed(true);
+                cards.get(i).setVisible(false);
                 getCards().get(getMoveCard()).setLayoutX(event.getSceneX() - getCards().get(0).getImage().getWidth() / 2);
                 getCards().get(getMoveCard()).setLayoutY(event.getSceneY() - getCards().get(0).getImage().getHeight() / 2);
                 pane.getChildren().add(cards.get(i));

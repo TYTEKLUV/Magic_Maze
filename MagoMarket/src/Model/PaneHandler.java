@@ -2,7 +2,6 @@ package Model;
 
 import Controller.GameWindow;
 import javafx.event.EventHandler;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 
 public class PaneHandler implements EventHandler<MouseEvent> {
@@ -23,58 +22,24 @@ public class PaneHandler implements EventHandler<MouseEvent> {
                 else mouseReleased(event);
                 break;
             case "MOUSE_MOVED":
-                if (gameWindow.isMoveCard())
-                   mouseMoved(event);
+                if (gameWindow.isMoveCard()) {
+                    mouseMoved(event);
+                }
                 break;
         }
     }
 
-    private void  mouseMoved(MouseEvent event) {
-        game.mouseMoved(event, gameWindow);
-    }
-
-    private void  moveReleased () {
-        Point point = gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getPosition();
-        gameWindow.getChips().get(gameWindow.getClosestLoupeId()).isOnLoupe = false;
-        int n = Integer.parseInt("20" + String.valueOf(gameWindow.getMoveCard()));
-        gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getMap()[((int)point.y - 1)*2][((int)point.x - 1)*2] = n;
-        gameWindow.setMoveCard(false);
-        if (gameWindow.getNotUsedCard() != -1) {
-            gameWindow.newCard.setDisable(false);
-            gameWindow.root.requestFocus();
-        }
+    private void moveReleased () {
+        game.moveReleased(gameWindow);
     }
 
     private void mouseReleased (MouseEvent event) {
-        boolean f = false;
-        for (int i = 0; i < 4; i ++) {
-            Chip chip = gameWindow.getChips().get(i);
-            if(chip.isSelected){
-                f = true;
-                Point pointCard = chip.getPosition(event, true);
-                Point point = chip.getPosition(event, false);
-                if (game.isChipCanBeMoved(event, chip.getPosition(), chip.getPosition(event, true), chip, gameWindow))
-                    if ((pointCard.y != -1) && (pointCard.x != -1)) {
-                        gameWindow.getChips().get(i).setLayoutX(point.x);
-                        gameWindow.getChips().get(i).setLayoutY(point.y);
-                        gameWindow.getChips().get(i).toFront();
-                        gameWindow.getChips().get(i).whereAreUNow(event);
-                    }
-                    chip.isSelected = false;
-                    chip.setImage(new Image(chip.url, 45, 45, true, true));
-            }
-        }
-        if (!f) {
-            for (int i = 0; i < 4; i ++) {
-                Chip chip = gameWindow.getChips().get(i);
-                if((event.getX() > chip.getLayoutX()) && (event.getX() < chip.getLayoutX() + chip.getImage().getWidth()) && (event.getY() > chip.getLayoutY()) && (event.getY() < chip.getLayoutY() + chip.getImage().getHeight())) {
-                    chip.isSelected = true;
-                    chip.setImage(new Image(chip.urlSelected, 45, 45, true, true));
-                }
-            }
-        }
+        game.mouseReleased(event, gameWindow);
     }
 
+    private void mouseMoved (MouseEvent event) {
+        game.mouseMoved(event, gameWindow);
+    }
 
 
 }

@@ -1,6 +1,7 @@
 package Model;
 
 import Controller.GameWindow;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
@@ -19,8 +20,17 @@ public class Chip extends ImageView {
        this.url = url;
        this.urlSelected = urlSelected;
     }
+    public void setClicked () {
+        isSelected = true;
+        setImage(new Image(urlSelected, 45, 45, true, true));
+    }
 
-    public void whereAreUNow (MouseEvent event) {
+    public void setDefault() {
+        isSelected = false;
+        setImage(new Image(url, 45, 45, true, true));
+    }
+    
+    void whereAreUNow(MouseEvent event) {
         isOnExit   = false;
         isOnWeapon = false;
         isOnLoupe = false;
@@ -42,7 +52,7 @@ public class Chip extends ImageView {
         }
     }
 
-    public int getCardId(MouseEvent event) {
+    int getCardId(MouseEvent event) {
         int n = -1;
         for(int i = 0; i < gameWindow.getCards().size(); i ++) {
             Card card = gameWindow.getCards().get(i);
@@ -55,7 +65,7 @@ public class Chip extends ImageView {
         return n;
     }
 
-    public int getCardId() {
+    int getCardId() {
         int n = -1;
         for(int i = 0; i < gameWindow.getCards().size(); i ++) {
             Card card = gameWindow.getCards().get(i);
