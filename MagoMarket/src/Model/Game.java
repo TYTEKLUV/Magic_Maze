@@ -105,6 +105,7 @@ class Game {
         }
         // ---------------------- ТУТ МОСТЫ
         int b = card.bridges;
+        System.out.println("Проверка начало "+b);
         if (card.bridges!=0) {
             int bridge = b;
             b = 0;
@@ -112,11 +113,14 @@ class Game {
                 int a = bridge%10000;
                 int a1 = a%100;
                 a = a/100;
-                a = 100000 + 1000*(a%10) + 100*(3-a/10) + 10*(a1%10) + (3-a/10);
+                System.out.println("Проверка a "+a+" Проверка a1 "+ a1);
+                a = 10000 + 1000*(a%10) + 100*(3-a/10) + 10*(a1%10) + (3-a1/10);
+                System.out.println("Проверка a "+a);
                 b = b*100000+a;
                 bridge = bridge/100000;
+                System.out.println("Проверка цикл "+bridge);
             }
-            System.out.println("Проверка "+b);
+            System.out.println("Проверка конец "+b);
         }
         card.bridges = b;
         // --------------------- ТУТ МОСТЫ
