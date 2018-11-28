@@ -103,6 +103,23 @@ class Game {
                 map[i][j] = card.getMap()[6-j][i];
             }
         }
+        // ---------------------- ТУТ МОСТЫ
+        int b = card.bridges;
+        if (card.bridges!=0) {
+            int bridge = b;
+            b = 0;
+            while (bridge!=0) {
+                int a = bridge%10000;
+                int a1 = a%100;
+                a = a/100;
+                a = 100000 + 1000*(a%10) + 100*(3-a/10) + 10*(a1%10) + (3-a/10);
+                b = b*100000+a;
+                bridge = bridge/100000;
+            }
+            System.out.println("Проверка "+b);
+        }
+        card.bridges = b;
+        // --------------------- ТУТ МОСТЫ
         card.setMap(map);
         card.setRotate(card.getRotate()+90);
         return card;
