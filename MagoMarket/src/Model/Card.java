@@ -12,6 +12,7 @@ public class Card extends ImageView {
         super();
         this.map = map;
         this.url = url;
+        this.bridges = bridges;
     }
 
     public int[][] getMap() {
