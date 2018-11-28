@@ -3,7 +3,7 @@ package Model;
 import Controller.GameWindow;
 import javafx.scene.input.MouseEvent;
 
-class Game {
+public class Game {
 
     private boolean isFloorIsEmpty (Point point, Chip chip, MouseEvent event, GameWindow gameWindow) {
         boolean f = true;
@@ -58,31 +58,31 @@ class Game {
         }
         return f;
     }
-    void mouseMoved(MouseEvent event, GameWindow gameWindow){
+    public void mouseMoved(MouseEvent event, GameWindow gameWindow){
         if (!gameWindow.getCards().get(gameWindow.getMoveCard()).isVisible()) { gameWindow.getCards().get(gameWindow.getMoveCard()).setVisible(true); }
         double x = 0, y = 0;
-        gameWindow.setClosestLoupeId(-1);
+        gameWindow.setClosestFindGlassId(-1);
         findClosestLoupe(event, gameWindow);
-        String pos = String.valueOf((int)gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getPosition().x) + String.valueOf((int)gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getPosition().y);
+        String pos = String.valueOf((int)gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getPosition().x) + String.valueOf((int)gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getPosition().y);
         switch (pos) {
             case "31":
-                x = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getLayoutX() + gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getImage().getWidth()/4;
-                y = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getLayoutY() - gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getImage().getWidth();
+                x = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getLayoutX() + gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getImage().getWidth()/4;
+                y = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getLayoutY() - gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getImage().getWidth();
                 rotateCard(gameWindow, 6, 2);
                 break;
             case "43":
-                x = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getLayoutX() + gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getImage().getWidth();
-                y = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getLayoutY() + gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getImage().getWidth()/4;
+                x = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getLayoutX() + gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getImage().getWidth();
+                y = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getLayoutY() + gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getImage().getWidth()/4;
                 rotateCard(gameWindow, 2, 0);
                 break;
             case "24":
-                x = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getLayoutX() - gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getImage().getWidth()/4;
-                y = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getLayoutY() + gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getImage().getWidth();
+                x = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getLayoutX() - gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getImage().getWidth()/4;
+                y = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getLayoutY() + gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getImage().getWidth();
                 rotateCard(gameWindow, 0, 4);
                 break;
             case "12":
-                x = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getLayoutX() - gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getImage().getWidth();
-                y = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getLayoutY() - gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getImage().getWidth()/4;
+                x = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getLayoutX() - gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getImage().getWidth();
+                y = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getLayoutY() - gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getImage().getWidth()/4;
                 rotateCard(gameWindow, 4, 6);
                 break;
         }
@@ -91,10 +91,10 @@ class Game {
     }
 
     public void  moveReleased (GameWindow gameWindow) {
-        Point point = gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getPosition();
-        gameWindow.getChips().get(gameWindow.getClosestLoupeId()).isOnLoupe = false;
+        Point point = gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getPosition();
+        gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).isOnFindGlass = false;
         int n = Integer.parseInt("20" + String.valueOf(gameWindow.getMoveCard()));
-        gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestLoupeId()).getCardId()).getMap()[((int)point.y - 1)*2][((int)point.x - 1)*2] = n;
+        gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getMap()[((int)point.y - 1)*2][((int)point.x - 1)*2] = n;
         gameWindow.setMoveCard(false);
         if (gameWindow.getNotUsedCard() != -1) {
             gameWindow.newCard.setDisable(false);
@@ -167,14 +167,14 @@ class Game {
     private  void findClosestLoupe (MouseEvent event, GameWindow gameWindow) {
         double min = gameWindow.getPane().getPrefWidth();
         double x, y;
-        for (int i = 0; i < gameWindow.getLoupes().size(); i ++) {
-            int chipId = gameWindow.getLoupes().get(i);
+        for (int i = 0; i < gameWindow.getFindGlasses().size(); i ++) {
+            int chipId = gameWindow.getFindGlasses().get(i);
             x = gameWindow.getChips().get(chipId).getLayoutX();
             y = gameWindow.getChips().get(chipId).getLayoutY();
             double length = Math.sqrt(Math.pow((event.getX() - x), 2) + Math.pow((event.getY() - y), 2));
             if (length < min) {
                 min = length;
-                gameWindow.setClosestLoupeId(chipId);
+                gameWindow.setClosestFindGlassId(chipId);
             }
         }
     }

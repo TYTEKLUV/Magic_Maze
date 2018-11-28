@@ -1,6 +1,7 @@
-package Model;
+package Controller;
 
 import Controller.GameWindow;
+import Model.Game;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 
@@ -9,7 +10,7 @@ public class PaneHandler implements EventHandler<MouseEvent> {
     private GameWindow gameWindow;
     private Game game = new Game();
 
-    public PaneHandler(GameWindow gameWindow) {
+    PaneHandler(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
     }
     @Override

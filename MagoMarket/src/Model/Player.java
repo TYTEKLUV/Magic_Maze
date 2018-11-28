@@ -6,6 +6,9 @@ public class Player {
     private boolean leader = false;
     private int role = -1;
 
+    public Player (int role) {
+        this.role = role;
+    }
     public void set(String nickname, boolean ready, boolean leader, int role) {
         this.nickname = nickname;
         this.ready = ready;

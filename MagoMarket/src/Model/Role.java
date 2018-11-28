@@ -3,6 +3,7 @@ package Model;
 import javafx.scene.layout.Pane;
 
 public class Role {
+
     private int countActions;
     private int arrow;
     private boolean glass;
@@ -11,6 +12,7 @@ public class Role {
     private String nickname;
     private boolean ready;
     private Pane pane;
+
     public Role(int countActions, int arrow, boolean glass, boolean portal, boolean bridge, Pane pane) {
         this.countActions = countActions;
         this.arrow = arrow;

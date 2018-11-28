@@ -9,26 +9,28 @@ import javafx.scene.layout.Pane;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.sql.Array;
+import java.util.*;
 
 public class GameWindow {
 
     @FXML
     public AnchorPane root;
     @FXML
-    public Pane newCard, pane1;
+    public Pane newCard;
 
 
     private Pane pane;
     private int cardsCount = 6;
-    private ArrayList <Card> cards = new ArrayList<>();
-    private ArrayList <Chip> chips = new ArrayList<>();
-    private ArrayList <Role> roles = new ArrayList<>();
-    private ArrayList<Integer> loupes = new ArrayList<>();
+    private ArrayList<Card> cards = new ArrayList<>();
+    private ArrayList<Chip> chips = new ArrayList<>();
+    private ArrayList<Role> roles = new ArrayList<>();
+    private PlayerList players = new PlayerList();
+    private ArrayList<Integer> findGlasses = new ArrayList<>();
     private boolean isMoveCard = false;
     private int moveCardId;
-    private int closestLoupeId;
+    private int closestFindGlassId;
+    private int currentPlayer = -1;
 
     @FXML
     void initialize() throws FileNotFoundException {
@@ -36,9 +38,8 @@ public class GameWindow {
         Scale scale = new Scale(root, 1280, 720);
         root.getChildren().add(scale);
         scale.toBack();
-        pane1.toBack();
         pane = scale.getScalePane();
-        createPlayers();
+        createRoles();
         createCards(1);
         createChip();
         create();
@@ -48,21 +49,30 @@ public class GameWindow {
 
     }
 
-    private void createPlayers () {
-        int count = 4;
-        roles.clear();
-        Factory factory = new Factory();
-        roles = factory.chooseActions(count);
-        for(int i = 0; i < roles.size(); i ++){
-            pane.getChildren().add(roles.get(i).getPane());
+    private void createRoles() {
+        int count = 3;
+        int h = 10;
+        ArrayList<Integer> list = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            list.add(i);
         }
+        //ArrayList<Integer> list = new ArrayList<>(Arrays.asList(0, 1));
+        Collections.shuffle(list);
+        roles.clear();
+        Factory factory = new Factory(this);
+        for (int i = 0; i < list.size(); i++) {
+            players.add(new Player(list.get(i)));
+        }
+        currentPlayer = 0;
+        roles = factory.chooseActions(count, this);
+        for (int i = 0; i < roles.size(); i++) {
+            root.getChildren().add(roles.get(i).getPane());
+        }
+        root.setRightAnchor(roles.get(players.get(currentPlayer).getRole()).getPane(), (double) h);
+        //newCard.setLayoutY(roles.get(roles.size() - 1).getPane().getLayoutY() + roles.get(roles.size() - 1).getPane().getPrefHeight() + h);
     }
 
-    private void addActionsCards () {
-       // pane.getChildren().add(new Pane);
-
-    }
-    public int getNotUsedCard () {
+    public int getNotUsedCard() {
         int i = 0;
         int j = 0;
         while ((cards.get(i).isUsed()) && (j != cards.size())) {
@@ -70,18 +80,20 @@ public class GameWindow {
                 i++;
             j++;
         }
-        if (j == cards.size()) { i = -1; }
+        if (j == cards.size()) {
+            i = -1;
+        }
         return i;
     }
 
     private void addNewCard(MouseEvent event) {
         int n = 0;
-        loupes.clear();
+        findGlasses.clear();
         for (int i = 0; i < 4; i++) {
-           if (chips.get(i).isOnLoupe) {
-               loupes.add(i);
-               n ++;
-           }
+            if (chips.get(i).isOnFindGlass) {
+                findGlasses.add(i);
+                n++;
+            }
         }
         if (n > 0) {
             int i = getNotUsedCard();
@@ -101,7 +113,7 @@ public class GameWindow {
 
     private void createChip() {
         for (int i = 1; i <= 4; i++) {
-            Chip chip = new Chip("res/pic/mag" + i + ".png","res/pic/mag"+ i + i +".png", this);
+            Chip chip = new Chip("res/pic/mag" + i + ".png", "res/pic/mag" + i + i + ".png", this);
             chip.setImage(new Image(chip.url, 45, 45, true, true));
             chips.add(chip);
         }
@@ -128,8 +140,8 @@ public class GameWindow {
             int bridges = input.nextInt();
             Card card = new Card(mas, "res/pic/cards/" + String.valueOf(i) + ".png", bridges);
             card.setImage(new Image(card.getUrl(), 300, 300, true, false));
-            card.setLayoutX(((Scale) pane.getParent()).WIDTH/2f - 150);
-            card.setLayoutY(((Scale) pane.getParent()).HEIGHT/2f - 150);
+            card.setLayoutX(((Scale) pane.getParent()).WIDTH / 2f - 150);
+            card.setLayoutY(((Scale) pane.getParent()).HEIGHT / 2f - 150);
             cards.add(card);
         }
     }
@@ -158,6 +170,15 @@ public class GameWindow {
 //        stage.show();
     }
 
+
+    public PlayerList getPlayers() {
+        return players;
+    }
+
+    public int getCurrentPlayer() {
+        return currentPlayer;
+    }
+
     public ArrayList<Card> getCards() {
         return cards;
     }
@@ -166,8 +187,8 @@ public class GameWindow {
         return chips;
     }
 
-    public ArrayList<Integer> getLoupes() {
-        return loupes;
+    public ArrayList<Integer> getFindGlasses() {
+        return findGlasses;
     }
 
     public boolean isMoveCard() {
@@ -186,11 +207,11 @@ public class GameWindow {
         return pane;
     }
 
-    public int getClosestLoupeId() {
-        return closestLoupeId;
+    public int getClosestFindGlassId() {
+        return closestFindGlassId;
     }
 
-    public void setClosestLoupeId(int closestLoupeId) {
-        this.closestLoupeId = closestLoupeId;
+    public void setClosestFindGlassId(int closestFindGlassId) {
+        this.closestFindGlassId = closestFindGlassId;
     }
 }

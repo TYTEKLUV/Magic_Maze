@@ -8,7 +8,7 @@ import javafx.scene.input.MouseEvent;
 public class Chip extends ImageView {
 
     boolean isSelected  = false;
-    public boolean isOnLoupe = false;
+    public boolean isOnFindGlass = false;
     public boolean  isOnExit   = false;
     public  boolean  isOnWeapon = false;
     GameWindow gameWindow;
@@ -33,14 +33,14 @@ public class Chip extends ImageView {
     void whereAreUNow(MouseEvent event) {
         isOnExit   = false;
         isOnWeapon = false;
-        isOnLoupe = false;
+        isOnFindGlass = false;
         double x = -1, y = -1;
         Point point = getPosition(event, true);
         x = (point.x - 1) * 2;
         y = (point.y - 1) * 2;
         int z = gameWindow.getCards().get(getCardId(event)).getMap()[(int)y][(int)x];
         if (String.valueOf(z).equals(String.valueOf(2) + String.valueOf(gameWindow.getChips().indexOf(this) + 1))){
-            isOnLoupe   = true;
+            isOnFindGlass = true;
         } else {
             if ((z >= 51)&&(z <= 54)) {
                 isOnWeapon = true;
