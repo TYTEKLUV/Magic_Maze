@@ -27,9 +27,9 @@ public class ClientStarter extends Application {
         System.out.println("Client started");
         System.out.println("--------------");
 
-        commandHandler(new Scanner("nick rar"));
+        commandHandler(new Scanner("nick"));
 
-        commandHandler(new Scanner("connect"));
+        commandHandler(new Scanner("connect 127.0.0.1"));
 
         while (work) {
             commandHandler(console);
@@ -47,7 +47,7 @@ public class ClientStarter extends Application {
         switch (command) {
             case "help":
                 for (String aCommandsList : commandsList) {
-                    System.out.println("OS: " + aCommandsList);
+                    System.out.println("|: " + aCommandsList);
                 }
                 break;
             case "connect":
@@ -63,7 +63,7 @@ public class ClientStarter extends Application {
                 client.turnOff();
                 break;
             case "ip":
-                System.out.println("OS: your ip = " + InetAddress.getLocalHost().getHostAddress());
+                System.out.println("|: your ip = " + InetAddress.getLocalHost().getHostAddress());
                 break;
             case "nick":
                 if (client == null || !client.isAlive()) {
@@ -77,18 +77,24 @@ public class ClientStarter extends Application {
                     System.out.println("disconnect before change nickname");
                 }
                 break;
-            case "a":
-                client.makeAction();
+            case "ready":
+                client.firstCommand();
                 break;
-            case "m":
-                client.makeMove();
+            case "nready":
+                client.secondCommand();
+                break;
+            case "start":
+                client.thirdCommand();
                 break;
             case "exit":
                 work = false;
                 input.close();
                 break;
+            case "status":
+                System.out.println(client.clientsStatus());
+                break;
             default:
-                System.out.println("OS: command not found");
+                System.out.println("|: command not found");
                 break;
         }
     }

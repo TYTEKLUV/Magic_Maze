@@ -22,7 +22,7 @@ public class OmegaServer extends Application {
     public void start(Stage primaryStage) throws IOException {
         Scanner console = new Scanner(System.in);
 
-        server = new Server(serverPort);
+        server = new Server(serverPort, 4);
         server.start();
 
         System.out.println("Server started");
@@ -45,11 +45,11 @@ public class OmegaServer extends Application {
         switch (command) {
             case "help":
                 for (String aCommandsList : commandsList) {
-                    System.out.println("OS: " + aCommandsList);
+                    System.out.println("|: " + aCommandsList);
                 }
                 break;
             case "ip":
-                System.out.println("OS: server ip = " + InetAddress.getLocalHost().getHostAddress());
+                System.out.println("|: server ip = " + InetAddress.getLocalHost().getHostAddress());
                 break;
             case "clients":
                 System.out.println(server.getClients());
@@ -58,7 +58,7 @@ public class OmegaServer extends Application {
                 if (input.hasNext()) {
                     server.sayToAll(input.nextLine().substring(1));
                 } else {
-                    System.out.println("OS: enter message [say <message>]");
+                    System.out.println("|: enter message [say <message>]");
                 }
                 break;
             case "kick":
@@ -70,7 +70,7 @@ public class OmegaServer extends Application {
                         System.out.println(server.kick(next));
                     }
                 } else {
-                    System.out.println("OS: enter client nickname [kick <nickname>]");
+                    System.out.println("|: enter client nickname [kick <nickname>]");
                 }
                 break;
             case "close":
@@ -78,8 +78,21 @@ public class OmegaServer extends Application {
                 server.turnOff();
                 input.close();
                 break;
+            case "status":
+                System.out.println(server.clientsStatus());
+                break;
+            case "roles":
+                switch (input.next()) {
+                    case "random":
+                        server.rolesRandom();
+                        break;
+                    case "change":
+                        server.rolesChange();
+                        break;
+                }
+                break;
             default:
-                System.out.println("OS: command not found");
+                System.out.println("|: command not found");
                 break;
         }
     }
