@@ -15,6 +15,12 @@ public class Card extends ImageView {
         this.bridges = bridges;
     }
 
+    public Point layoutXY(int x, int y) {
+        x = (int)(getLayoutX() + getImage().getWidth()/4*x);
+        y = (int)(getLayoutY() + getImage().getWidth()/4*y);
+        return new Point(x, y);
+    }
+
     public int[][] getMap() {
         return map;
     }

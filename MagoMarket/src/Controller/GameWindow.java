@@ -56,8 +56,8 @@ public class GameWindow {
         for (int i = 0; i < count; i++) {
             list.add(i);
         }
-        //ArrayList<Integer> list = new ArrayList<>(Arrays.asList(0, 1));
         Collections.shuffle(list);
+        list = new ArrayList<>(Arrays.asList(1, 0, 2));
         roles.clear();
         Factory factory = new Factory(this);
         for (int i = 0; i < list.size(); i++) {
