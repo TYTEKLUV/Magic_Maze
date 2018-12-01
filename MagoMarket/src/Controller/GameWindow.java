@@ -12,7 +12,7 @@ import java.io.FileReader;
 import java.sql.Array;
 import java.util.*;
 
-public class GameWindow {
+public class GameWindow extends ControllerFXML {
 
     @FXML
     public AnchorPane root;
@@ -45,7 +45,6 @@ public class GameWindow {
         pane.addEventFilter(MouseEvent.MOUSE_CLICKED, new PaneHandler(this));
         pane.addEventFilter(MouseEvent.MOUSE_MOVED, new PaneHandler(this));
         newCard.setOnMouseClicked(this::addNewCard);
-
     }
 
     private void createRoles() {
@@ -61,7 +60,7 @@ public class GameWindow {
         currentPlayer = 0;
         roles = factory.chooseActions(count, this);
         for (Role role : roles) { root.getChildren().add(role.getPane()); }
-        root.setRightAnchor(roles.get(players.get(currentPlayer).getRole()).getPane(), (double) h);
+        AnchorPane.setRightAnchor(roles.get(players.get(currentPlayer).getRole()).getPane(), (double) h);
         //newCard.setLayoutY(roles.get(roles.size() - 1).getPane().getLayoutY() + roles.get(roles.size() - 1).getPane().getPrefHeight() + h);
     }
 
@@ -109,15 +108,15 @@ public class GameWindow {
             chip.setImage(new Image(chip.url, 45, 45, true, true));
             chips.add(chip);
         }
-        double step = cards.get(0).getImage().getWidth() / 4;
-        chips.get(0).setLayoutX(cards.get(0).getLayoutX() + step * 2 + step / 2 - chips.get(0).getImage().getWidth() / 2);
-        chips.get(0).setLayoutY(cards.get(0).getLayoutY() + step * 2 + step / 2 - chips.get(0).getImage().getHeight() / 2);
-        chips.get(1).setLayoutX(cards.get(0).getLayoutX() + step * 2 + step / 2 - chips.get(0).getImage().getWidth() / 2);
-        chips.get(1).setLayoutY(cards.get(0).getLayoutY() + step * 1 + step / 2 - chips.get(0).getImage().getHeight() / 2);
-        chips.get(2).setLayoutX(cards.get(0).getLayoutX() + step * 1 + step / 2 - chips.get(0).getImage().getWidth() / 2);
-        chips.get(2).setLayoutY(cards.get(0).getLayoutY() + step * 1 + step / 2 - chips.get(0).getImage().getHeight() / 2);
-        chips.get(3).setLayoutX(cards.get(0).getLayoutX() + step * 1 + step / 2 - chips.get(0).getImage().getWidth() / 2);
-        chips.get(3).setLayoutY(cards.get(0).getLayoutY() + step * 2 + step / 2 - chips.get(0).getImage().getHeight() / 2);
+        double step = (cards.get(0).getImage().getWidth() - 10) / 4;
+        chips.get(0).setLayoutX(5 + cards.get(0).getLayoutX() + step * 2 + step / 2 - chips.get(0).getImage().getWidth() / 2);
+        chips.get(0).setLayoutY(5 + cards.get(0).getLayoutY() + step * 2 + step / 2 - chips.get(0).getImage().getHeight() / 2);
+        chips.get(1).setLayoutX(5 + cards.get(0).getLayoutX() + step * 2 + step / 2 - chips.get(0).getImage().getWidth() / 2);
+        chips.get(1).setLayoutY(5 + cards.get(0).getLayoutY() + step * 1 + step / 2 - chips.get(0).getImage().getHeight() / 2);
+        chips.get(2).setLayoutX(5 + cards.get(0).getLayoutX() + step * 1 + step / 2 - chips.get(0).getImage().getWidth() / 2);
+        chips.get(2).setLayoutY(5 + cards.get(0).getLayoutY() + step * 1 + step / 2 - chips.get(0).getImage().getHeight() / 2);
+        chips.get(3).setLayoutX(5 + cards.get(0).getLayoutX() + step * 1 + step / 2 - chips.get(0).getImage().getWidth() / 2);
+        chips.get(3).setLayoutY(5 + cards.get(0).getLayoutY() + step * 2 + step / 2 - chips.get(0).getImage().getHeight() / 2);
     }
 
     private void createCards(int level) throws FileNotFoundException {
