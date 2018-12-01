@@ -11,7 +11,7 @@ public class Factory {
     private final int width = 80;
     private int h = 10;
     private String[] styles = {"btn1", "btn2", "btn3", "btn4"};
-    GameWindow gameWindow;
+    private GameWindow gameWindow;
 
     public Factory (GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -39,14 +39,14 @@ public class Factory {
                 list.add(new Role(2, 4, true, false, false, changePane(new Pane(), styles[1], height2)));
                 break;
         }
-        for (int i = 0; i < list.size(); i++) {
-            list.get(i).setPane(addPicOnPane(list.get(i)));
+        for (Role aList : list) {
+            aList.setPane(addPicOnPane(aList));
         }
         Role myRole = myRole(list.get(gameWindow.getPlayers().get(gameWindow.getCurrentPlayer()).getRole()));
         list.remove(gameWindow.getPlayers().get(gameWindow.getCurrentPlayer()).getRole());
         double height = 0;
-        for (int i = 0; i < list.size(); i++) {
-            height += (list.get(i).getPane().getPrefHeight() + h);
+        for (Role aList : list) {
+            height += (aList.getPane().getPrefHeight() + h);
         }
         list.get(0).getPane().setLayoutY(gameWindow.root.getPrefHeight()/2 - height/2);
         list.get(0).getPane().setLayoutX(h);
@@ -73,7 +73,7 @@ public class Factory {
         gameWindow.newCard.setLayoutY(role.getPane().getLayoutY() + role.getPane().getPrefHeight() + h);
         return role;
     }
-    public Pane changePane(Pane pane, String style, int h) {
+    private Pane changePane(Pane pane, String style, int h) {
         pane.getStyleClass().add(style);
         pane.setPrefWidth(width);
         pane.setPrefHeight(h);
@@ -112,12 +112,11 @@ public class Factory {
         return pane;
     }
 
-    public ImageView setParams(ImageView imageView, int h) {
-        ImageView image = imageView;
-        image.setFitWidth(width);
-        image.setFitHeight(width);
-        image.setLayoutX(0);
-        image.setLayoutY(h * (image.getFitHeight() / 1.4));
-        return image;
+    private ImageView setParams(ImageView imageView, int h) {
+        imageView.setFitWidth(width);
+        imageView.setFitHeight(width);
+        imageView.setLayoutX(0);
+        imageView.setLayoutY(h * (imageView.getFitHeight() / 1.4));
+        return imageView;
     }
 }

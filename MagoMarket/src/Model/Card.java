@@ -3,10 +3,10 @@ package Model;
 import javafx.scene.image.ImageView;
 
 public class Card extends ImageView {
-    int map[][];
+    private int map[][];
     int bridges;
-    String url;
-    boolean isUsed;
+    private String url;
+    private boolean isUsed;
 
     public Card(int map[][], String url, int bridges) {
         super();
@@ -15,17 +15,21 @@ public class Card extends ImageView {
         this.bridges = bridges;
     }
 
-    public Point layoutXY(int x, int y) {
+    Point layoutXY(int x, int y) {
         x = (int)(getLayoutX() + getImage().getWidth()/4*x);
         y = (int)(getLayoutY() + getImage().getWidth()/4*y);
         return new Point(x, y);
     }
 
-    public int[][] getMap() {
+    int getBridges() {
+        return bridges;
+    }
+
+    int[][] getMap() {
         return map;
     }
 
-    public void setMap(int[][] map) {
+    void setMap(int[][] map) {
         this.map = map;
     }
 

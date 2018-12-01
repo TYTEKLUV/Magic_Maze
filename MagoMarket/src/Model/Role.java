@@ -9,8 +9,6 @@ public class Role {
     private boolean glass;
     private boolean portal;
     private boolean bridge;
-    private String nickname;
-    private boolean ready;
     private Pane pane;
 
     public Role(int countActions, int arrow, boolean glass, boolean portal, boolean bridge, Pane pane) {
@@ -22,39 +20,27 @@ public class Role {
         this.pane = pane;
     }
 
-    public int getArrow() {
+    int getArrow() {
         return arrow;
     }
 
-    public boolean isBridge() {
+    boolean isBridge() {
         return bridge;
     }
 
-    public boolean isGlass() {
+    boolean isGlass() {
         return glass;
     }
 
-    public boolean isPortal() {
+    boolean isPortal() {
         return portal;
-    }
-
-    public void setPortal(boolean portal) {
-        this.portal = portal;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
     }
 
     public Pane getPane() {
         return pane;
     }
 
-    public void setPane(Pane pane) {
+    void setPane(Pane pane) {
         this.pane = pane;
     }
 

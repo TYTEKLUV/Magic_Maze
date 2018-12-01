@@ -19,7 +19,6 @@ public class GameWindow {
     @FXML
     public Pane newCard;
 
-
     private Pane pane;
     private int cardsCount = 6;
     private ArrayList<Card> cards = new ArrayList<>();
@@ -50,24 +49,18 @@ public class GameWindow {
     }
 
     private void createRoles() {
-        int count = 3;
+        int count = 4;
         int h = 10;
         ArrayList<Integer> list = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
-            list.add(i);
-        }
+        for (int i = 0; i < count; i++) { list.add(i); }
         Collections.shuffle(list);
-        list = new ArrayList<>(Arrays.asList(1, 0, 2));
+        list = new ArrayList<>(Arrays.asList(3, 1, 0, 2));
         roles.clear();
         Factory factory = new Factory(this);
-        for (int i = 0; i < list.size(); i++) {
-            players.add(new Player(list.get(i)));
-        }
+        for (Integer aList : list) { players.add(new Player(aList)); }
         currentPlayer = 0;
         roles = factory.chooseActions(count, this);
-        for (int i = 0; i < roles.size(); i++) {
-            root.getChildren().add(roles.get(i).getPane());
-        }
+        for (Role role : roles) { root.getChildren().add(role.getPane()); }
         root.setRightAnchor(roles.get(players.get(currentPlayer).getRole()).getPane(), (double) h);
         //newCard.setLayoutY(roles.get(roles.size() - 1).getPane().getLayoutY() + roles.get(roles.size() - 1).getPane().getPrefHeight() + h);
     }
@@ -108,7 +101,6 @@ public class GameWindow {
                 newCard.setDisable(true);
             }
         }
-
     }
 
     private void createChip() {
@@ -169,7 +161,6 @@ public class GameWindow {
 //        stage.setScene(new Scene(root1));
 //        stage.show();
     }
-
 
     public PlayerList getPlayers() {
         return players;

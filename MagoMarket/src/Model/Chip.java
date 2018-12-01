@@ -57,7 +57,10 @@ public class Chip extends ImageView {
         for(int i = 0; i < gameWindow.getCards().size(); i ++) {
             Card card = gameWindow.getCards().get(i);
             if(card.isUsed()) {
-                if ((event.getX() > card.getLayoutX()) && (event.getX() < card.getLayoutX() + card.getImage().getWidth()) && (event.getY() > card.getLayoutY()) && (event.getY() < card.getLayoutY() + card.getImage().getHeight())) {
+                final double layoutX = card.getLayoutX();
+                final double layoutY = card.getLayoutY();
+                final double width = card.getImage().getWidth();
+                if ((event.getX() > layoutX) && (event.getX() < layoutX + width) && (event.getY() > layoutY) && (event.getY() < layoutY + width)) {
                     n = i;
                 }
             }
@@ -70,7 +73,10 @@ public class Chip extends ImageView {
         for(int i = 0; i < gameWindow.getCards().size(); i ++) {
             Card card = gameWindow.getCards().get(i);
             if(card.isUsed()) {
-                if ((getLayoutX() > card.getLayoutX()) && (getLayoutX() < card.getLayoutX() + card.getImage().getWidth()) && (getLayoutY() > card.getLayoutY()) && (getLayoutY() < card.getLayoutY() + card.getImage().getHeight())) {
+                final double layoutX = card.getLayoutX();
+                final double layoutY = card.getLayoutY();
+                final double width = card.getImage().getWidth();
+                if ((getLayoutX() > layoutX) && (getLayoutX() < layoutX + width) && (getLayoutY() > layoutY) && (getLayoutY() < layoutY + width)) {
                     n = i;
                 }
             }
@@ -80,10 +86,12 @@ public class Chip extends ImageView {
 
     Point getPosition() { //тек положение чипа
         double x, y;
-        double width = gameWindow.getCards().get(0).getImage().getWidth()/4;
+        double width = (gameWindow.getCards().get(0).getImage().getWidth())/4;
         double r = width/2 - getImage().getWidth()/2;
-        x = Math.ceil((getLayoutX() - r + width - gameWindow.getCards().get(getCardId()).getLayoutX()) / width);
-        y = Math.ceil((getLayoutY() - r + width - gameWindow.getCards().get(getCardId()).getLayoutY()) / width);
+        final double layoutX = gameWindow.getCards().get(getCardId()).getLayoutX();
+        final double layoutY = gameWindow.getCards().get(getCardId()).getLayoutY();
+        x = Math.ceil((getLayoutX() - layoutX)/(width));
+        y = Math.ceil((getLayoutY() - layoutY)/(width));
         return new Point(x, y);
     }
 
@@ -92,14 +100,17 @@ public class Chip extends ImageView {
         int n = getCardId(event);
         if (n >= 0) {
             Card card = gameWindow.getCards().get(n);
-            double width = card.getImage().getWidth()/4;
-            x = Math.ceil((event.getX() - card.getLayoutX())/(width));
-            y = Math.ceil((event.getY() - card.getLayoutY())/(width));
+            final double layoutX = card.getLayoutX();
+            final double layoutY = card.getLayoutY();
+            double width = (card.getImage().getWidth())/4;
+            x = Math.ceil((event.getX() - layoutX)/(width));
+            y = Math.ceil((event.getY() - layoutY)/(width));
             if (!isInCard) {
-                x = card.getLayoutX() + x * width - width + (Math.floor(width / 2) - Math.floor(gameWindow.getChips().get(0).getImage().getWidth() / 2));
-                y = card.getLayoutY() + y * width - width + (Math.floor(width / 2) - Math.floor(gameWindow.getChips().get(0).getImage().getWidth() / 2));
+                width = (card.getImage().getWidth() - 10)/4;
+                final Image image = gameWindow.getChips().get(0).getImage();
+                x = layoutX + 5 + (x - 1) * (width) + (Math.floor((width)/ 2) - Math.floor((image.getWidth()) / 2));
+                y = layoutY + 5 + (y - 1) * (width) + (Math.floor((width)/ 2) - Math.floor((image.getWidth()) / 2));
             }
-
         }
         return new Point(x, y);
     }
