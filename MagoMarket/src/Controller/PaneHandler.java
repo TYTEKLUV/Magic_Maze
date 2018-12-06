@@ -1,14 +1,14 @@
 package Controller;
 
-import Controller.GameWindow;
-import Model.Game;
+import Model.GameRules;
+import Model.Point;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 
 public class PaneHandler implements EventHandler<MouseEvent> {
 
     private GameWindow gameWindow;
-    private Game game = new Game();
+    private GameRules game = new GameRules();
 
     PaneHandler(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -35,11 +35,11 @@ public class PaneHandler implements EventHandler<MouseEvent> {
     }
 
     private void mouseReleased (MouseEvent event) {
-        game.mouseReleased(event, gameWindow);
+        game.mouseReleased(new Point(event.getX(), event.getY()), gameWindow);
     }
 
     private void mouseMoved (MouseEvent event) {
-        game.mouseMoved(event, gameWindow);
+        game.mouseMoved(new Point(event.getX(), event.getY()), gameWindow);
     }
 
 
