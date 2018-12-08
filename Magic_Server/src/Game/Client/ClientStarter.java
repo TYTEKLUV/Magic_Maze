@@ -1,5 +1,6 @@
 package Game.Client;
 
+import Game.Model.PlayerList;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -9,9 +10,10 @@ import java.util.Scanner;
 
 public class ClientStarter extends Application {
 
+    private PlayerList players = new PlayerList();
+
     private int serverPort = 4444;
     private Client client;
-    private boolean work = true;
     private String nickname;
     private String[] commandsList =
             {"close         - close server",
@@ -27,55 +29,46 @@ public class ClientStarter extends Application {
         System.out.println("Client started");
         System.out.println("--------------");
 
-        commandHandler(new Scanner("nick"));
+        commandHandler("nick");
+        commandHandler("connect 127.0.0.1");
 
-        commandHandler(new Scanner("connect 127.0.0.1"));
-
-        while (work) {
-            commandHandler(console);
-        }
-
-        System.out.println("--------------");
-        System.out.println("Client stopped");
-        System.exit(0);
+        while (true) commandHandler(console.nextLine());
     }
 
-    private void commandHandler(Scanner console) throws IOException {
-        String line = console.nextLine();
-        Scanner input = new Scanner(line);
-        String command = input.next();
-        switch (command) {
+    private void commandHandler(String message) throws IOException {
+        Scanner command = new Scanner(message);
+        switch (command.next()) {
             case "help":
-                for (String aCommandsList : commandsList) {
-                    System.out.println("|: " + aCommandsList);
-                }
+                for (String aCommandsList : commandsList)
+                    System.out.println("| " + aCommandsList);
                 break;
             case "connect":
-                if (input.hasNext()) {
-                    client = new Client(serverPort, nickname, input.next());
+                if (command.hasNext()) {
+//                    client = new Client(this, nickname,"TEST_ROOM", 4, input.next());
+                    client = new Client(this, nickname, "TEST_ROOM", 0, command.next());
                     client.start();
                 } else {
-                    client = new Client(serverPort, nickname);
+//                    client = new Client(this, nickname,"TEST_ROOM", 4);
+                    client = new Client(this, nickname, "TEST_ROOM", 0);
                     client.start();
                 }
                 break;
             case "close":
-                client.turnOff();
+                client.close();
                 break;
             case "ip":
-                System.out.println("|: your ip = " + InetAddress.getLocalHost().getHostAddress());
+                System.out.println("| your ip = " + InetAddress.getLocalHost().getHostAddress());
                 break;
             case "nick":
-                if (client == null || !client.isAlive()) {
-                    if (input.hasNext()) {
-                        nickname = input.next();
-                    } else {
+                if (client == null || !client.isAlive())
+                    if (command.hasNext())
+                        nickname = command.next();
+                    else {
                         System.out.print("Enter nickname: ");
                         nickname = new Scanner(System.in).next();
                     }
-                } else {
+                else
                     System.out.println("disconnect before change nickname");
-                }
                 break;
             case "ready":
                 client.firstCommand();
@@ -83,19 +76,31 @@ public class ClientStarter extends Application {
             case "nready":
                 client.secondCommand();
                 break;
-            case "start":
-                client.thirdCommand();
-                break;
             case "exit":
-                work = false;
-                input.close();
+                System.out.println("--------------");
+                System.out.println("Client stopped");
+                System.exit(0);
                 break;
             case "status":
-                System.out.println(client.clientsStatus());
+                System.out.println(status());
                 break;
             default:
-                System.out.println("|: command not found");
+                System.out.println("| command not found");
                 break;
         }
+    }
+
+    public String status() {
+        return "Player status: \n" + players.toString() +
+                "\nLEADER " + players.getLeader().getNickname() +
+                "\nSTART " + (players.readyCount() == players.size() ? "READY" : "NOT_READY");
+    }
+
+    public PlayerList getPlayers() {
+        return players;
+    }
+
+    public int getServerPort() {
+        return serverPort;
     }
 }

@@ -1,79 +1,54 @@
 package Game.Client;
 
 import Game.Model.Player;
-import Game.Model.PlayerList;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.*;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class Client extends Thread {
 
-    private PlayerList players = new PlayerList();
-
-    private int playersCount = 4;
-    private int number;
-    private int serverPort;
-    private Socket client;
-    private String nickname;
-    private DataOutputStream out;
-    private DataInputStream in;
+    private ClientStarter main;
+    private Player player = new Player();
+    private String roomName;
+    private int newRoomPlayersCount;
     private String presetIP = "";
-    private ArrayList<Socket> threadSockets = new ArrayList<>();
-    private List<Thread> pool = new ArrayList<>();
-    private boolean startReady = false;
+    private Socket client;
+    private DataInputStream in;
+    private DataOutputStream out;
 
 
-    public Client(int serverPort, String nickname) {
-        this.serverPort = serverPort;
-        this.nickname = nickname;
-
-        for (int i = 0; i < playersCount; i++) {
-            players.add(new Player());
-        }
+    public Client(ClientStarter main, String nickname, String roomName, int newRoomPlayersCount) {
+        this.main = main;
+        player.setNickname(nickname);
+        this.roomName = roomName;
+        this.newRoomPlayersCount = newRoomPlayersCount;
     }
 
-    public Client(int serverPort, String nickname, String presetIP) {
-        this.serverPort = serverPort;
-        this.nickname = nickname;
+    public Client(ClientStarter main, String nickname, String roomName, int newRoomPlayersCount, String presetIP) {
+        this.main = main;
+        player.setNickname(nickname);
+        this.roomName = roomName;
+        this.newRoomPlayersCount = newRoomPlayersCount;
         this.presetIP = presetIP;
-
-        for (int i = 0; i < 4; i++) {
-            players.add(new Player());
-        }
     }
 
     @Override
     public void run() {
         try {
             searchServerIP();
-
             in = new DataInputStream(client.getInputStream());
             out = new DataOutputStream(client.getOutputStream());
-
-            commandPerformer("CONNECT");
-
-            while (!client.isClosed()) {
-                commandHandler(in.readUTF());
-            }
+            connect();
+            while (true) commandHandler(in.readUTF());
         } catch (Exception e) {
             System.out.println("disconnect from server");
-        }
-    }
-
-    private void commandPerformer(String message) throws IOException {
-        Scanner command = new Scanner(message);
-        switch (command.next()) {
-            case "CONNECT":
-                connectPerform();
-                break;
-            case "START":
-                send("START");
-                break;
         }
     }
 
@@ -82,34 +57,30 @@ public class Client extends Thread {
         Scanner command = new Scanner(message);
         switch (command.next()) {
             case "ADD":
-                int i = command.nextInt();
-                players.get(i).setNickname(command.next());
-                players.get(i).setReady(command.next().equals("READY"));
-                if (command.hasNext()) {
-                    if (command.next().equals("LEADER")) {
-                        players.get(i).setLeader(true);
-                    }
-                }
+                main.getPlayers().get(command.nextInt()).set(command.next(), command.next().equals("READY"));
                 break;
             case "REMOVE":
-                int j = command.nextInt();
-                players.get(j).reset();
+                main.getPlayers().get(command.nextInt()).reset();
                 break;
             case "SET":
                 switch (command.next()) {
                     case "STATUS":
-                        players.get(command.nextInt()).setReady(command.next().equals("READY"));
-                        break;
-                    case "START":
-                        startReady = (command.next().equals("READY"));
+                        main.getPlayers().get(command.nextInt()).setReady(command.next().equals("READY"));
+                        //Обработка кнопки старт
                         break;
                     case "LEADER":
-                        players.resetLeader();
-                        players.get(command.nextInt()).setLeader(true);
+                        main.getPlayers().setLeader(main.getPlayers().get(command.nextInt()));
                         break;
                     case "ROLES":
-                        for (int k = 0; k < playersCount; k++) players.get(k).setRole(command.nextInt());
-                        System.out.println("Роли загружены");
+                        for (Player player : main.getPlayers())
+                            player.setRole(command.nextInt());
+                        break;
+                    case "ROOM":
+                        roomName = command.next();
+                        main.getPlayers().createPlayers(command.nextInt());
+                        break;
+                    case "PLAYER":
+                        player = main.getPlayers().get(command.nextInt());
                         break;
                 }
                 break;
@@ -117,7 +88,6 @@ public class Client extends Thread {
                 switch (command.next()) {
                     case "LOAD":
                         System.out.println("Начинаем загрузку");
-
                         //Включить загрузочный экран
                         //Настроить интерфейс
                         break;
@@ -129,45 +99,8 @@ public class Client extends Thread {
                 }
                 break;
             default:
-                System.out.println("NOT_COMMAND: " + message);
+                System.out.println("NOT_COMMAND");
                 break;
-        }
-    }
-
-    private void connectPerform() throws IOException {
-        send("CONNECT");
-        send(nickname);
-        number = in.readInt();
-
-        players.get(number).setNickname(nickname);
-        players.get(number).set(nickname, false, false, -1);
-
-        for (int i = 0; i < players.size() - 1; i++) {
-            commandHandler(in.readUTF());
-        }
-
-        commandHandler(in.readUTF());
-
-        System.out.println("connection complete");
-    }
-
-    public void firstCommand() throws IOException {
-        players.get(number).setReady(true);
-        send("STATUS READY");
-    }
-
-    public void secondCommand() throws IOException {
-        players.get(number).setReady(false);
-        send("STATUS NOT_READY");
-    }
-
-    public void thirdCommand() throws IOException {
-        if (startReady) {
-            System.out.println("Не все готовы");
-        } else if (players.get(number).isLeader()) {
-            commandPerformer("START");
-        } else {
-            System.out.println("You are not Leader");
         }
     }
 
@@ -176,92 +109,99 @@ public class Client extends Thread {
         out.flush();
     }
 
-    public String clientsStatus() {
-        return "Player status: \n" + players.toString() + "\nSTART " + (startReady ? "READY" : "NOT_READY");
+    private void connect() throws IOException {
+        if (newRoomPlayersCount != 0)
+            send("CONNECT " + player.getNickname() + " CREATE " + roomName + " " + newRoomPlayersCount);
+        else
+            send("CONNECT " + player.getNickname() + " " + roomName);
+        switch (in.readUTF()) {
+            case "ACCEPT":
+                System.out.println("Подключилось к комнате");
+                break;
+            case "BUSY":
+                System.out.println("Комната занята");
+                close();
+                break;
+            case "NOT_FOUND":
+                System.out.println("Комната не найдена");
+                close();
+                break;
+        }
+    }
+
+    public void firstCommand() throws IOException {
+        player.setReady(true);
+        send("STATUS READY");
+    }
+
+    public void secondCommand() throws IOException {
+        player.setReady(false);
+        send("STATUS NOT_READY");
     }
 
     private void searchServerIP() throws UnknownHostException {
         boolean preset = !presetIP.equals("");
-        int searchStart;
+        ArrayList<Thread> searchThreads = new ArrayList<>();
+        final ArrayList<Socket> sockets = new ArrayList<>();
         String localIP;
-
-        if (preset) {
+        if (preset)
             localIP = presetIP;
-        } else {
+        else {
             localIP = InetAddress.getLocalHost().getHostAddress();
-            if (localIP.equals("127.0.0.1")) {
+            if (localIP.equals("127.0.0.1"))
                 preset = true;
-            } else {
+            else
                 localIP = getIpMask(localIP);
-            }
         }
-
-        searchStart = preset ? 255 : 1;
-
-        for (int i = searchStart; i < 256; i++) {
+        for (int i = (preset ? 255 : 1); i < 256; i++) {
             final String iIPv4 = preset ? localIP : localIP + i;
-            System.out.println("searching " + iIPv4);
-
             Socket socket = new Socket();
-
-            threadSockets.add(socket);
-
-            createSearchThread(iIPv4, socket, preset);
+            sockets.add(socket);
+            searchThreads.add(createSearchThread(iIPv4, socket, preset, sockets));
         }
-        for (Thread aThread : pool) {
+        for (Thread thread : searchThreads)
             try {
-                if (aThread.isAlive()) {
-                    aThread.join();
-                }
+                if (thread.isAlive())
+                    thread.join();
             } catch (InterruptedException ignored) {
             }
-        }
     }
 
     private String getIpMask(String ip) {
         int l = 0;
         int pCount = 0;
-        while (pCount < 3) {
+        while (pCount < 3)
             if (String.valueOf(ip.charAt(l + pCount)).equals("."))
                 pCount++;
             else
                 l++;
-        }
         return ip.substring(0, l + pCount);
     }
 
-    private void createSearchThread(String iIPv4, Socket socket, Boolean preset) {
+    private Thread createSearchThread(String iIPv4, Socket socket, Boolean preset, ArrayList<Socket> sockets) {
         Thread thread = new Thread(() -> {
             try {
                 InetAddress ip = InetAddress.getByName(iIPv4);
-
-                socket.connect(new InetSocketAddress(ip, serverPort));
-
+                socket.connect(new InetSocketAddress(ip, main.getServerPort()));
                 DataInputStream in = new DataInputStream(socket.getInputStream());
-
                 String fromServer = in.readUTF();
-
-                if (fromServer.equals("OS: Welcome")) {
-                    while ((threadSockets.size() != 255) && !preset) {
-                        System.out.println("wait " + threadSockets.size());
-                    }
-                    threadSockets.remove(socket);
-                    for (Socket threadSocket : threadSockets) {
+                if (fromServer.equals("OMEGA_WELCOME")) {
+                    while ((sockets.size() != 255) && !preset)
+                        Thread.sleep(100);
+                    sockets.remove(socket);
+                    for (Socket threadSocket : sockets)
                         threadSocket.close();
-                    }
-
                     client = socket;
                     System.out.println("OmegaServer found: " + iIPv4);
-
                 }
-            } catch (IOException ignored) {
+            } catch (IOException | InterruptedException ignored) {
             }
         });
-        pool.add(thread);
         thread.start();
+        return thread;
     }
 
-    public void turnOff() throws IOException {
+    public void close() throws IOException {
         client.close();
     }
 }
