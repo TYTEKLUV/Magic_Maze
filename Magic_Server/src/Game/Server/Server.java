@@ -1,193 +1,92 @@
 package Game.Server;
 
 import Game.Model.Player;
-import Game.Model.PlayerList;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.Scanner;
 
 public class Server extends Thread {
+    private OmegaServer main;
+    private int port;
+    private ArrayList<Room> rooms = new ArrayList<>();
 
-    private PlayerList players = new PlayerList();
-    private int playersCount = 4;
-    private int leader = -1;
-
-    private ExecutorService executeIt = Executors.newFixedThreadPool(4);
-    private int serverPort;
-    private ServerSocket server;
-    private ArrayList<ClientHandler> clientList = new ArrayList<>();
-    private boolean startReady = false;
-    private ArrayList<Integer> roles = new ArrayList<>();
-
-    public Server(int serverPort, int playersCount) {
-        this.playersCount = playersCount;
-        this.serverPort = serverPort;
-        for (int i = 0; i < playersCount; i++) {
-            players.add(new Player());
-            roles.add(-1);
-        }
+    public Server(OmegaServer main, int port) {
+        this.port = port;
+        this.main = main;
     }
 
     @Override
     public void run() {
         try {
-            server = new ServerSocket(serverPort);
+            ServerSocket server = new ServerSocket(port);
             while (!server.isClosed()) {
                 Socket client = server.accept();
-                ClientHandler cH = new ClientHandler(client, this, getFreeSlot());
-                clientList.add(cH);
-                executeIt.execute(cH);
+                connect(client);
             }
-        } catch (Exception ignored) {
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    private int getFreeSlot() {
-        int result = -1;
-        for (int i = 0; i < players.size(); i++) {
-            if (players.get(i).getNickname().equals("NOT_CONNECTED")) {
-                result = i;
-                break;
+    private void connect(Socket client) throws IOException {
+        String nickname;
+        String roomName;
+
+        DataInputStream in = new DataInputStream(client.getInputStream());
+        DataOutputStream out = new DataOutputStream(client.getOutputStream());
+
+        out.writeUTF("OMEGA_WELCOME");
+
+        Scanner command = new Scanner(in.readUTF());
+        if (command.next().equals("CONNECT")) {
+            nickname = command.next();
+            roomName = command.next();
+            if (roomName.equals("CREATE")) {
+                roomName = command.next();
+                Room room = new Room(roomName, command.nextInt());
+                rooms.add(room);
+                main.setCurrentRoom(room);
+                out.writeUTF("ACCEPT");
+                Player player = room.getFreeSlot();
+                player.setNickname(nickname);
+                room.changeLeader(player);
+                room.connectClient(client, player);
+            } else {
+                Room room = searchRoom(roomName);
+                if (room != null) {
+                    Player player = room.getFreeSlot();
+                    if (player != null) {
+                        out.writeUTF("ACCEPT");
+                        player.setNickname(nickname);
+                        room.connectClient(client, player);
+                    } else
+                        out.writeUTF("BUSY");
+                } else
+                    out.writeUTF("NOT_FOUND");
             }
         }
-        return result;
     }
 
-    public void turnOff() throws IOException {
-        executeIt.shutdown();
-        server.close();
+    public void destroyRoom(Room room) throws IOException {
+        room.kickAll();
+        rooms.remove(room);
+        System.out.println("Room " + room.getName() + " destroyed");
+        main.changeCurrentRoom(0);
     }
 
-    public String getClients() {
-        StringBuilder result = new StringBuilder("Count: " + clientList.size());
-        for (int i = 0; i < clientList.size(); i++) {
-            result.append("\n").append("| ").append(i + 1).append(": ").append(clientList.get(i).toString());
-        }
-        return result.toString();
+    private Room searchRoom(String roomName) {
+        for (Room room : rooms)
+            if (roomName.equals(room.getName()))
+                return room;
+        return null;
     }
 
-    public void clientDisconnect(ClientHandler cH) throws IOException {
-        clientList.remove(cH);
-        if (cH.leader && clientList.size() != 0) {
-            clientList.get(0).leader = true;
-            players.get(clientList.get(0).getNumber()).setLeader(true);
-            sendToAll("SET LEADER " + clientList.get(0).getNumber());
-            leader = clientList.get(0).getNumber();
-        }
-        sendToAll("REMOVE " + cH.getNumber());
-        System.out.println(cH.getNickname() + " disconnected");
-    }
-
-    public void sayToAll(String text) throws IOException {
-        for (ClientHandler aClientList : clientList) {
-            aClientList.say(text);
-        }
-    }
-
-    public boolean kick(int index) throws IOException {
-        if (index == -1) {
-            return false;
-        } else {
-            clientList.get(index).turnOff();
-            return true;
-        }
-    }
-
-    public String kick(String nickname) throws IOException {
-        return kick(players.indexOf(nickname)) ? (nickname + " not found") : (nickname + " kicking...");
-    }
-
-    public String kickAll() throws IOException {
-        for (int i = clientList.size() - 1; i >= 0; i--) {
-            kick(i);
-        }
-        //TODO Сделать проверку на отключение всех клиентов перед Complete
-        return "Complete";
-    }
-
-    public void sendToAll(String message) throws IOException {
-        sendToOthers(message, null);
-    }
-
-    public void sendToOthers(String message, String nickname) throws IOException {
-        for (ClientHandler clientHandler : clientList)
-            if (!clientHandler.getNickname().equals(nickname))
-                clientHandler.send(message);
-    }
-
-    public void startGame() throws IOException {
-        sendToAll("START GAME");
-    }
-
-    public void rolesRandom() throws IOException {
-        for (int i = 0; i < playersCount; i++)
-            roles.set(i, i);
-        Collections.shuffle(roles);
-        players.setRoles(roles);
-        sendRoles(roles);
-     }
-
-     public void loadGame() throws IOException {
-        sendToAll("START LOAD");
-        rolesRandom();
-     }
-
-    public void rolesChange() throws IOException {
-        for (int i = 0; i < playersCount; i++)
-            roles.set(i, (roles.get(i) + 1 == playersCount ? 0 : roles.get(i) + 1));
-        players.setRoles(roles);
-        sendRoles(roles);
-    }
-
-    public void sendRoles(ArrayList<Integer> roles) throws IOException {
-        StringBuilder message = new StringBuilder("SET ROLES");
-        for (int role : roles) message.append(" ").append(role);
-        sendToAll(message.toString());
-    }
-
-    public void startStatus() throws IOException {
-        setStartReady(isAllReady());
-        sendToAll("SET START " + (isStartReady() ? "READY" : "NOT_READY"));
-    }
-
-    public String clientsStatus() {
-        return "Player status: \n" + players.toString() + "\nSTART " + (isAllReady() ? "READY" : "NOT_READY");
-    }
-
-    public PlayerList getPlayers() {
-        return players;
-    }
-
-    public ArrayList<ClientHandler> getClientList() {
-        return clientList;
-    }
-
-    public boolean isAllReady() {
-        int i = 0;
-        for (Player player : players) if (player.isReady()) i++;
-        return i == playersCount;
-    }
-
-    public boolean isStartReady() {
-        return startReady;
-    }
-
-    public void setStartReady(boolean startReady) {
-        this.startReady = startReady;
-    }
-
-    public int getLeader() {
-        return leader;
-    }
-
-    public void setLeader(int leader) {
-        this.leader = leader;
+    public ArrayList<Room> getRooms() {
+        return rooms;
     }
 }
