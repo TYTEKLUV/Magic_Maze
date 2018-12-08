@@ -76,6 +76,10 @@ public class GameRules {
         if ((end.x < start.x) || (end.y < start.y)) {
             minPoint = end;
         }
+        if (event.isOnPortal(end, chip, gameWindow)) {
+            return true;
+        }
+
         Point d = calcD(new Point(chip.getLayoutX(), chip.getLayoutY()).getPosition(false, gameWindow), (event.getPosition(false, gameWindow)));
         if ((minPoint.x != -1) && (minPoint.y != -1) && (isFloorIsEmpty(event, gameWindow))) {
             if ((d.x <= 2.5) && (d.y > 1)) {
@@ -117,9 +121,7 @@ public class GameRules {
                 }
                 return true;
             }
-            if (event.isOnPortal(end, chip, gameWindow)) {
-                return true;
-            } else if (isChipOnBridge(event, chip, gameWindow)) {
+            if (isChipOnBridge(event, chip, gameWindow)) {
                 return true;
             }
 //                //транспортные задачи, зажачи потоков
