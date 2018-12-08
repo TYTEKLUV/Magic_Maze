@@ -6,14 +6,20 @@ import java.util.ArrayList;
 
 public class GameRules {
 
-    private boolean isFloorIsEmpty(Point event, Point point, Chip chip, GameWindow gameWindow) {
-        boolean f = true;
+
+    private boolean isFloorIsEmpty(Point event, GameWindow gameWindow) {
+        Point point = event.getPosition(true, gameWindow);
         for (int i = 0; i < 4; i++) {
-            if ((gameWindow.getChips().get(i).getPosition().x == point.x) && (gameWindow.getChips().get(i).getPosition().y == point.y) && (gameWindow.getChips().get(i).getCardId() == event.getCardId(chip))) {
-                f = false;
+            final Chip chip = gameWindow.getChips().get(i);
+            if ((chip.getPosition().x == point.x) && (chip.getPosition().y == point.y) && (chip.getCardId() == event.getCardId(gameWindow))) {
+                return false;
             }
         }
-        return f;
+        point = point.localToMap();
+        if (gameWindow.getCards().get(event.getCardId(gameWindow)).getMap()[(int) point.y][(int) point.x] == 0) {
+            return false;
+        }
+        return true;
     }
 
     private void glassToGlass(Card card, ArrayList<Card> cards) { //проверяем после того, как поставили карту
@@ -29,7 +35,7 @@ public class GameRules {
                                     int h = (int) Math.abs(cards.get(k).layoutXY(t / 2 + 1, z / 2 + 1).y - card.layoutXY(j / 2 + 1, i / 2 + 1).y);
                                     if ((w <= card.getImage().getWidth() / 4) && (h <= card.getImage().getHeight() / 4)) {
                                         card.getMap()[i][j] = 20;
-                                        cards.get(k).getMap()[z][t] = Integer.parseInt("20" + String.valueOf(cards.indexOf(card)));
+                                        cards.get(k).getMap()[z][t] = 20;
                                     }
                                 }
                             }
@@ -41,7 +47,6 @@ public class GameRules {
     }
 
     private boolean isChipOnBridge(Point event, Chip chip, GameWindow gameWindow) {
-        boolean f = false;
         int bridges = gameWindow.getCards().get(chip.getCardId()).getBridges();
         String s = String.valueOf(bridges).substring(1);
         if (bridges != 0) {
@@ -51,102 +56,77 @@ public class GameRules {
                 int y1 = Integer.parseInt(String.valueOf(s.charAt(i + 1))) + 1;
                 int x2 = Integer.parseInt(String.valueOf(s.charAt(i + 2))) + 1;
                 int y2 = Integer.parseInt(String.valueOf(s.charAt(i + 3))) + 1;
-                System.out.println(chip.getPosition().y + " " + chip.getPosition().x);
-                if ((chip.getPosition().y == x1) && (chip.getPosition().x == y1) && (event.getPosition(true, chip).y == x2) && (event.getPosition(true, chip).x == y2) ||
-                        ((chip.getPosition().y == x2) && (chip.getPosition().x == y2) && (event.getPosition(true, chip).y == x1) && (event.getPosition(true, chip).x == y1))) {
-                    f = true;
+                if ((chip.getPosition().y == x1) && (chip.getPosition().x == y1) && (event.getPosition(true, gameWindow).y == x2) && (event.getPosition(true, gameWindow).x == y2) ||
+                        ((chip.getPosition().y == x2) && (chip.getPosition().x == y2) && (event.getPosition(true, gameWindow).y == x1) && (event.getPosition(true, gameWindow).x == y1))) {
+                    return true;
                 }
             }
         }
-        return f;
+        return false;
     }
 
-    public Point calcD(Point start, Point end) {
+    Point calcD(Point start, Point end) {
         double dx = (Math.abs(end.x - start.x));
         double dy = (Math.abs(end.y - start.y));
         return new Point(dx, dy);
     }
 
-    private boolean isOnLine(Point event, Point dOld, Point start, Point end, Chip chip, GameWindow gameWindow) {
-        if ((calcD(start, end).x == dOld.x) && (calcD(start, end).y == dOld.y)) {
-            if (isFloorIsEmpty(event, end, chip, gameWindow))
-                if (event.isOnLine(start, end, chip, gameWindow, this))
-                    return true;
-        }
-        return false;
-    }
-
     private boolean isChipMovable(Point event, Point start, Point end, Chip chip, GameWindow gameWindow) {
-        if (isFloorIsEmpty(event, end, chip, gameWindow)) {
-            Point minPoint = start, maxPoint = end;
-            if ((end.x < start.x) || (end.y < start.y)) {
-                minPoint = end;
-                maxPoint = start;
-            }
-            if ((minPoint.x != -1) && (minPoint.y != -1)) {
-                if (event.isOnLine(start, end, chip, gameWindow, this)) {
-                    return true;
-                } else if (event.isOnPortal(end, chip, gameWindow)) {
-                    return true;
-                } else if (event.isOnArrow(start, end, chip, gameWindow)) {
-                    return true;
-                } else if (isChipOnBridge(event, chip, gameWindow)) {
-                    return true;
-                }
-                //транспортные задачи, зажачи потоков
-                else {
-                    Point d = calcD(new Point(chip.getLayoutX(), chip.getLayoutY()).getPosition(false, chip), (event.getPosition(false, chip)));
-                    //System.out.println("d " + d.x + " y " + d.y);
-                    if ((d.x <= 2.5) && (d.y > 1)) {
-                        int c = (int)Math.round(d.y / 72.5);
-                        System.out.println("c "+ c);
-                        Point point = new Point(chip.getLayoutX(), chip.getLayoutY());
-                        for (int i = 0; i < c; i++) {
-                            Point pointCard = point.getPosition(true, chip);
-                            int cardId = point.getCardId(chip);
-                            System.out.println("cardId " + cardId);
-                            if (gameWindow.getCards().get(cardId).getMap()[(int) pointCard.y][(int) pointCard.x] != 0) {
-                                if (isFloorIsEmpty(event, point, chip, gameWindow)) {
-                                    return true;
-                                }
-                            }
-                            //if (pointCard.isOnLine())
-                            point.x += 72.5;
-                            point = point.getPosition(false, chip);
-
-
-                        }
-//                        if (event.isOnLine(minPoint, new Point(minPoint.x, minPoint.y + 1), chip, gameWindow, this))
-//                            if (isFloorIsEmpty(event, new Point(minPoint.x, minPoint.y + 1), chip, gameWindow)) {
-//                            for (int i = (int) minPoint.y; i < (int) maxPoint.y - 2; i++) {
-//                                Point old = new Point(calcD(minPoint, new Point(minPoint.x, i + 1)).x, calcD(minPoint, new Point(minPoint.x, i + 1)).y);
-//                                Point s = new Point(minPoint.x, minPoint.y + i);
-//                                Point e = new Point(minPoint.x, minPoint.y + i + 1);
-//                                    if (!isOnLine(event, old, s, e, chip, gameWindow)) {
-//                                    return false;
-//                                }
-//                            }
-//                            return true;
-//                        }
-                    } else if ((d.x > 1) && (d.y == 0)) {
-                            if (event.isOnLine(minPoint, new Point(minPoint.x + 1, minPoint.y), chip, gameWindow, this))
-                                if (isFloorIsEmpty(event, new Point(minPoint.x + 1, minPoint.y), chip, gameWindow)) {
-                                    for (int i = (int) minPoint.x; i < (int) maxPoint.x - 2; i++) {
-                                        Point old = new Point(calcD(minPoint, new Point(i + 1, minPoint.y)).x, calcD(minPoint, new Point(i + 1, minPoint.y)).y);
-                                        Point s = new Point(minPoint.x + i, minPoint.y );
-                                        Point e = new Point(minPoint.x + i + 1, minPoint.y);
-                                        if (!isOnLine(event, old, s, e, chip, gameWindow)) {
-                                            return false;
-                                        }
-                                    }
-                                    return true;
-                                }
-                        }
-                }
+        Point minPoint = start;
+        if ((end.x < start.x) || (end.y < start.y)) {
+            minPoint = end;
         }
+        Point d = calcD(new Point(chip.getLayoutX(), chip.getLayoutY()).getPosition(false, gameWindow), (event.getPosition(false, gameWindow)));
+        if ((minPoint.x != -1) && (minPoint.y != -1) && (isFloorIsEmpty(event, gameWindow))) {
+            if ((d.x <= 2.5) && (d.y > 1)) {
+                int c = (int) Math.round(d.y / 72.5);
+                Point point = new Point(chip.getLayoutX(), chip.getLayoutY()).getPosition(false, gameWindow);
+                double r = - gameWindow.getCards().get(0).getImage().getWidth()/4;
+                if (chip.getLayoutY() < event.y) {
+                    r *= -1;
+                }
+                for (int i = 0; i < c; i++) {
+                    Point pEnd = new Point(point.x, point.y + r).getPosition(false, gameWindow);
+                    if (point.getCardId(gameWindow) != pEnd.getCardId(gameWindow)){
+                        pEnd = new Point(point.x + 2.5, point.y + r + 10).getPosition(false, gameWindow);
+                    }
+                    if (!(isFloorIsEmpty(pEnd, gameWindow) && (point.isOnLine(pEnd, gameWindow, this)))) {
+                        return false;
+                    }
+                    point.y += r;
+                    point = point.getPosition(false, gameWindow);
+                }
+                return true;
+            } else if (((d.x > 1) && (d.y <= 2.5))) {
+                int c = (int) Math.round(d.x / 72.5);
+                Point point = new Point(chip.getLayoutX(), chip.getLayoutY()).getPosition(false, gameWindow);
+                double r = - gameWindow.getCards().get(0).getImage().getWidth()/4;
+                if (chip.getLayoutX() < event.x) {
+                    r *= -1;
+                }
+                for (int i = 0; i < c; i++) {
+                    Point pEnd = new Point(point.x + r, point.y).getPosition(false, gameWindow);
+                    if (point.getCardId(gameWindow) != pEnd.getCardId(gameWindow)){
+                        pEnd = new Point(point.x + r + 10, point.y + 2.5).getPosition(false, gameWindow);
+                    }
+                    if (!(isFloorIsEmpty(pEnd, gameWindow) && (point.isOnLine(pEnd, gameWindow, this)))) {
+                        return false;
+                    }
+                    point.x += r;
+                    point = point.getPosition(false, gameWindow);
+                }
+                return true;
+            }
+            if (event.isOnPortal(end, chip, gameWindow)) {
+                return true;
+            } else if (isChipOnBridge(event, chip, gameWindow)) {
+                return true;
+            }
+//                //транспортные задачи, зажачи потоков
         }
         return false;
     }
+
 
     public void mouseMoved(Point event, GameWindow gameWindow) {
         if (!gameWindow.getCards().get(gameWindow.getMoveCard()).isVisible()) {
@@ -183,10 +163,11 @@ public class GameRules {
     }
 
     public void moveReleased(GameWindow gameWindow) {
-        Point point = gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getPosition();
-        gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).isOnFindGlass = false;
-        int n = Integer.parseInt("20" + String.valueOf(gameWindow.getMoveCard()));
-        gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getMap()[((int) point.y - 1) * 2][((int) point.x - 1) * 2] = n;
+        final int closestGlassId = gameWindow.getClosestFindGlassId();
+        Point point = gameWindow.getChips().get(closestGlassId).getPosition();
+        gameWindow.getChips().get(closestGlassId).isOnFindGlass = false;
+        final int cardId = gameWindow.getChips().get(closestGlassId).getCardId();
+        gameWindow.getCards().get(cardId).getMap()[((int) point.y - 1) * 2][((int) point.x - 1) * 2] = 20;
         glassToGlass(gameWindow.getCards().get(gameWindow.getMoveCard()), gameWindow.getCards());
         gameWindow.setMoveCard(false);
         if (gameWindow.getNotUsedCard() != -1) {
@@ -201,9 +182,9 @@ public class GameRules {
             Chip chip = gameWindow.getChips().get(i);
             if (chip.isSelected) {
                 f = true;
-                Point pointCard = event.getPosition(true, chip);
-                Point point = event.getPosition(false, chip);
-                if (isChipMovable(event, chip.getPosition(), event.getPosition(true, chip), chip, gameWindow)) {
+                Point pointCard = event.getPosition(true, gameWindow);
+                Point point = event.getPosition(false, gameWindow);
+                if (isChipMovable(event, chip.getPosition(), event.getPosition(true, gameWindow), chip, gameWindow)) {
                     if ((pointCard.y != -1) && (pointCard.x != -1)) {
                         gameWindow.getChips().get(i).setLayoutX(point.x);
                         gameWindow.getChips().get(i).setLayoutY(point.y);

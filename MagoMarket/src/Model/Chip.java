@@ -34,10 +34,10 @@ public class Chip extends ImageView {
         isOnWeapon = false;
         isOnFindGlass = false;
         double x = -1, y = -1;
-        Point point = event.getPosition(true, this);
+        Point point = event.getPosition(true, gameWindow);
         x = (point.x - 1) * 2;
         y = (point.y - 1) * 2;
-        int z = gameWindow.getCards().get(event.getCardId(this)).getMap()[(int)y][(int)x];
+        int z = gameWindow.getCards().get(event.getCardId(gameWindow)).getMap()[(int)y][(int)x];
         if (String.valueOf(z).equals(String.valueOf(2) + String.valueOf(gameWindow.getChips().indexOf(this) + 1))){
             isOnFindGlass = true;
         } else {

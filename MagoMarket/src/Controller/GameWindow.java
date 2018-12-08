@@ -9,8 +9,10 @@ import javafx.scene.layout.Pane;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.sql.Array;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Scanner;
 
 public class GameWindow extends ControllerFXML {
 
@@ -20,7 +22,7 @@ public class GameWindow extends ControllerFXML {
     public Pane newCard;
 
     private Pane pane;
-    private int cardsCount = 6;
+    private int cardsCount = 7;
     private ArrayList<Card> cards = new ArrayList<>();
     private ArrayList<Chip> chips = new ArrayList<>();
     private ArrayList<Role> roles = new ArrayList<>();
