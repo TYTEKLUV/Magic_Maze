@@ -75,7 +75,7 @@ public class Server extends Thread {
     public void destroyRoom(Room room) throws IOException {
         room.kickAll();
         rooms.remove(room);
-        System.out.println("Room " + room.getName() + " destroyed");
+        System.out.println("| Room " + room.getName() + " destroyed");
         main.changeCurrentRoom(0);
     }
 

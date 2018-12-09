@@ -114,7 +114,7 @@ public class Room {
     }
 
     public String kick(String nickname) throws IOException {
-        return kick(players.indexOf(nickname)) ? (nickname + " kicking...") : (nickname + " not found");
+        return kick(players.indexOf(nickname)) ? ("| " + nickname + " kicking...") : ("| " + nickname + " not found");
     }
 
     public String kickAll() throws IOException {

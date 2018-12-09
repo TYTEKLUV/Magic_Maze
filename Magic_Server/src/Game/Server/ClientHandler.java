@@ -12,8 +12,8 @@ public class ClientHandler extends Thread {
     private Socket client;
     private Room room;
     private Player player;
-    private DataOutputStream out;
     private DataInputStream in;
+    private DataOutputStream out;
     private String ip;
 
     public ClientHandler(Socket client, Room room, Player player) {

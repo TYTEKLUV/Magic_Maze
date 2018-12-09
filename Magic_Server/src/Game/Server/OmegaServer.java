@@ -16,36 +16,42 @@ import java.net.InetAddress;
 import java.util.Scanner;
 
 public class OmegaServer extends Application {
-    private Room currentRoom;
     private int serverPort = 4444;
-    private static boolean window;
     private Server server;
+    private Room currentRoom;
     private String[] commandsList =
-            {"close         - close room",
-                    "ip            - show room ip",
-                    "clients       - show current room clients",
-                    "say <message> - send message to clients",
-                    "kick <client> - kick client from room"};
+            {"ip                    - show server ip",
+                    "create <name> <count> - create new room",
+                    "destroy               - destroy CURRENT room",
+                    "rooms                 - show rooms list",
+                    "room [index]          - show current room or change it",
+                    "clients               - show CURRENT room clients",
+                    "status                - show CURRENT room players status",
+                    "kick <client> or all  - kick client from room",
+                    "exit                  - stop server"};
 
     public static void main(String[] args) {
-        if (args.length != 0) window = !args[0].equals("c");
-        else window = true;
         launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        commandHandler("start");
-
-        if (window) {
+        if (!(!getParameters().getRaw().isEmpty() && getParameters().getRaw().get(0).equals("-c"))) {
             showConsole(primaryStage);
-            commandHandler("create TEST_ROOM 4");
+            startCommands();
         } else {
             Scanner console = new Scanner(System.in);
-            commandHandler("create TEST_ROOM 4");
-            System.out.println("Server started");
+            startCommands();
             while (true) commandHandler(console.nextLine());
         }
+    }
+
+    private void startCommands() throws IOException {
+        server = new Server(this, serverPort);
+        server.start();
+        System.out.println("Server started");
+        System.out.println("\"help\" to show commands list");
+        commandHandler("create TEST_ROOM 4");
     }
 
     private void commandHandler(String message) throws IOException {
@@ -55,26 +61,38 @@ public class OmegaServer extends Application {
                 for (String aCommandsList : commandsList)
                     System.out.println("| " + aCommandsList);
                 break;
-            case "start":
-                server = new Server(this, serverPort);
-                server.start();
+            case "ip":
+                System.out.println("| Server ip = " + InetAddress.getLocalHost().getHostAddress());
                 break;
             case "create":
                 Room room = new Room(command.next(), command.nextInt(), server);
                 server.getRooms().add(room);
                 currentRoom = room;
-                System.out.println("Room " + currentRoom.getName() + " created");
+                System.out.println("| Room " + currentRoom.getName() + " created");
                 break;
             case "destroy":
                 if (checkCurrentRoom())
                     server.destroyRoom(currentRoom);
                 break;
-            case "ip":
-                System.out.println("| Server ip = " + InetAddress.getLocalHost().getHostAddress());
+            case "rooms":
+                if (checkCurrentRoom())
+                    for (int i = 0; i < server.getRooms().size(); i++)
+                        System.out.println("| " + i + ": " + server.getRooms().get(i).getName());
+                break;
+            case "room":
+                if (checkCurrentRoom())
+                    if (command.hasNextInt())
+                        changeCurrentRoom(command.nextInt());
+                    else
+                        System.out.println("| Current room \"" + currentRoom.getName() + "\"");
                 break;
             case "clients":
                 if (checkCurrentRoom())
                     System.out.println(getClientsList(currentRoom));
+                break;
+            case "status":
+                if (checkCurrentRoom())
+                    System.out.println(currentRoom.status());
                 break;
             case "kick":
                 if (checkCurrentRoom())
@@ -86,14 +104,6 @@ public class OmegaServer extends Application {
                             System.out.println(currentRoom.kick(next));
                     } else
                         System.out.println("| enter client nickname [kick <nickname>]");
-                break;
-            case "exit":
-                System.out.println("Server stopped");
-                System.exit(0);
-                break;
-            case "status":
-                if (checkCurrentRoom())
-                    System.out.println(currentRoom.status());
                 break;
             case "roles":
                 if (checkCurrentRoom())
@@ -108,17 +118,9 @@ public class OmegaServer extends Application {
                             break;
                     }
                 break;
-            case "rooms":
-                if (checkCurrentRoom())
-                    for (int i = 0; i < server.getRooms().size(); i++)
-                        System.out.println("| " + i + ": " + server.getRooms().get(i).getName());
-                break;
-            case "room":
-                if (checkCurrentRoom())
-                    if (command.hasNextInt())
-                        changeCurrentRoom(command.nextInt());
-                    else
-                        System.out.println("| Current room \"" + currentRoom.getName() + "\"");
+            case "exit":
+                System.out.print("Server stopped");
+                System.exit(0);
                 break;
             default:
                 System.out.println("| command not found");

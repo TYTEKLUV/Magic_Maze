@@ -9,38 +9,41 @@ import java.net.InetAddress;
 import java.util.Scanner;
 
 public class ClientStarter extends Application {
-
-    private PlayerList players = new PlayerList();
-
     private int serverPort = 4444;
     private Client client;
     private String nickname;
-    private String[] commandsList =
-            {"close         - close server",
-                    "ip            - show server ip",
-                    "clients       - show current server clients",
-                    "sayToAllClients <message> - send message to clients",
-                    "kick <client> - kick client from server"};
+    private PlayerList players = new PlayerList();
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         Scanner console = new Scanner(System.in);
+        startCommands();
+        while (true) commandHandler(console.nextLine());
+    }
 
+    private void startCommands() throws IOException {
         System.out.println("Client started");
         System.out.println("--------------");
-
         commandHandler("nick");
         commandHandler("connect 127.0.0.1");
-
-        while (true) commandHandler(console.nextLine());
     }
 
     private void commandHandler(String message) throws IOException {
         Scanner command = new Scanner(message);
         switch (command.next()) {
-            case "help":
-                for (String aCommandsList : commandsList)
-                    System.out.println("| " + aCommandsList);
+            case "ip":
+                System.out.println("| your ip = " + InetAddress.getLocalHost().getHostAddress());
+                break;
+            case "nick":
+                if (client == null || !client.isAlive())
+                    if (command.hasNext())
+                        nickname = command.next();
+                    else {
+                        System.out.print("Enter nickname: ");
+                        nickname = new Scanner(System.in).next();
+                    }
+                else
+                    System.out.println("disconnect before change nickname");
                 break;
             case "connect":
                 if (command.hasNext()) {
@@ -56,19 +59,8 @@ public class ClientStarter extends Application {
             case "close":
                 client.close();
                 break;
-            case "ip":
-                System.out.println("| your ip = " + InetAddress.getLocalHost().getHostAddress());
-                break;
-            case "nick":
-                if (client == null || !client.isAlive())
-                    if (command.hasNext())
-                        nickname = command.next();
-                    else {
-                        System.out.print("Enter nickname: ");
-                        nickname = new Scanner(System.in).next();
-                    }
-                else
-                    System.out.println("disconnect before change nickname");
+            case "status":
+                System.out.println(status());
                 break;
             case "ready":
                 client.firstCommand();
@@ -78,11 +70,8 @@ public class ClientStarter extends Application {
                 break;
             case "exit":
                 System.out.println("--------------");
-                System.out.println("Client stopped");
+                System.out.print("Client stopped");
                 System.exit(0);
-                break;
-            case "status":
-                System.out.println(status());
                 break;
             default:
                 System.out.println("| command not found");

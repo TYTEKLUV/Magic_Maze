@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Client extends Thread {
-
     private ClientStarter main;
     private Player player = new Player();
     private String roomName;
