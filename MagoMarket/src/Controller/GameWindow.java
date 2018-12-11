@@ -22,7 +22,7 @@ public class GameWindow extends ControllerFXML {
     public Pane newCard;
 
     private Pane pane;
-    private int cardsCount = 7;
+    private int cardsCount = 9;
     private ArrayList<Card> cards = new ArrayList<>();
     private ArrayList<Chip> chips = new ArrayList<>();
     private ArrayList<Role> roles = new ArrayList<>();
@@ -45,7 +45,7 @@ public class GameWindow extends ControllerFXML {
         createChip();
         create();
         pane.addEventFilter(MouseEvent.MOUSE_CLICKED, new PaneHandler(this));
-        pane.addEventFilter(MouseEvent.MOUSE_MOVED, new PaneHandler(this));
+        root.addEventFilter(MouseEvent.MOUSE_MOVED, new PaneHandler(this));
         newCard.setOnMouseClicked(this::addNewCard);
     }
 
