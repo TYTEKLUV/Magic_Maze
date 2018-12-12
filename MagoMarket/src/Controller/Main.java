@@ -17,6 +17,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         gameWindow = loadFXML(primaryStage, "../View/FieldEditor.fxml", "Magic Maze", 1280, 720, true);
+        clientStarter();
+
 //        Parent root = FXMLLoader.load(getClass().getResource("../View/FieldEditor.fxml"));
 //        primaryStage.initStyle(StageStyle.TRANSPARENT);
 //        Scene scene = new Scene(root, 1280, 720);
@@ -42,5 +44,10 @@ public class Main extends Application {
 
     public ControllerFXML getGameWindow() {
         return gameWindow;
+    }
+
+    private void clientStarter() {
+        ClientStarter clientStarter = new ClientStarter(gameWindow);
+        clientStarter.start();
     }
 }
