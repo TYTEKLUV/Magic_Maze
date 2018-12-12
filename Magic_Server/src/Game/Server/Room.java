@@ -6,12 +6,14 @@ import Game.Model.PlayerList;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
 
 public class Room {
     private String name;
     private Server server;
-    private PlayerList players = new PlayerList();
-    private ArrayList<ClientHandler> clients = new ArrayList<>();
+    private volatile PlayerList players = new PlayerList();
+    private volatile ArrayList<ClientHandler> clients = new ArrayList<>();
 
     public Room(String name, int playersCount) {
         this.name = name;
@@ -71,14 +73,26 @@ public class Room {
                 clientHandler.send(message);
     }
 
-    public void startGame() throws IOException {
-        sendAll("START GAME");
+    private String randomChips() {
+        StringBuilder chips = new StringBuilder();
+        ArrayList<Integer> chipsList = new ArrayList<>(Arrays.asList(0, 1, 2, 3));
+        for (int i = 0; i < 4; i++)
+            chips.append(i != 0 ? " " : "").append(chipsList.get(i));
+        return chips.toString();
     }
 
     public void loadGame() throws IOException {
-        sendAll("START LOAD");
+        players.resetReady();
         players.rolesRandom();
+        sendAll("GAME LOAD");
         sendRoles();
+        sendAll("SET ROTATE " + new Random().nextInt(4));
+        sendAll("SET CHIPS " + randomChips());
+    }
+
+    public void startGame() throws IOException {
+        if (players.readyCount() == players.size())
+            sendAll("START GAME");
     }
 
     public void rolesChange() throws IOException {
@@ -120,7 +134,7 @@ public class Room {
     public String kickAll() throws IOException {
         while (!clients.isEmpty())
             kick(0);
-        return "Complete";
+        return "| complete";
     }
 
     public String status() {

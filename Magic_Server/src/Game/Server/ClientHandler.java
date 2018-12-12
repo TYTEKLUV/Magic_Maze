@@ -12,8 +12,8 @@ public class ClientHandler extends Thread {
     private Socket client;
     private Room room;
     private Player player;
-    private DataInputStream in;
-    private DataOutputStream out;
+    private volatile DataInputStream in;
+    private volatile DataOutputStream out;
     private String ip;
 
     public ClientHandler(Socket client, Room room, Player player) {
@@ -40,17 +40,38 @@ public class ClientHandler extends Thread {
     }
 
     private void commandHandler(String message) throws IOException {
+        System.out.println(player.getNickname() + " message = [" + message + "]");
         Scanner command = new Scanner(message);
         switch (command.next()) {
             case "STATUS":
                 changeStatus(command.next().equals("READY"));
                 break;
+            case "GAME":
+                switch (command.next()) {
+                    case "START":
+                        if (room.getPlayers().getLeader() == player)
+                            room.loadGame();
+                        else
+                            System.out.println("| " + player.getNickname() + " not leader");
+                        break;
+                    case "READY":
+                        player.setReady(true);
+                        room.startGame();
+                        break;
+                    case "SELECT":
+                        break;
+                    case "MOVE":
+                        break;
+                }
+                break;
         }
     }
 
     public void send(String message) throws IOException {
+//        System.out.println(player.getNickname() + " send: " + message);
         out.writeUTF(message);
         out.flush();
+//        System.out.println(player.getNickname() + " send: " + message + " complete");
     }
 
     private void connect() throws IOException {

@@ -13,7 +13,7 @@ import java.util.Scanner;
 public class Server extends Thread {
     private OmegaServer main;
     private int port;
-    private ArrayList<Room> rooms = new ArrayList<>();
+    private volatile ArrayList<Room> rooms = new ArrayList<>();
 
     public Server(OmegaServer main, int port) {
         this.port = port;

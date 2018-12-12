@@ -50,7 +50,7 @@ public class OmegaServer extends Application {
         server = new Server(this, serverPort);
         server.start();
         System.out.println("Server started");
-        System.out.println("\"help\" to show commands list");
+        System.out.println("\"help\" to show commands list\n");
         commandHandler("create TEST_ROOM 4");
     }
 
@@ -119,7 +119,7 @@ public class OmegaServer extends Application {
                     }
                 break;
             case "exit":
-                System.out.print("Server stopped");
+                System.out.print("\nServer stopped");
                 System.exit(0);
                 break;
             default:

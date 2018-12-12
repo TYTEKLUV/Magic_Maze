@@ -22,7 +22,6 @@ public class Client extends Thread {
     private DataInputStream in;
     private DataOutputStream out;
 
-
     public Client(ClientStarter main, String nickname, String roomName, int newRoomPlayersCount) {
         this.main = main;
         player.setNickname(nickname);
@@ -51,7 +50,7 @@ public class Client extends Thread {
         }
     }
 
-    private void commandHandler(String message) {
+    private void commandHandler(String message) throws IOException {
         System.out.println("message = [" + message + "]");
         Scanner command = new Scanner(message);
         switch (command.next()) {
@@ -83,17 +82,21 @@ public class Client extends Thread {
                         break;
                 }
                 break;
-            case "START":
+            case "GAME":
                 switch (command.next()) {
                     case "LOAD":
-                        System.out.println("Начинаем загрузку");
                         //Включить загрузочный экран
                         //Настроить интерфейс
                         break;
-                    case "GAME":
-                        System.out.println("Начинаем игру");
+                    case "START":
                         //Выключить загрузочный экран
                         //Включить игровое поле
+                        break;
+                    case "SELECT":
+                        break;
+                    case "MOVE":
+                        break;
+                    case "ROLES":
                         break;
                 }
                 break;
@@ -136,6 +139,10 @@ public class Client extends Thread {
     public void secondCommand() throws IOException {
         player.setReady(false);
         send("STATUS NOT_READY");
+    }
+
+    public void thirdCommand() throws IOException {
+        send("GAME START");
     }
 
     private void searchServerIP() throws UnknownHostException {
@@ -202,5 +209,9 @@ public class Client extends Thread {
 
     public void close() throws IOException {
         client.close();
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 }

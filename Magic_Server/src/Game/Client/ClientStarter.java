@@ -64,9 +64,23 @@ public class ClientStarter extends Application {
                 break;
             case "ready":
                 client.firstCommand();
+                System.out.println("send ready");
                 break;
             case "nready":
                 client.secondCommand();
+                System.out.println("send not ready");
+                break;
+            case "start":
+                if (players.readyCount() == players.size()) {
+                    if (players.getLeader() == client.getPlayer())
+                        client.thirdCommand();
+                    else
+                        System.out.println("you not leader");
+                } else
+                    System.out.println("all not ready");
+                break;
+            case "send":
+                client.send("GAME READY");
                 break;
             case "exit":
                 System.out.println("--------------");
