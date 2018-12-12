@@ -81,8 +81,8 @@ public class Room {
         return chips.toString();
     }
 
-    public void addCard(int id, int x, int y, ClientHandler setter) throws IOException {
-        sendOthers("GAME CARD " + id + " " + x + " " + y, setter);
+    public void addCard(int id, int x, int y, int rotate, ClientHandler setter) throws IOException {
+        sendOthers("GAME CARD " + id + " " + x + " " + y + " " + rotate, setter);
     }
 
     public void loadGame() throws IOException {
@@ -96,7 +96,7 @@ public class Room {
 
     public void startGame() throws IOException {
         if (players.readyCount() == players.size())
-            sendAll("START GAME");
+            sendAll("GAME START");
     }
 
     public void rolesChange() throws IOException {

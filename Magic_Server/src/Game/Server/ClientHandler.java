@@ -63,7 +63,7 @@ public class ClientHandler extends Thread {
                     case "MOVE":
                         break;
                     case "CARD":
-                        room.addCard(command.nextInt(), command.nextInt(), command.nextInt(), this);
+                        room.addCard(command.nextInt(), command.nextInt(), command.nextInt(), command.nextInt(), this);
                         break;
                 }
                 break;
