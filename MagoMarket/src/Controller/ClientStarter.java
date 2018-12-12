@@ -1,8 +1,17 @@
 package Controller;
 
 import Model.PlayerList;
+import javafx.application.Platform;
+import javafx.scene.Scene;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.net.InetAddress;
 import java.util.Scanner;
 
@@ -15,14 +24,15 @@ public class ClientStarter extends Thread {
 
     public ClientStarter(ControllerFXML gameWindow) {
         this.gameWindow = (GameWindow) gameWindow;
+        showConsole(new Stage());
     }
 
     @Override
     public void run() {
-        Scanner console = new Scanner(System.in);
+//        Scanner console = new Scanner(System.in);
         try {
             startCommands();
-            while (true) commandHandler(console.nextLine());
+//            while (true) commandHandler(console.nextLine());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -31,7 +41,7 @@ public class ClientStarter extends Thread {
     private void startCommands() throws IOException {
         System.out.println("Client started");
         System.out.println("--------------");
-        commandHandler("nick");
+//        commandHandler("nick");
 //        commandHandler("connect 127.0.0.1");
     }
 
@@ -43,12 +53,14 @@ public class ClientStarter extends Thread {
                 break;
             case "nick":
                 if (client == null || !client.isAlive())
-                    if (command.hasNext())
+                    if (command.hasNext()) {
                         nickname = command.next();
-                    else {
-                        System.out.print("Enter nickname: ");
-                        nickname = new Scanner(System.in).next();
+                        System.out.println("New nickname: " + nickname);
                     }
+//                    else {
+//                        System.out.print("Enter nickname: ");
+//                        nickname = new Scanner(System.in).next();
+//                    }
                 else
                     System.out.println("disconnect before change nickname");
                 break;
@@ -98,6 +110,40 @@ public class ClientStarter extends Thread {
                 System.out.println("| command not found");
                 break;
         }
+    }
+
+    private void showConsole(Stage stage) {
+        TextArea text = new TextArea();
+        TextField textField = new TextField();
+        BorderPane root = new BorderPane(text, null, null, textField, null);
+        text.setEditable(false);
+        textField.requestFocus();
+        textField.setOnAction(event -> {
+            text.appendText(textField.getText() + "\n");
+            if (textField.getText().equals("clear"))
+                text.clear();
+            else
+                try {
+                    commandHandler(textField.getText());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            textField.clear();
+        });
+        OutputStream out = new OutputStream() {
+            @Override
+            public void write(int b) {
+                Platform.runLater(() -> text.appendText(String.valueOf((char) b)));
+            }
+        };
+        System.setOut(new PrintStream(out, true));
+        Scene scene = new Scene(root, 500, 300);
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> textField.requestFocus());
+//        scene.getStylesheets().add("Game/Server/Default.css");
+        stage.setScene(scene);
+        stage.setTitle("Active - Omega Server");
+        stage.setOnCloseRequest(event -> System.exit(0));
+        stage.show();
     }
 
     public String status() {
