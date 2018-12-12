@@ -98,6 +98,8 @@ public class Client extends Thread {
                         break;
                     case "ROLES":
                         break;
+                    case "CARD":
+                        break;
                 }
                 break;
             default:
@@ -129,6 +131,10 @@ public class Client extends Thread {
                 close();
                 break;
         }
+    }
+
+    public void addCard(int id, int x, int y) throws IOException {
+        send("GAME CARD " + id + " " + x + " " + y);
     }
 
     public void firstCommand() throws IOException {

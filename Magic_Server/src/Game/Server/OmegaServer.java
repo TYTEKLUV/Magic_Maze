@@ -51,7 +51,7 @@ public class OmegaServer extends Application {
         server.start();
         System.out.println("Server started");
         System.out.println("\"help\" to show commands list\n");
-        commandHandler("create TEST_ROOM 4");
+        commandHandler("create TEST_ROOM 2");
     }
 
     private void commandHandler(String message) throws IOException {

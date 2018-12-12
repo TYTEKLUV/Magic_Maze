@@ -81,6 +81,10 @@ public class Room {
         return chips.toString();
     }
 
+    public void addCard(int id, int x, int y, ClientHandler setter) throws IOException {
+        sendOthers("GAME CARD " + id + " " + x + " " + y, setter);
+    }
+
     public void loadGame() throws IOException {
         players.resetReady();
         players.rolesRandom();
