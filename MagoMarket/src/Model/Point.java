@@ -49,7 +49,6 @@ public class Point {
         final int cardId = end.getCardId(gameWindow);
         minPoint = minPoint.getPosition(true, gameWindow);
         end = end.getPosition(true, gameWindow);
-        System.out.println("dx "  + dx + " " + dy);
         if ((dx <= 2.5)) {
             if ((dy == 72.5)) {
                 if (gameWindow.getCards().get(cardId).getMap()[(int) (minPoint.y - 1) * 2 + 1][(int) (minPoint.x - 1) * 2] != 0) {
