@@ -26,7 +26,13 @@ public class PaneHandler implements EventHandler<MouseEvent> {
                         e.printStackTrace();
                     }
                 }
-                else mouseReleased(event);
+                else {
+                    try {
+                        mouseReleased(event);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
                 break;
             case "MOUSE_MOVED":
                 if (gameWindow.isMoveCard()) {
@@ -37,10 +43,10 @@ public class PaneHandler implements EventHandler<MouseEvent> {
     }
 
     private void moveReleased (MouseEvent event) throws IOException {
-        game.moveReleased(new Point(event.getX(), event.getY()), gameWindow);
+        game.moveReleased(gameWindow);
     }
 
-    private void mouseReleased (MouseEvent event) {
+    private void mouseReleased (MouseEvent event) throws IOException {
         game.mouseReleased(new Point(event.getX(), event.getY()), gameWindow);
     }
 
