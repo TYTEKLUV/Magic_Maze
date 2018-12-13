@@ -21,7 +21,7 @@ public class GameRules {
 
     private void glassRefactor(Point glass, GameWindow gameWindow) {
         glass = glass.getPosition(false, gameWindow);
-        double width = gameWindow.getCards().get(0).getImage().getWidth() / 4 - 2.5;
+        double width = gameWindow.getCards().get(0).getWidth() / 4 - 2.5;
         Point d = new Point(glass.x + width, glass.y).getPosition(false, gameWindow);
         changeGlass(d, glass, gameWindow);
         d = new Point(glass.x, glass.y + width).getPosition(false, gameWindow);
@@ -104,7 +104,7 @@ public class GameRules {
             if ((d.x <= 2.5) && (d.y > 1)) {
                 int c = (int) Math.round(d.y / 72.5);
                 Point point = new Point(chip.getLayoutX(), chip.getLayoutY()).getPosition(false, gameWindow);
-                double r = -gameWindow.getCards().get(0).getImage().getWidth() / 4;
+                double r = -gameWindow.getCards().get(0).getWidth() / 4;
                 if (chip.getLayoutY() < event.y) {
                     r *= -1;
                 }
@@ -123,7 +123,7 @@ public class GameRules {
             } else if (((d.x > 1) && (d.y <= 2.5))) {
                 int c = (int) Math.round(d.x / 72.5);
                 Point point = new Point(chip.getLayoutX(), chip.getLayoutY()).getPosition(false, gameWindow);
-                double r = -gameWindow.getCards().get(0).getImage().getWidth() / 4;
+                double r = -gameWindow.getCards().get(0).getWidth() / 4;
                 if (chip.getLayoutX() < event.x) {
                     r *= -1;
                 }
@@ -154,23 +154,23 @@ public class GameRules {
         String pos = String.valueOf((int) gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getPosition().x) + (int) gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getPosition().y;
         switch (pos) {
             case "31":
-                x = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getLayoutX() + gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getImage().getWidth() / 4;
-                y = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getLayoutY() - gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getImage().getWidth();
+                x = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getLayoutX() + gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getWidth() / 4;
+                y = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getLayoutY() - gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getWidth();
                 rotateCard(gameWindow, 6, 2);
                 break;
             case "43":
-                x = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getLayoutX() + gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getImage().getWidth();
-                y = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getLayoutY() + gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getImage().getWidth() / 4;
+                x = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getLayoutX() + gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getWidth();
+                y = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getLayoutY() + gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getWidth() / 4;
                 rotateCard(gameWindow, 2, 0);
                 break;
             case "24":
-                x = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getLayoutX() - gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getImage().getWidth() / 4;
-                y = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getLayoutY() + gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getImage().getWidth();
+                x = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getLayoutX() - gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getWidth() / 4;
+                y = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getLayoutY() + gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getWidth();
                 rotateCard(gameWindow, 0, 4);
                 break;
             case "12":
-                x = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getLayoutX() - gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getImage().getWidth();
-                y = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getLayoutY() - gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getImage().getWidth() / 4;
+                x = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getLayoutX() - gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getWidth();
+                y = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getLayoutY() - gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getWidth() / 4;
                 rotateCard(gameWindow, 4, 6);
                 break;
         }

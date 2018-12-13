@@ -13,11 +13,17 @@ public class Chip extends ImageView {
     GameWindow gameWindow;
     public String urlSelected;
     public String url;
+    private double width = 45;
 
     public Chip(String url, String urlSelected, GameWindow gameWindow) {
         this.gameWindow = gameWindow;
         this.url = url;
         this.urlSelected = urlSelected;
+        this.width = width;
+    }
+
+    public double getWidth() {
+        return width;
     }
 
     void setClicked() {
@@ -60,7 +66,7 @@ public class Chip extends ImageView {
             if (card.isUsed()) {
                 final double layoutX = card.getLayoutX();
                 final double layoutY = card.getLayoutY();
-                final double width = card.getImage().getWidth();
+                final double width = card.getWidth();
                 if ((getLayoutX() > layoutX) && (getLayoutX() < layoutX + width) && (getLayoutY() > layoutY) && (getLayoutY() < layoutY + width)) {
                     n = i;
                 }
@@ -71,7 +77,7 @@ public class Chip extends ImageView {
 
     Point getPosition() { //тек положение чипа
         double x, y;
-        double width = (gameWindow.getCards().get(0).getImage().getWidth()) / 4;
+        double width = (gameWindow.getCards().get(0).getWidth()) / 4;
         final double layoutX = gameWindow.getCards().get(getCardId()).getLayoutX();
         final double layoutY = gameWindow.getCards().get(getCardId()).getLayoutY();
         x = Math.ceil((getLayoutX() - layoutX) / (width));

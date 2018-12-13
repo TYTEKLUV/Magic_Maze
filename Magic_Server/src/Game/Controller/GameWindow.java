@@ -108,8 +108,8 @@ public class GameWindow extends ControllerFXML {
                 isMoveCard = true;
                 cards.get(i).setUsed(true);
                 cards.get(i).setVisible(false);
-                getCards().get(getMoveCard()).setLayoutX(event.getSceneX() - getCards().get(0).getImage().getWidth() / 2);
-                getCards().get(getMoveCard()).setLayoutY(event.getSceneY() - getCards().get(0).getImage().getHeight() / 2);
+                getCards().get(getMoveCard()).setLayoutX(event.getSceneX() - getCards().get(0).getWidth() / 2);
+                getCards().get(getMoveCard()).setLayoutY(event.getSceneY() - getCards().get(0).getWidth() / 2);
                 pane.getChildren().add(cards.get(i));
                 newCard.setDisable(true);
             }

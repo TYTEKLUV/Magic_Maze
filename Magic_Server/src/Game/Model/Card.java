@@ -7,6 +7,7 @@ public class Card extends ImageView {
     int bridges;
     private String url;
     private boolean isUsed;
+    private double width = 300;
 
     public Card(int map[][], String url, int bridges) {
         super();
@@ -50,8 +51,8 @@ public class Card extends ImageView {
     }
 
     public Point layoutXY(int x, int y) {
-        x = (int) (getLayoutX() + getImage().getWidth() / 4 * x);
-        y = (int) (getLayoutY() + getImage().getWidth() / 4 * y);
+        x = (int) (getLayoutX() + getWidth() / 4 * x);
+        y = (int) (getLayoutY() + getWidth() / 4 * y);
         return new Point(x, y);
     }
 
@@ -61,6 +62,10 @@ public class Card extends ImageView {
 
     int[][] getMap() {
         return map;
+    }
+
+    public double getWidth() {
+        return width;
     }
 
     void setMap(int[][] map) {
