@@ -33,6 +33,7 @@ public class GameWindow extends ControllerFXML {
     private int closestFindGlassId;
     private int currentPlayer = -1;
     private Client client;
+    GameRules gameRules;
 
     @FXML
     void initialize() throws FileNotFoundException {
