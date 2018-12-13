@@ -1,6 +1,8 @@
 package Controller;
 
 import Model.Player;
+import Model.Point;
+import javafx.application.Platform;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -49,6 +51,7 @@ public class Client extends Thread {
             connect();
             while (true) commandHandler(in.readUTF());
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("disconnect from server");
         }
     }
@@ -83,6 +86,19 @@ public class Client extends Thread {
                     case "PLAYER":
                         player = main.getPlayers().get(command.nextInt());
                         break;
+                    case "ROTATE":
+                        gameWindow.clientRotate(command.nextInt() * 90);
+                        break;
+                    case "CHIPS":
+                        gameWindow.create(this, main.getPlayers().indexOf(player), main.getPlayers().size(), main.getPlayers());
+
+                        ArrayList<Integer> chipsOrder = new ArrayList<>();
+                        for (int i = 0; i < 4; i++)
+                            chipsOrder.add(command.nextInt());
+                        gameWindow.clientChips(chipsOrder);
+
+                        send("GAME READY");
+                        break;
                 }
                 break;
             case "GAME":
@@ -92,7 +108,7 @@ public class Client extends Thread {
                         //Настроить интерфейс
                         break;
                     case "START":
-                        gameWindow.getStage().show();
+                        Platform.runLater(() -> gameWindow.getStage().show());
                         //Выключить загрузочный экран
                         //Включить игровое поле
                         break;
@@ -103,6 +119,7 @@ public class Client extends Thread {
                     case "ROLES":
                         break;
                     case "CARD":
+                        Platform.runLater(() -> gameWindow.sendCard(command.nextInt(), new Point(command.nextInt(), command.nextInt()), command.nextInt()));
                         break;
                 }
                 break;
@@ -137,8 +154,8 @@ public class Client extends Thread {
         }
     }
 
-    public void addCard(int id, int x, int y) throws IOException {
-        send("GAME CARD " + id + " " + x + " " + y);
+    public void addCard(int id, int x, int y, int angle) throws IOException {
+        send("GAME CARD " + id + " " + x + " " + y + " " + angle);
     }
 
     public void firstCommand() throws IOException {

@@ -2,6 +2,7 @@ package Model;
 
 import Controller.GameWindow;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class GameRules {
@@ -20,7 +21,7 @@ public class GameRules {
 
     private void glassRefactor(Point glass, GameWindow gameWindow) {
         glass = glass.getPosition(false, gameWindow);
-        double width = gameWindow.getCards().get(0).getImage().getWidth()/4 - 2.5;
+        double width = gameWindow.getCards().get(0).getImage().getWidth() / 4 - 2.5;
         Point d = new Point(glass.x + width, glass.y).getPosition(false, gameWindow);
         changeGlass(d, glass, gameWindow);
         d = new Point(glass.x, glass.y + width).getPosition(false, gameWindow);
@@ -33,7 +34,7 @@ public class GameRules {
 
     private void changeGlass(Point d, Point glass, GameWindow gameWindow) {
         glass = glass.getPosition(false, gameWindow);
-        if ((d.getCardId(gameWindow) != -1)&&(d.getCardId(gameWindow)!=glass.getCardId(gameWindow))&&(glass.getCardId(gameWindow) != -1)) {
+        if ((d.getCardId(gameWindow) != -1) && (d.getCardId(gameWindow) != glass.getCardId(gameWindow)) && (glass.getCardId(gameWindow) != -1)) {
             final double x = d.getPosition(true, gameWindow).x;
             final double y = d.getPosition(true, gameWindow).y;
             final double x2 = glass.getPosition(true, gameWindow).x;
@@ -42,25 +43,24 @@ public class GameRules {
             Point p2 = new Point(x2, y2).localToMap();
             Card card = gameWindow.getCards().get(d.getCardId(gameWindow));
             Card card2 = gameWindow.getCards().get(glass.getCardId(gameWindow));
-            if ((card.getMap()[(int) p.y][(int) p.x] >= 21)&&(card.getMap()[(int) p.y][(int) p.x] <= 24)) {
+            if ((card.getMap()[(int) p.y][(int) p.x] >= 21) && (card.getMap()[(int) p.y][(int) p.x] <= 24)) {
                 card.getMap()[(int) p.y][(int) p.x] = 20;
                 card2.getMap()[(int) p2.y][(int) p2.x] = 20;
-            }
-            else if (card.getMap()[(int) p.y][(int) p.x] != 20) {
+            } else if (card.getMap()[(int) p.y][(int) p.x] != 20) {
                 glass = glass.getPosition(true, gameWindow);
                 p = new Point(glass.x, glass.y).localToMap();
-                card2.getMap()[(int)p.y][(int)p.x] = 10;
+                card2.getMap()[(int) p.y][(int) p.x] = 10;
             }
         }
     }
 
-    private void glassToGlass(ArrayList<Card> cards, GameWindow gameWindow) { //проверяем после того, как поставили карту
+    public void glassToGlass(ArrayList<Card> cards, GameWindow gameWindow) { //проверяем после того, как поставили карту
         for (int k = 0; k < cards.size(); k++) {
-        for (int i = 0; i < cards.get(k).getMap().length; i++) {
-            for (int j = 0; j < cards.get(k).getMap().length; j++) {
-                if ((cards.get(k).getMap()[i][j] >= 21) && (cards.get(k).getMap()[i][j] <= 24)) {
-                    glassRefactor(cards.get(k).layoutXY(j / 2 + 1, i / 2 + 1), gameWindow);
-                }
+            for (int i = 0; i < cards.get(k).getMap().length; i++) {
+                for (int j = 0; j < cards.get(k).getMap().length; j++) {
+                    if ((cards.get(k).getMap()[i][j] >= 21) && (cards.get(k).getMap()[i][j] <= 24)) {
+                        glassRefactor(cards.get(k).layoutXY(j / 2 + 1, i / 2 + 1), gameWindow);
+                    }
                 }
             }
         }
@@ -104,13 +104,13 @@ public class GameRules {
             if ((d.x <= 2.5) && (d.y > 1)) {
                 int c = (int) Math.round(d.y / 72.5);
                 Point point = new Point(chip.getLayoutX(), chip.getLayoutY()).getPosition(false, gameWindow);
-                double r = - gameWindow.getCards().get(0).getImage().getWidth()/4;
+                double r = -gameWindow.getCards().get(0).getImage().getWidth() / 4;
                 if (chip.getLayoutY() < event.y) {
                     r *= -1;
                 }
                 for (int i = 0; i < c; i++) {
                     Point pEnd = new Point(point.x, point.y + r).getPosition(false, gameWindow);
-                    if (point.getCardId(gameWindow) != pEnd.getCardId(gameWindow)){
+                    if (point.getCardId(gameWindow) != pEnd.getCardId(gameWindow)) {
                         pEnd = new Point(point.x + 2.5, point.y + r + 10).getPosition(false, gameWindow);
                     }
                     if (!(isFloorIsEmpty(pEnd, gameWindow) && (point.isOnLine(pEnd, gameWindow, this)))) {
@@ -123,13 +123,13 @@ public class GameRules {
             } else if (((d.x > 1) && (d.y <= 2.5))) {
                 int c = (int) Math.round(d.x / 72.5);
                 Point point = new Point(chip.getLayoutX(), chip.getLayoutY()).getPosition(false, gameWindow);
-                double r = - gameWindow.getCards().get(0).getImage().getWidth()/4;
+                double r = -gameWindow.getCards().get(0).getImage().getWidth() / 4;
                 if (chip.getLayoutX() < event.x) {
                     r *= -1;
                 }
                 for (int i = 0; i < c; i++) {
                     Point pEnd = new Point(point.x + r, point.y).getPosition(false, gameWindow);
-                    if (point.getCardId(gameWindow) != pEnd.getCardId(gameWindow)){
+                    if (point.getCardId(gameWindow) != pEnd.getCardId(gameWindow)) {
                         pEnd = new Point(point.x + r + 10, point.y + 2.5).getPosition(false, gameWindow);
                     }
                     if (!(isFloorIsEmpty(pEnd, gameWindow) && (point.isOnLine(pEnd, gameWindow, this)))) {
@@ -147,6 +147,7 @@ public class GameRules {
         }
         return false;
     }
+
     public void mouseMoved(Point event, GameWindow gameWindow) {
         if (!gameWindow.getCards().get(gameWindow.getMoveCard()).isVisible()) {
             gameWindow.getCards().get(gameWindow.getMoveCard()).setVisible(true);
@@ -180,18 +181,23 @@ public class GameRules {
         gameWindow.getCards().get(gameWindow.getMoveCard()).setLayoutY(y);
     }
 
-    public void moveReleased(GameWindow gameWindow) {
+    public void moveReleased(Point event, GameWindow gameWindow) throws IOException {
         final int closestGlassId = gameWindow.getClosestFindGlassId();
         Point point = gameWindow.getChips().get(closestGlassId).getPosition();
         gameWindow.getChips().get(closestGlassId).isOnFindGlass = false;
         final int cardId = gameWindow.getChips().get(closestGlassId).getCardId();
         gameWindow.getCards().get(cardId).getMap()[((int) point.y - 1) * 2][((int) point.x - 1) * 2] = 20;
         glassToGlass(gameWindow.getCards(), gameWindow);
+        for (int i = 0; i < gameWindow.getChips().size(); i++) {
+            gameWindow.getChips().get(i).whereAreUNow();
+        }
         gameWindow.setMoveCard(false);
         if (gameWindow.getNotUsedCard() != -1) {
             gameWindow.newCard.setDisable(false);
             gameWindow.root.requestFocus();
         }
+        gameWindow.getClient().addCard(gameWindow.getMoveCard(), (int) gameWindow.getCards().get(gameWindow.getMoveCard()).getLayoutX(), (int) gameWindow.getCards().get(gameWindow.getMoveCard()).getLayoutY(), (int) gameWindow.getCards().get(gameWindow.getMoveCard()).getRotate());
+
     }
 
     public void mouseReleased(Point event, GameWindow gameWindow) {
@@ -207,7 +213,7 @@ public class GameRules {
                         gameWindow.getChips().get(i).setLayoutX(point.x);
                         gameWindow.getChips().get(i).setLayoutY(point.y);
                         gameWindow.getChips().get(i).toFront();
-                        gameWindow.getChips().get(i).whereAreUNow(event);
+                        gameWindow.getChips().get(i).whereAreUNow();
                     }
                 }
                 chip.setDefault();

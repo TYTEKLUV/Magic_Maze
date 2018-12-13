@@ -4,14 +4,14 @@ import Controller.GameWindow;
 import javafx.scene.image.Image;
 
 public class Point {
-    double x, y;
+    public double x, y;
 
     public Point(double x, double y) {
         this.x = x;
         this.y = y;
     }
 
-    Point getPosition(boolean isInCard, GameWindow gameWindow) { //в карте
+    public Point getPosition(boolean isInCard, GameWindow gameWindow) { //в карте
         double x = -1, y = -1;
         int n = getCardId(gameWindow);
         if (n >= 0) {
@@ -67,8 +67,6 @@ public class Point {
                 }
             } else if (dx == 82.5) {
                 int place = gameWindow.getCards().get(cardId).getMap()[(int) (end.y - 1) * 2][(int) (end.x - 1) * 2];
-                System.out.println(place);
-
                 if (place == 20) {
                     return true;
                 }

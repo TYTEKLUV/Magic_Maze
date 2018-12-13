@@ -29,16 +29,17 @@ public class Chip extends ImageView {
         setImage(new Image(url, 45, 45, true, true));
     }
     
-    void whereAreUNow(Point event) {
+    void whereAreUNow() {
+        Point point = new Point(getLayoutX(), getLayoutY()).getPosition(false, gameWindow);
         isOnExit   = false;
         isOnWeapon = false;
         isOnFindGlass = false;
         double x = -1, y = -1;
-        Point point = event.getPosition(true, gameWindow);
-        x = (point.x - 1) * 2;
-        y = (point.y - 1) * 2;
-        int z = gameWindow.getCards().get(event.getCardId(gameWindow)).getMap()[(int)y][(int)x];
-        if (String.valueOf(z).equals(String.valueOf(2) + String.valueOf(gameWindow.getChips().indexOf(this) + 1))){
+        Point point2 = point.getPosition(true, gameWindow);
+        x = (point2.x - 1) * 2;
+        y = (point2.y - 1) * 2;
+        int z = gameWindow.getCards().get(point.getCardId(gameWindow)).getMap()[(int)y][(int)x];
+        if (String.valueOf(z).equals(2 + String.valueOf(gameWindow.getChips().indexOf(this) + 1))){
             isOnFindGlass = true;
         } else {
             if ((z >= 51)&&(z <= 54)) {

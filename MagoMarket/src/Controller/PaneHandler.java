@@ -5,6 +5,8 @@ import Model.Point;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 
+import java.io.IOException;
+
 public class PaneHandler implements EventHandler<MouseEvent> {
 
     private GameWindow gameWindow;
@@ -18,7 +20,11 @@ public class PaneHandler implements EventHandler<MouseEvent> {
         switch (String.valueOf(event.getEventType())) {
             case "MOUSE_CLICKED":
                 if(gameWindow.isMoveCard()) {
-                    moveReleased();
+                    try {
+                        moveReleased(event);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
                 else mouseReleased(event);
                 break;
@@ -30,8 +36,8 @@ public class PaneHandler implements EventHandler<MouseEvent> {
         }
     }
 
-    private void moveReleased () {
-        game.moveReleased(gameWindow);
+    private void moveReleased (MouseEvent event) throws IOException {
+        game.moveReleased(new Point(event.getX(), event.getY()), gameWindow);
     }
 
     private void mouseReleased (MouseEvent event) {

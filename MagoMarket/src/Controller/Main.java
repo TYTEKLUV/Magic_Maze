@@ -5,9 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
@@ -16,7 +14,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        gameWindow = loadFXML(primaryStage, "../View/FieldEditor.fxml", "Magic Maze", 1280, 720, true);
+        gameWindow = loadFXML(primaryStage, "../View/FieldEditor.fxml", "Magic Maze", 1280, 720, false);
         clientStarter();
 
 //        Parent root = FXMLLoader.load(getClass().getResource("../View/FieldEditor.fxml"));
