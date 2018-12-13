@@ -93,9 +93,13 @@ public class Room {
     }
 
     public void addCard(int id, int x, int y, int rotate, ClientHandler setter) throws IOException {
-        Platform.runLater(() -> gameWindow.sendCard(id, new Point(x, y), rotate));
-        new GameRules().glassToGlass(gameWindow.getCards(), gameWindow);
-
+        Platform.runLater(() -> {
+            try {
+                gameWindow.sendCard(id, new Point(x, y), rotate);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
         sendOthers("GAME CARD " + id + " " + x + " " + y + " " + rotate, setter);
     }
 

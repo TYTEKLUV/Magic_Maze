@@ -78,13 +78,6 @@ public class ClientHandler extends Thread {
                     case "MOVE":
                         break;
                     case "CARD":
-                        Platform.runLater(() -> {
-                            try {
-                                new GameRules().moveReleased(room.getGameWindow());
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        });
                         room.addCard(command.nextInt(), command.nextInt(), command.nextInt(), command.nextInt(), this);
                         break;
                 }

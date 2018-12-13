@@ -178,8 +178,10 @@ public class GameRules {
         gameWindow.getCards().get(gameWindow.getMoveCard()).setLayoutY(y);
     }
 
-    public void moveReleased(GameWindow gameWindow) throws IOException {
+    public void moveReleased(GameWindow gameWindow, Point event) throws IOException {
+        findClosestGlass(new Point(event.x + 150, event.y + 150), gameWindow);
         final int closestGlassId = gameWindow.getClosestFindGlassId();
+        System.out.println("closestGlassId = " + closestGlassId);
         Point point = gameWindow.getChips().get(closestGlassId).getPosition();
         gameWindow.getChips().get(closestGlassId).isOnFindGlass = false;
         final int cardId = gameWindow.getChips().get(closestGlassId).getCardId();

@@ -9,6 +9,7 @@ import javafx.scene.layout.Pane;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -83,13 +84,20 @@ public class GameWindow extends ControllerFXML {
         return i;
     }
 
-    public void sendCard(int id, Point point, int angle) {
+    public void sendCard(int id, Point point, int angle) throws IOException {
+        findGlasses.clear();
+        for (int i = 0; i < 4; i++) {
+            if (chips.get(i).isOnFindGlass) {
+                findGlasses.add(i);
+            }
+        }
         cards.get(id).setLayoutX(point.x);
         cards.get(id).setLayoutY(point.y);
         cards.get(id).setUsed(true);
         cards.get(id).rotate(angle);
         pane.getChildren().add(cards.get(id));
         cards.get(id).setVisible(true);
+        new GameRules().moveReleased(this, point);
     }
 
     private void addNewCard(MouseEvent event) {
