@@ -1,7 +1,11 @@
 package Game.Server;
 
+import Game.Model.ControllerFXML;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -19,6 +23,7 @@ public class OmegaServer extends Application {
     private int serverPort = 4444;
     private Server server;
     private Room currentRoom;
+    private ControllerFXML gameWindow;
     private String[] commandsList =
             {"ip                    - show server ip",
                     "create <name> <count> - create new room",
@@ -47,6 +52,7 @@ public class OmegaServer extends Application {
     }
 
     private void startCommands() throws IOException {
+        gameWindow = loadFXML(new Stage(), "/View/FieldEditor.fxml", "Magic Maze", 1280, 720, false);
         server = new Server(this, serverPort);
         server.start();
         System.out.println("Server started");
@@ -189,5 +195,22 @@ public class OmegaServer extends Application {
 
     public void setCurrentRoom(Room currentRoom) {
         this.currentRoom = currentRoom;
+    }
+
+    private ControllerFXML loadFXML(Stage stage, String file, String title, double width, double height, boolean show) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(file));
+        Parent root = loader.load();
+        ControllerFXML controller = loader.getController();
+        controller.setMain(this);
+        controller.setStage(stage);
+        stage.setTitle(title);
+        stage.setScene(new Scene(root, width, height));
+        stage.getScene().setCursor(Cursor.DEFAULT);
+        if (show) stage.show();
+        return controller;
+    }
+
+    public ControllerFXML getGameWindow() {
+        return gameWindow;
     }
 }
