@@ -218,7 +218,7 @@ public class GameRules {
         if (!f) {
             for (int i = 0; i < 4; i++) {
                 Chip chip = gameWindow.getChips().get(i);
-                if ((event.x > chip.getLayoutX()) && (event.x < chip.getLayoutX() + chip.getImage().getWidth()) && (event.y > chip.getLayoutY()) && (event.y < chip.getLayoutY() + chip.getImage().getHeight())) {
+                if ((event.x > chip.getLayoutX()) && (event.x < chip.getLayoutX() + chip.getWidth()) && (event.y > chip.getLayoutY()) && (event.y < chip.getLayoutY() + chip.getWidth())) {
                     chip.setClicked();
                     gameWindow.getMain().sendAll("GAME SELECT " + i);
                 }

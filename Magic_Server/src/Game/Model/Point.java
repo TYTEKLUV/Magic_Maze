@@ -18,14 +18,14 @@ public class Point {
             Card card = gameWindow.getCards().get(n);
             final double layoutX = card.getLayoutX();
             final double layoutY = card.getLayoutY();
-            double width = (card.getImage().getWidth()) / 4;
+            double width = (card.getWidth()) / 4;
             x = Math.ceil((this.x - layoutX) / (width));
             y = Math.ceil((this.y - layoutY) / (width));
             if (!isInCard) {
-                width = (card.getImage().getWidth() - 10) / 4;
-                final Image image = gameWindow.getChips().get(0).getImage();
-                x = layoutX + 5 + (x - 1) * (width) + (Math.floor((width) / 2) - Math.floor((image.getWidth()) / 2));
-                y = layoutY + 5 + (y - 1) * (width) + (Math.floor((width) / 2) - Math.floor((image.getWidth()) / 2));
+                width = (card.getWidth() - 10) / 4;
+                final Chip chip = gameWindow.getChips().get(0);
+                x = layoutX + 5 + (x - 1) * (width) + (Math.floor((width) / 2) - Math.floor((chip.getWidth()) / 2));
+                y = layoutY + 5 + (y - 1) * (width) + (Math.floor((width) / 2) - Math.floor((chip.getWidth()) / 2));
             }
         }
         return new Point(x, y);
@@ -82,7 +82,7 @@ public class Point {
             if (card.isUsed()) {
                 final double layoutX = card.getLayoutX();
                 final double layoutY = card.getLayoutY();
-                final double width = card.getImage().getWidth();
+                final double width = card.getWidth();
                 if ((x > layoutX) && (x < layoutX + width) && (y > layoutY) && (y < layoutY + width)) {
                     n = i;
                 }
