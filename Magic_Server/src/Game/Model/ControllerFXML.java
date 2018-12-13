@@ -1,11 +1,11 @@
 package Game.Model;
 
-import Game.Server.OmegaServer;
+import Game.Server.Room;
 import javafx.stage.Stage;
 
 public class ControllerFXML {
     private Stage stage;
-    private OmegaServer main;
+    private Room main;
 
     public Stage getStage() {
         return stage;
@@ -15,11 +15,11 @@ public class ControllerFXML {
         this.stage = stage;
     }
 
-    public OmegaServer getMain() {
+    public Room getMain() {
         return main;
     }
 
-    public void setMain(OmegaServer main) {
+    public void setMain(Room main) {
         this.main = main;
     }
 }

@@ -87,7 +87,7 @@ public class Factory {
             int h = 0;
             ImageView imageView;
             for (int i = 0; i < length; i++) {
-                imageView = new ImageView("res/pic/window/1.png");
+                imageView = new ImageView(/*"res/pic/window/1.png"*/);
                 int n = Integer.parseInt(String.valueOf(String.valueOf(role.getArrow()).charAt(i)));
                 pane.getChildren().add(imageView);
                 imageView = setParams(imageView, h);
@@ -95,17 +95,17 @@ public class Factory {
                 h++;
             }
             if (role.isGlass()) {
-                imageView = new ImageView("res/pic/window/2.png");
+                imageView = new ImageView(/*"res/pic/window/2.png"*/);
                 pane.getChildren().add(setParams(imageView, h));
                 h++;
             }
             if (role.isPortal()) {
-                imageView = new ImageView("res/pic/window/3.png");
+                imageView = new ImageView(/*"res/pic/window/3.png"*/);
                 pane.getChildren().add(setParams(imageView, h));
                 h++;
             }
             if (role.isBridge()) {
-                imageView = new ImageView("res/pic/window/4.png");
+                imageView = new ImageView(/*"res/pic/window/4.png"*/);
                 pane.getChildren().add(setParams(imageView, h));
             }
         }

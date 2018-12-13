@@ -3,7 +3,6 @@ package Game.Controller;
 import Game.Client.Client;
 import Game.Model.*;
 import javafx.fxml.FXML;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -45,21 +44,11 @@ public class GameWindow extends ControllerFXML {
         createChip(chipsOrder);
     }
 
-    public void clientRotate(int angle) {
+    public void cardsRotate(int angle) {
     }
 
-    public void create(Client client, int currentPlayer, int playersCount, PlayerList players) throws FileNotFoundException {
-        this.client = client;
-        this.currentPlayer = currentPlayer;
+    public void create(PlayerList players) throws FileNotFoundException {
         this.players = players;
-        int h = 10;
-        roles.clear();
-        Factory factory = new Factory(this);
-        roles = factory.chooseActions(playersCount, this);
-        for (Role role : roles) {
-            root.getChildren().add(role.getPane());
-        }
-        AnchorPane.setRightAnchor(roles.get(players.get(currentPlayer).getRole()).getPane(), (double) h);
         createCards(1);
     }
 
@@ -101,7 +90,6 @@ public class GameWindow extends ControllerFXML {
         cards.get(id).rotate(angle);
         pane.getChildren().add(cards.get(id));
         cards.get(id).setVisible(true);
-
     }
 
     private void addNewCard(MouseEvent event) {
@@ -129,10 +117,9 @@ public class GameWindow extends ControllerFXML {
     }
 
     private void createChip(ArrayList<Integer> chipsOrder) {
-
         for (int i = 1; i <= 4; i++) {
             Chip chip = new Chip("res/pic/mag" + i + ".png", "res/pic/mag" + i + i + ".png", this);
-            chip.setImage(new Image(chip.url, 45, 45, true, true));
+//            chip.setImage(new Image(chip.url, 45, 45, true, true));
             chip.setLayoutX(cards.get(0).getLayoutX() + 10);
             chip.setLayoutY(cards.get(0).getLayoutY() + 10);
             chips.add(chip);
@@ -147,15 +134,6 @@ public class GameWindow extends ControllerFXML {
             }
         }
         addStartObjects();
-
-//        chips.get(0).setLayoutX(5 + cards.get(0).getLayoutX() + step * 2 + step / 2 - chips.get(0).getImage().getWidth() / 2);
-//        chips.get(0).setLayoutY(5 + cards.get(0).getLayoutY() + step * 2 + step / 2 - chips.get(0).getImage().getHeight() / 2);
-//        chips.get(1).setLayoutX(5 + cards.get(0).getLayoutX() + step * 2 + step / 2 - chips.get(0).getImage().getWidth() / 2);
-//        chips.get(1).setLayoutY(5 + cards.get(0).getLayoutY() + step * 1 + step / 2 - chips.get(0).getImage().getHeight() / 2);
-//        chips.get(2).setLayoutX(5 + cards.get(0).getLayoutX() + step * 1 + step / 2 - chips.get(0).getImage().getWidth() / 2);
-//        chips.get(2).setLayoutY(5 + cards.get(0).getLayoutY() + step * 1 + step / 2 - chips.get(0).getImage().getHeight() / 2);
-//        chips.get(3).setLayoutX(5 + cards.get(0).getLayoutX() + step * 1 + step / 2 - chips.get(0).getImage().getWidth() / 2);
-//        chips.get(3).setLayoutY(5 + cards.get(0).getLayoutY() + step * 2 + step / 2 - chips.get(0).getImage().getHeight() / 2);
     }
 
     private void createCards(int level) throws FileNotFoundException {
@@ -169,7 +147,7 @@ public class GameWindow extends ControllerFXML {
             }
             int bridges = input.nextInt();
             Card card = new Card(mas, "res/pic/cards/" + String.valueOf(i) + ".png", bridges);
-            card.setImage(new Image(card.getUrl(), 300, 300, true, false));
+//            card.setImage(new Image(card.getUrl(), 300, 300, true, false));
             card.setLayoutX(((Scale) pane.getParent()).WIDTH / 2f - 150);
             card.setLayoutY(((Scale) pane.getParent()).HEIGHT / 2f - 150);
             cards.add(card);

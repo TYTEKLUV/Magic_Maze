@@ -1,6 +1,8 @@
 package Game.Server;
 
+import Game.Model.GameRules;
 import Game.Model.Player;
+import Game.Model.Point;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -57,6 +59,9 @@ public class ClientHandler extends Thread {
                     case "READY":
                         player.setReady(true);
                         room.startGame();
+                        break;
+                    case "CLICK":
+                        new GameRules().mouseReleased(new Point(command.nextDouble(), command.nextDouble()), room.getGameWindow());
                         break;
                     case "SELECT":
                         break;

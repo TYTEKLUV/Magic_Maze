@@ -51,11 +51,12 @@ public class ClientStarter extends Thread {
             case "ip":
                 System.out.println("| your ip = " + InetAddress.getLocalHost().getHostAddress());
                 break;
-            case "nick":
+            case "n":
                 if (client == null || !client.isAlive())
                     if (command.hasNext()) {
                         nickname = command.next();
                         System.out.println("New nickname: " + nickname);
+                        commandHandler("connect");
                     }
 //                    else {
 //                        System.out.print("Enter nickname: ");

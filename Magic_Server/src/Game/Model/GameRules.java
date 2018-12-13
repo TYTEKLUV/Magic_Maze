@@ -195,7 +195,7 @@ public class GameRules {
         }
     }
 
-    public void mouseReleased(Point event, GameWindow gameWindow) {
+    public void mouseReleased(Point event, GameWindow gameWindow) throws IOException {
         boolean f = false;
         for (int i = 0; i < 4; i++) {
             Chip chip = gameWindow.getChips().get(i);
@@ -209,6 +209,7 @@ public class GameRules {
                         gameWindow.getChips().get(i).setLayoutY(point.y);
                         gameWindow.getChips().get(i).toFront();
                         gameWindow.getChips().get(i).whereAreUNow();
+                        gameWindow.getMain().sendAll("GAME MOVE " + i + " " + point.x + " " + point.y);
                     }
                 }
                 chip.setDefault();
@@ -219,6 +220,7 @@ public class GameRules {
                 Chip chip = gameWindow.getChips().get(i);
                 if ((event.x > chip.getLayoutX()) && (event.x < chip.getLayoutX() + chip.getImage().getWidth()) && (event.y > chip.getLayoutY()) && (event.y < chip.getLayoutY() + chip.getImage().getHeight())) {
                     chip.setClicked();
+                    gameWindow.getMain().sendAll("GAME SELECT " + i);
                 }
             }
         }

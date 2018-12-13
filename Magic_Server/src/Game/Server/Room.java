@@ -1,30 +1,42 @@
 package Game.Server;
 
+import Game.Controller.GameWindow;
+import Game.Model.ControllerFXML;
 import Game.Model.Player;
 import Game.Model.PlayerList;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
+import java.util.Scanner;
 
 public class Room {
     private String name;
     private Server server;
     private volatile PlayerList players = new PlayerList();
     private volatile ArrayList<ClientHandler> clients = new ArrayList<>();
+    private GameWindow gameWindow;
 
-    public Room(String name, int playersCount) {
+
+    public Room(String name, int playersCount) throws IOException {
         this.name = name;
         server = (Server) Thread.currentThread();
         players.createPlayers(playersCount);
+        gameWindow = (GameWindow) loadFXML(new Stage(), "/View/FieldEditor.fxml", "Magic Maze", 1280, 720, false);
     }
 
-    public Room(String name, int playersCount, Server server) {
+    public Room(String name, int playersCount, Server server) throws IOException {
         this.name = name;
         this.server = server;
         players.createPlayers(playersCount);
+        gameWindow = (GameWindow) loadFXML(new Stage(), "/View/FieldEditor.fxml", "Magic Maze", 1280, 720, false);
     }
 
     public void connectClient(Socket client, Player player) {
@@ -90,13 +102,27 @@ public class Room {
         players.rolesRandom();
         sendAll("GAME LOAD");
         sendRoles();
-        sendAll("SET ROTATE " + new Random().nextInt(4));
-        sendAll("SET CHIPS " + randomChips());
+
+        int rotate = new Random().nextInt(4);
+        gameWindow.cardsRotate(rotate * 90);
+        sendAll("SET ROTATE " + rotate);
+
+        gameWindow.create(players);
+
+        String chips = randomChips();
+        Scanner command = new Scanner(chips);
+        ArrayList<Integer> chipsOrder = new ArrayList<>();
+        for (int i = 0; i < 4; i++)
+            chipsOrder.add(command.nextInt());
+        gameWindow.clientChips(chipsOrder);
+        sendAll("SET CHIPS " + chips);
     }
 
     public void startGame() throws IOException {
-        if (players.readyCount() == players.size())
+        if (players.readyCount() == players.size()) {
+            gameWindow.getStage().show();
             sendAll("GAME START");
+        }
     }
 
     public void rolesChange() throws IOException {
@@ -145,6 +171,23 @@ public class Room {
         return "| Player status: \n" + players.toString() +
                 "\n| LEADER " + players.getLeader().getNickname() +
                 "\n| START " + (players.readyCount() == players.size() ? "READY" : "NOT_READY");
+    }
+
+    private ControllerFXML loadFXML(Stage stage, String file, String title, double width, double height, boolean show) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(file));
+        Parent root = loader.load();
+        ControllerFXML controller = loader.getController();
+        controller.setMain(this);
+        controller.setStage(stage);
+        stage.setTitle(title);
+        stage.setScene(new Scene(root, width, height));
+        stage.getScene().setCursor(Cursor.DEFAULT);
+        if (show) stage.show();
+        return controller;
+    }
+
+    public GameWindow getGameWindow() {
+        return (GameWindow) gameWindow;
     }
 
     //endregion
