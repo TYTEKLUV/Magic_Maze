@@ -52,6 +52,7 @@ public class GameRules {
     public void commandMove (int id, double x, double y, GameWindow gameWindow) {
         gameWindow.getChips().get(id).setLayoutX(x);
         gameWindow.getChips().get(id).setLayoutY(y);
+        gameWindow.getChips().get(id).setDefault();
     }
 
     public void commandSelect (int id, GameWindow gameWindow) {

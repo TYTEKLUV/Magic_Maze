@@ -4,6 +4,7 @@ import Game.Controller.GameWindow;
 import Game.Model.ControllerFXML;
 import Game.Model.Player;
 import Game.Model.PlayerList;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
@@ -120,7 +121,8 @@ public class Room {
 
     public void startGame() throws IOException {
         if (players.readyCount() == players.size()) {
-            gameWindow.getStage().show();
+            Platform.runLater(() -> gameWindow.getStage().show());
+            //gameWindow.getStage().show();
             sendAll("GAME START");
         }
     }
