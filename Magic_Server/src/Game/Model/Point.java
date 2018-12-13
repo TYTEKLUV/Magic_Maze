@@ -75,7 +75,7 @@ public class Point {
         return false;
     }
 
-    int getCardId(GameWindow gameWindow) {
+    public int getCardId(GameWindow gameWindow) {
         int n = -1;
         for (int i = 0; i < gameWindow.getCards().size(); i++) {
             Card card = gameWindow.getCards().get(i);
@@ -91,7 +91,7 @@ public class Point {
         return n;
     }
 
-    Point localToMap() {
+    public Point localToMap() {
         x = (x - 1) * 2;
         y = (y - 1) * 2;
         return this;

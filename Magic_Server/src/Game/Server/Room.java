@@ -1,9 +1,7 @@
 package Game.Server;
 
 import Game.Controller.GameWindow;
-import Game.Model.ControllerFXML;
-import Game.Model.Player;
-import Game.Model.PlayerList;
+import Game.Model.*;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
@@ -95,6 +93,9 @@ public class Room {
     }
 
     public void addCard(int id, int x, int y, int rotate, ClientHandler setter) throws IOException {
+        Platform.runLater(() -> gameWindow.sendCard(id, new Point(x, y), rotate));
+        new GameRules().glassToGlass(gameWindow.getCards(), gameWindow);
+
         sendOthers("GAME CARD " + id + " " + x + " " + y + " " + rotate, setter);
     }
 

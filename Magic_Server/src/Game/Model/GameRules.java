@@ -178,7 +178,7 @@ public class GameRules {
         gameWindow.getCards().get(gameWindow.getMoveCard()).setLayoutY(y);
     }
 
-    public void moveReleased(Point event, GameWindow gameWindow) throws IOException {
+    public void moveReleased(GameWindow gameWindow) throws IOException {
         final int closestGlassId = gameWindow.getClosestFindGlassId();
         Point point = gameWindow.getChips().get(closestGlassId).getPosition();
         gameWindow.getChips().get(closestGlassId).isOnFindGlass = false;
@@ -209,7 +209,7 @@ public class GameRules {
                         gameWindow.getChips().get(i).setLayoutY(point.y);
                         gameWindow.getChips().get(i).toFront();
                         gameWindow.getChips().get(i).whereAreUNow();
-                        gameWindow.getMain().sendAll("GAME MOVE " + i + " " + point.x + " " + point.y);
+                        gameWindow.getMain().sendAll("GAME MOVE " + i + " " + (int)point.x + " " + (int)point.y);
                     }
                 }
                 chip.setDefault();

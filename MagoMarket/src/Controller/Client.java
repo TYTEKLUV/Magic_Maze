@@ -116,7 +116,7 @@ public class Client extends Thread {
                         gameWindow.gameRules.commandSelect(command.nextInt(), gameWindow);
                         break;
                     case "MOVE":
-                        gameWindow.gameRules.commandMove(command.nextInt(), (double)command.nextInt(), (double)command.nextInt(), gameWindow);
+                        gameWindow.gameRules.commandMove(command.nextInt(), command.nextInt(), command.nextInt(), gameWindow);
                         break;
                     case "ROLES":
                         break;
@@ -156,11 +156,11 @@ public class Client extends Thread {
         }
     }
 
-    public void addCard(int id, double x, double y, int angle) throws IOException {
+    public void addCard(int id, int x, int y, int angle) throws IOException {
         send("GAME CARD " + id + " " + x + " " + y + " " + angle);
     }
 
-    public void sendClick (double x, double y) throws IOException {
+    public void sendClick (int x, int y) throws IOException {
         send("GAME CLICK " + x + " " + y);
     }
 

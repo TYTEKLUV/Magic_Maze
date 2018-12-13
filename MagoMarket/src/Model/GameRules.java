@@ -46,21 +46,27 @@ public class GameRules {
     }
 
     public void moveReleased(GameWindow gameWindow) throws IOException {
+        gameWindow.getCards().get(gameWindow.getMoveCard()).toBack();
         gameWindow.getClient().addCard(gameWindow.getMoveCard(), (int) gameWindow.getCards().get(gameWindow.getMoveCard()).getLayoutX(), (int) gameWindow.getCards().get(gameWindow.getMoveCard()).getLayoutY(), (int) gameWindow.getCards().get(gameWindow.getMoveCard()).getRotate());
+        gameWindow.setMoveCard(false);
+        gameWindow.getNewCard().setDisable(false);
     }
 
-    public void commandMove (int id, double x, double y, GameWindow gameWindow) {
+    public void commandMove (int id, int x, int y, GameWindow gameWindow) {
         gameWindow.getChips().get(id).setLayoutX(x);
         gameWindow.getChips().get(id).setLayoutY(y);
         gameWindow.getChips().get(id).setDefault();
+        gameWindow.getChips().get(id).whereAreUNow();
+        System.out.println("move");
     }
 
     public void commandSelect (int id, GameWindow gameWindow) {
         gameWindow.getChips().get(id).setClicked();
+        System.out.println("select");
     }
 
     public void mouseReleased(Point event, GameWindow gameWindow) throws IOException {
-        gameWindow.getClient().sendClick(event.x, event.y);
+        gameWindow.getClient().sendClick((int)event.x, (int)event.y);
     }
 
     private void rotateCard(GameWindow gameWindow, int x, int y) {

@@ -91,13 +91,13 @@ public class ClientStarter extends Thread {
                 System.out.println("send not ready");
                 break;
             case "start":
-                if (players.readyCount() == players.size()) {
+//                if (players.readyCount() == players.size()) {
                     if (players.getLeader() == client.getPlayer())
                         client.thirdCommand();
                     else
                         System.out.println("you not leader");
-                } else
-                    System.out.println("all not ready");
+//                } else
+//                    System.out.println("all not ready");
                 break;
             case "send":
                 client.send("GAME READY");

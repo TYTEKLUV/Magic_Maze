@@ -3,6 +3,7 @@ package Game.Server;
 import Game.Model.GameRules;
 import Game.Model.Player;
 import Game.Model.Point;
+import javafx.application.Platform;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -61,13 +62,29 @@ public class ClientHandler extends Thread {
                         room.startGame();
                         break;
                     case "CLICK":
-                        new GameRules().mouseReleased(new Point(command.nextDouble(), command.nextDouble()), room.getGameWindow());
+                        Platform.runLater(() -> {
+                            Point point = new Point(command.nextInt(), command.nextInt());
+                            try {
+                                new GameRules().mouseReleased(point, room.getGameWindow());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            int c = point.getCardId(room.getGameWindow());
+                            System.out.println("click place = " + room.getGameWindow().getCards().get(c).getMap()[(int) point.getPosition(true, room.getGameWindow()).localToMap().y][(int) point.getPosition(true, room.getGameWindow()).localToMap().x]);
+                        });
                         break;
                     case "SELECT":
                         break;
                     case "MOVE":
                         break;
                     case "CARD":
+                        Platform.runLater(() -> {
+                            try {
+                                new GameRules().moveReleased(room.getGameWindow());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        });
                         room.addCard(command.nextInt(), command.nextInt(), command.nextInt(), command.nextInt(), this);
                         break;
                 }
@@ -76,10 +93,10 @@ public class ClientHandler extends Thread {
     }
 
     public void send(String message) throws IOException {
-//        System.out.println(player.getNickname() + " send: " + message);
+        System.out.println(player.getNickname() + " send: " + message);
         out.writeUTF(message);
         out.flush();
-//        System.out.println(player.getNickname() + " send: " + message + " complete");
+        System.out.println(player.getNickname() + " send: " + message + " complete");
     }
 
     private void connect() throws IOException {

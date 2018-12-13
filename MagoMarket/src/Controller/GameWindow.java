@@ -9,6 +9,7 @@ import javafx.scene.layout.Pane;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -33,7 +34,7 @@ public class GameWindow extends ControllerFXML {
     private int closestFindGlassId;
     private int currentPlayer = -1;
     private Client client;
-    GameRules gameRules;
+    GameRules gameRules = new GameRules();
 
     @FXML
     void initialize() throws FileNotFoundException {
@@ -47,11 +48,17 @@ public class GameWindow extends ControllerFXML {
         //createChip(new ArrayList<>(Arrays.asList(3, 1, 0, 2)));
         pane.addEventFilter(MouseEvent.MOUSE_CLICKED, new PaneHandler(this));
         root.addEventFilter(MouseEvent.MOUSE_MOVED, new PaneHandler(this));
-        newCard.setOnMouseClicked(this::addNewCard);
+        newCard.setOnMouseClicked(event -> {
+            try {
+                addNewCard(event);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
-    private void test() {
-
+    public Pane getNewCard() {
+        return newCard;
     }
 
     public void clientChips(ArrayList<Integer> chipsOrder) {
@@ -112,10 +119,11 @@ public class GameWindow extends ControllerFXML {
         cards.get(id).rotate(angle);
         pane.getChildren().add(cards.get(id));
         cards.get(id).setVisible(true);
+        cards.get(id).toBack();
 
     }
 
-    private void addNewCard(MouseEvent event) {
+    private void addNewCard(MouseEvent event) throws IOException {
         int n = 0;
         findGlasses.clear();
         for (int i = 0; i < 4; i++) {

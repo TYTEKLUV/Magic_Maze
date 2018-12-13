@@ -28,6 +28,7 @@ public class PaneHandler implements EventHandler<MouseEvent> {
                 }
                 else {
                     try {
+                        System.out.println("mouseClicked");
                         mouseReleased(event);
                     } catch (IOException e) {
                         e.printStackTrace();
