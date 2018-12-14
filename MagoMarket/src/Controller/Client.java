@@ -112,13 +112,20 @@ public class Client extends Thread {
                         //Выключить загрузочный экран
                         //Включить игровое поле
                         break;
-                    case "SELECT":
-                        gameWindow.gameRules.commandSelect(command.nextInt(), gameWindow);
+                    case "BUSY":
+                        gameWindow.getChips().get(command.nextInt()).setBusy(true);
                         break;
                     case "MOVE":
-                        gameWindow.gameRules.commandMove(command.nextInt(), command.nextInt(), command.nextInt(), gameWindow);
+                        int id = command.nextInt();
+                        gameWindow.gameRules.commandMove(id, command.nextInt(), command.nextInt(), gameWindow);
                         break;
                     case "ROLES":
+                        break;
+                    case "GLACES":
+                        gameWindow.getFindGlasses().clear();
+                        while (command.hasNextInt())
+                            gameWindow.getFindGlasses().add(command.nextInt());
+                        Platform.runLater(() -> gameWindow.getNewCard());
                         break;
                     case "CARD":
                         Platform.runLater(() -> gameWindow.sendCard(command.nextInt(), new Point(command.nextInt(), command.nextInt()), command.nextInt()));
@@ -156,11 +163,15 @@ public class Client extends Thread {
         }
     }
 
+    public void selectChip(int id) throws IOException {
+        send("GAME BUSY " + id);
+    }
+
     public void addCard(int id, int x, int y, int angle) throws IOException {
         send("GAME CARD " + id + " " + x + " " + y + " " + angle);
     }
 
-    public void sendClick (int x, int y) throws IOException {
+    public void sendClick(int x, int y) throws IOException {
         send("GAME CLICK " + x + " " + y);
     }
 

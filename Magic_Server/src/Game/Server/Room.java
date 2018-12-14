@@ -11,10 +11,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class Room {
     private String name;
@@ -87,6 +84,7 @@ public class Room {
     private String randomChips() {
         StringBuilder chips = new StringBuilder();
         ArrayList<Integer> chipsList = new ArrayList<>(Arrays.asList(0, 1, 2, 3));
+        Collections.shuffle(chipsList);
         for (int i = 0; i < 4; i++)
             chips.append(i != 0 ? " " : "").append(chipsList.get(i));
         return chips.toString();
@@ -126,8 +124,6 @@ public class Room {
 
     public void startGame() throws IOException {
         if (players.readyCount() == players.size()) {
-            Platform.runLater(() -> gameWindow.getStage().show());
-            //gameWindow.getStage().show();
             sendAll("GAME START");
         }
     }

@@ -67,10 +67,10 @@ public class Factory {
         }
         else {
             center = (role.getPane().getPrefHeight() + h) / 2;
-            gameWindow.newCard.setVisible(false);
+            gameWindow.newCardBtn.setVisible(false);
         }
         role.getPane().setLayoutY(gameWindow.root.getPrefHeight()/2 - center);
-        gameWindow.newCard.setLayoutY(role.getPane().getLayoutY() + role.getPane().getPrefHeight() + h);
+        gameWindow.newCardBtn.setLayoutY(role.getPane().getLayoutY() + role.getPane().getPrefHeight() + h);
         return role;
     }
     private Pane changePane(Pane pane, String style, int h) {

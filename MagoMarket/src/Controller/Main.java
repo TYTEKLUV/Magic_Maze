@@ -36,6 +36,7 @@ public class Main extends Application {
         stage.setTitle(title);
         stage.setScene(new Scene(root, width, height));
         stage.getScene().setCursor(Cursor.DEFAULT);
+        stage.setOnCloseRequest(event -> System.exit(0));
         if (show) stage.show();
         return controller;
     }

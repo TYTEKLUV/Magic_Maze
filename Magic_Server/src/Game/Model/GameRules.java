@@ -197,36 +197,66 @@ public class GameRules {
         }
     }
 
-    public void mouseReleased(Point event, GameWindow gameWindow) throws IOException {
-        boolean f = false;
+    public void chipBusy(int id, GameWindow gameWindow) throws IOException {
+        gameWindow.getMain().sendAll("GAME BUSY " + id);
+    }
+
+    public void chipMove(int id, Point event, GameWindow gameWindow) throws IOException {
+        gameWindow.getChips().get(id).isSelected = true;
         for (int i = 0; i < 4; i++) {
             Chip chip = gameWindow.getChips().get(i);
             if (chip.isSelected) {
-                f = true;
                 Point pointCard = event.getPosition(true, gameWindow);
                 Point point = event.getPosition(false, gameWindow);
-                if (isChipMovable(event, chip.getPosition(), event.getPosition(true, gameWindow), chip, gameWindow)) {
-                    if ((pointCard.y != -1) && (pointCard.x != -1)) {
-                        gameWindow.getChips().get(i).setLayoutX(point.x);
-                        gameWindow.getChips().get(i).setLayoutY(point.y);
-                        gameWindow.getChips().get(i).toFront();
-                        gameWindow.getChips().get(i).whereAreUNow();
-                        gameWindow.getMain().sendAll("GAME MOVE " + i + " " + (int)point.x + " " + (int)point.y);
+                Point pointChip = new Point(chip.getLayoutX(), chip.getLayoutY()).getPosition(false, gameWindow);
+                if (pointChip.x == point.x && pointChip.y == point.y) {
+                    gameWindow.getMain().sendAll("GAME MOVE " + i + " " + (int) point.x + " " + (int) point.y);
+                } else {
+                    if (isChipMovable(event, chip.getPosition(), event.getPosition(true, gameWindow), chip, gameWindow)) {
+                        if ((pointCard.y != -1) && (pointCard.x != -1)) {
+                            gameWindow.getChips().get(i).setLayoutX(point.x);
+                            gameWindow.getChips().get(i).setLayoutY(point.y);
+                            gameWindow.getChips().get(i).toFront();
+                            gameWindow.getChips().get(i).whereAreUNow();
+                            gameWindow.getMain().sendAll("GAME MOVE " + i + " " + (int) point.x + " " + (int) point.y);
+                        }
                     }
-                }
-                chip.setDefault();
-            }
-        }
-        if (!f) {
-            for (int i = 0; i < 4; i++) {
-                Chip chip = gameWindow.getChips().get(i);
-                if ((event.x > chip.getLayoutX()) && (event.x < chip.getLayoutX() + chip.getWidth()) && (event.y > chip.getLayoutY()) && (event.y < chip.getLayoutY() + chip.getWidth())) {
-                    chip.setClicked();
-                    gameWindow.getMain().sendAll("GAME SELECT " + i);
+                    chip.setDefault();
                 }
             }
         }
     }
+
+//    public void mouseReleased(Point event, GameWindow gameWindow) throws IOException {
+//        boolean f = false;
+//        for (int i = 0; i < 4; i++) {
+//            Chip chip = gameWindow.getChips().get(i);
+//            if (chip.isSelected) {
+//                f = true;
+//                Point pointCard = event.getPosition(true, gameWindow);
+//                Point point = event.getPosition(false, gameWindow);
+//                if (isChipMovable(event, chip.getPosition(), event.getPosition(true, gameWindow), chip, gameWindow)) {
+//                    if ((pointCard.y != -1) && (pointCard.x != -1)) {
+//                        gameWindow.getChips().get(i).setLayoutX(point.x);
+//                        gameWindow.getChips().get(i).setLayoutY(point.y);
+//                        gameWindow.getChips().get(i).toFront();
+//                        gameWindow.getChips().get(i).whereAreUNow();
+//                        gameWindow.getMain().sendAll("GAME MOVE " + i + " " + (int)point.x + " " + (int)point.y);
+//                    }
+//                }
+//                chip.setDefault();
+//            }
+//        }
+//        if (!f) {
+//            for (int i = 0; i < 4; i++) {
+//                Chip chip = gameWindow.getChips().get(i);
+//                if ((event.x > chip.getLayoutX()) && (event.x < chip.getLayoutX() + chip.getWidth()) && (event.y > chip.getLayoutY()) && (event.y < chip.getLayoutY() + chip.getWidth())) {
+//                    chip.setClicked();
+//                    gameWindow.getMain().sendAll("GAME SELECT " + i);
+//                }
+//            }
+//        }
+//    }
 
     private void rotateCard(GameWindow gameWindow, int x, int y) {
         while (gameWindow.getCards().get(gameWindow.getMoveCard()).getMap()[x][y] != 20) {

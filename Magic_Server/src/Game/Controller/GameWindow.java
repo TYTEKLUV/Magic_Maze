@@ -1,6 +1,5 @@
 package Game.Controller;
 
-import Game.Client.Client;
 import Game.Model.*;
 import javafx.fxml.FXML;
 import javafx.scene.input.MouseEvent;
@@ -31,7 +30,6 @@ public class GameWindow extends ControllerFXML {
     private int moveCardId;
     private int closestFindGlassId;
     private int currentPlayer = -1;
-    private Client client;
 
     @FXML
     void initialize() {
@@ -85,12 +83,6 @@ public class GameWindow extends ControllerFXML {
     }
 
     public void sendCard(int id, Point point, int angle) throws IOException {
-        findGlasses.clear();
-        for (int i = 0; i < 4; i++) {
-            if (chips.get(i).isOnFindGlass) {
-                findGlasses.add(i);
-            }
-        }
         cards.get(id).setLayoutX(point.x);
         cards.get(id).setLayoutY(point.y);
         cards.get(id).setUsed(true);
@@ -229,9 +221,5 @@ public class GameWindow extends ControllerFXML {
 
     public void setClosestFindGlassId(int closestFindGlassId) {
         this.closestFindGlassId = closestFindGlassId;
-    }
-
-    public Client getClient() {
-        return client;
     }
 }

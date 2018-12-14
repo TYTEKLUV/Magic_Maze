@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.InetAddress;
+import java.util.Random;
 import java.util.Scanner;
 
 public class ClientStarter extends Thread {
@@ -41,6 +42,7 @@ public class ClientStarter extends Thread {
     private void startCommands() throws IOException {
         System.out.println("Client started");
         System.out.println("--------------");
+        commandHandler("n " + new Random().nextInt(100));
 //        commandHandler("nick");
 //        commandHandler("connect 127.0.0.1");
     }
@@ -56,7 +58,7 @@ public class ClientStarter extends Thread {
                     if (command.hasNext()) {
                         nickname = command.next();
                         System.out.println("New nickname: " + nickname);
-                        commandHandler("connect");
+                        commandHandler("connect 127.0.0.1");
                     }
 //                    else {
 //                        System.out.print("Enter nickname: ");

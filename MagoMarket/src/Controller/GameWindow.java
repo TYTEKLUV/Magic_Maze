@@ -20,7 +20,7 @@ public class GameWindow extends ControllerFXML {
     @FXML
     public AnchorPane root;
     @FXML
-    public Pane newCard;
+    public Pane newCardBtn;
 
     private Pane pane;
     private int cardsCount = 9;
@@ -48,7 +48,7 @@ public class GameWindow extends ControllerFXML {
         //createChip(new ArrayList<>(Arrays.asList(3, 1, 0, 2)));
         pane.addEventFilter(MouseEvent.MOUSE_CLICKED, new PaneHandler(this));
         root.addEventFilter(MouseEvent.MOUSE_MOVED, new PaneHandler(this));
-        newCard.setOnMouseClicked(event -> {
+        newCardBtn.setOnMouseClicked(event -> {
             try {
                 addNewCard(event);
             } catch (IOException e) {
@@ -57,8 +57,8 @@ public class GameWindow extends ControllerFXML {
         });
     }
 
-    public Pane getNewCard() {
-        return newCard;
+    public Pane getNewCardBtn() {
+        return newCardBtn;
     }
 
     public void clientChips(ArrayList<Integer> chipsOrder) {
@@ -95,7 +95,7 @@ public class GameWindow extends ControllerFXML {
         roles = factory.chooseActions(count, this);
         for (Role role : roles) { root.getChildren().add(role.getPane()); }
         AnchorPane.setRightAnchor(roles.get(players.get(currentPlayer).getRole()).getPane(), (double) h);
-        //newCard.setLayoutY(roles.get(roles.size() - 1).getPane().getLayoutY() + roles.get(roles.size() - 1).getPane().getPrefHeight() + h);
+        //newCardBtn.setLayoutY(roles.get(roles.size() - 1).getPane().getLayoutY() + roles.get(roles.size() - 1).getPane().getPrefHeight() + h);
     }
 
     public int getNotUsedCard() {
@@ -123,34 +123,30 @@ public class GameWindow extends ControllerFXML {
 
     }
 
-    private void addNewCard(MouseEvent event) throws IOException {
-        int n = 0;
-        findGlasses.clear();
-        for (int i = 0; i < 4; i++) {
-            if (chips.get(i).isOnFindGlass) {
-                findGlasses.add(i);
-                n++;
-            }
-        }
-        if (n > 0) {
+    public void getNewCard() {
+        if (findGlasses.size() > 0) {
             int i = getNotUsedCard();
             if (i != -1) {
                 moveCardId = i;
                 isMoveCard = true;
                 cards.get(i).setUsed(true);
                 cards.get(i).setVisible(false);
-                getCards().get(getMoveCard()).setLayoutX(event.getSceneX() - getCards().get(0).getImage().getWidth() / 2);
-                getCards().get(getMoveCard()).setLayoutY(event.getSceneY() - getCards().get(0).getImage().getHeight() / 2);
+//                getCards().get(getMoveCard()).setLayoutX(event.getSceneX() - getCards().get(0).getImage().getWidth() / 2);
+//                getCards().get(getMoveCard()).setLayoutY(event.getSceneY() - getCards().get(0).getImage().getHeight() / 2);
                 pane.getChildren().add(cards.get(i));
-                newCard.setDisable(true);
+                newCardBtn.setDisable(true);
             }
         }
+    }
+
+    private void addNewCard(MouseEvent event) throws IOException {
+        client.send("GAME GLACES");
     }
 
     private void createChip(ArrayList<Integer> chipsOrder) {
 
         for (int i = 1; i <= 4; i++) {
-            Chip chip = new Chip("res/pic/mag" + i + ".png", "res/pic/mag" + i + i + ".png", this);
+            Chip chip = new Chip("res/pic/mag" + i + ".png", "res/pic/mag" + i + i + ".png", "res/pic/mag" + i + i + i + ".png", this);
             chip.setImage(new Image(chip.url, 45, 45, true, true));
             chip.setLayoutX(cards.get(0).getLayoutX() + 10);
             chip.setLayoutY(cards.get(0).getLayoutY() + 10);
