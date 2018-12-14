@@ -78,9 +78,13 @@ public class ClientHandler extends Thread {
                         room.sendOthers("GAME BUSY " + command.nextInt(), this);
                         break;
                     case "MOVE":
+
                         Platform.runLater(() -> {
                             try {
-                                new GameRules().chipMove(command.nextInt(), new Point(command.nextInt(), command.nextInt()), room.getGameWindow());
+                                final int id = command.nextInt();
+                                final Point event = new Point(command.nextInt(), command.nextInt());
+                                new GameRules().chipMove(id, event, room.getGameWindow(), player.getRole());
+                                //room.getGameWindow().getGameRules().getArrowRotate(id, event, room.getGameWindow());
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }

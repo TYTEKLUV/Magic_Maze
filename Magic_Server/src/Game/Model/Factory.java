@@ -39,23 +39,7 @@ public class Factory {
                 list.add(new Role(2, 4, true, false, false, changePane(new Pane(), styles[1], height2)));
                 break;
         }
-        for (Role aList : list) {
-            aList.setPane(addPicOnPane(aList));
-        }
-        Role myRole = myRole(list.get(gameWindow.getPlayers().get(gameWindow.getCurrentPlayer()).getRole()));
-        list.remove(gameWindow.getPlayers().get(gameWindow.getCurrentPlayer()).getRole());
-        double height = 0;
-        for (Role aList : list) {
-            height += (aList.getPane().getPrefHeight() + h);
-        }
-        list.get(0).getPane().setLayoutY(gameWindow.root.getPrefHeight() / 2 - height / 2);
-        list.get(0).getPane().setLayoutX(h);
-        for (int i = 1; i < list.size(); i++) {
-            list.get(i).getPane().setLayoutX(h);
-            list.get(i).getPane().setLayoutY(list.get(i - 1).getPane().getLayoutY() + list.get(i - 1).getPane().getPrefHeight() + h);
-            list.get(i).getPane().setLayoutX(h);
-        }
-        list.add(gameWindow.getPlayers().get(gameWindow.getCurrentPlayer()).getRole(), myRole);
+
         return list;
     }
 

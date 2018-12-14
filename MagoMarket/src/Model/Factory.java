@@ -88,7 +88,7 @@ public class Factory {
             ImageView imageView;
             for (int i = 0; i < length; i++) {
                 imageView = new ImageView("res/pic/window/1.png");
-                int n = Integer.parseInt(String.valueOf(String.valueOf(role.getArrow()).charAt(i)));
+                int n = Integer.parseInt(String.valueOf(String.valueOf(role.getArrow()).charAt(i))) - 1;
                 pane.getChildren().add(imageView);
                 imageView = setParams(imageView, h);
                 imageView.setRotate(90 * n);

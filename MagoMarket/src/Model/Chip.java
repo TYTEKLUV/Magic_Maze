@@ -31,7 +31,7 @@ public class Chip extends ImageView {
     public void setBusy(boolean busy) {
         isBusy = busy;
         if (busy)
-            setImage(new Image(urlBusy, 45, 45, true, true));
+             setImage(new Image(urlBusy, 45, 45, true, true));
         else
             setDefault();
     }

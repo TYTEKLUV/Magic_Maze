@@ -162,15 +162,6 @@ public class GameWindow extends ControllerFXML {
             }
         }
         addStartObjects();
-
-//        chips.get(0).setLayoutX(5 + cards.get(0).getLayoutX() + step * 2 + step / 2 - chips.get(0).getImage().getWidth() / 2);
-//        chips.get(0).setLayoutY(5 + cards.get(0).getLayoutY() + step * 2 + step / 2 - chips.get(0).getImage().getHeight() / 2);
-//        chips.get(1).setLayoutX(5 + cards.get(0).getLayoutX() + step * 2 + step / 2 - chips.get(0).getImage().getWidth() / 2);
-//        chips.get(1).setLayoutY(5 + cards.get(0).getLayoutY() + step * 1 + step / 2 - chips.get(0).getImage().getHeight() / 2);
-//        chips.get(2).setLayoutX(5 + cards.get(0).getLayoutX() + step * 1 + step / 2 - chips.get(0).getImage().getWidth() / 2);
-//        chips.get(2).setLayoutY(5 + cards.get(0).getLayoutY() + step * 1 + step / 2 - chips.get(0).getImage().getHeight() / 2);
-//        chips.get(3).setLayoutX(5 + cards.get(0).getLayoutX() + step * 1 + step / 2 - chips.get(0).getImage().getWidth() / 2);
-//        chips.get(3).setLayoutY(5 + cards.get(0).getLayoutY() + step * 2 + step / 2 - chips.get(0).getImage().getHeight() / 2);
     }
 
     private void createCards(int level) throws FileNotFoundException {
