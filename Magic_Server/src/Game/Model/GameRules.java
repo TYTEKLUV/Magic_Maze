@@ -55,30 +55,31 @@ public class GameRules {
 
     private boolean getArrowRotate(int id, Point event, GameWindow gameWindow, int role) {
         Chip chip = gameWindow.getChips().get(id);
-        Point p = new Point(chip.getLayoutX(), chip.getLayoutY()).getPosition(true, gameWindow);
-        Point e = new Point(event.x, event.y).getPosition(true, gameWindow);
+        Point p = new Point(chip.getLayoutX(), chip.getLayoutY()).getPosition(false, gameWindow);
+        Point e = new Point(event.x, event.y).getPosition(false, gameWindow);
         Point d = new Point(p.x - e.x, p.y - e.y);
         System.out.println("d " + d.x + " " + d.y);
         System.out.println("arr " + gameWindow.getRoles().get(role).getArrow());
         String arrow = String.valueOf(gameWindow.getRoles().get(role).getArrow());
         int length = String.valueOf(arrow).length();
+        double n = 2.5;
         for (int i = 0; i < length; i ++) {
-            if ((d.x == 0)&&(d.y > 0)) {
+            if ((d.x <= n)&&(d.y > 0)) {
                 if (Integer.parseInt(String.valueOf(arrow.charAt(i))) == 1) {
                     return true;
                 }
             }
-            if ((d.x < 0)&&(d.y == 0)) {
+            if ((d.x < 0)&&(d.y <= n)) {
                 if (Integer.parseInt(String.valueOf(arrow.charAt(i))) == 2) {
                     return true;
                 }
             }
-            if ((d.x == 0)&&(d.y < 0)) {
+            if ((d.x <= n)&&(d.y < 0)) {
                 if (Integer.parseInt(String.valueOf(arrow.charAt(i))) == 3) {
                     return true;
                 }
             }
-            if ((d.x > 0)&&(d.y == 0)) {
+            if ((d.x > 0)&&(d.y <= n)) {
                 if (Integer.parseInt(String.valueOf(arrow.charAt(i))) == 3) {
                     return true;
                 }
