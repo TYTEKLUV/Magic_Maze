@@ -7,7 +7,7 @@
 
 <AnchorPane fx:id="root" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#click" prefHeight="720.0" prefWidth="1280.0" snapToPixel="false" stylesheets="@../Styles/FieldEditor.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.GameWindow">
    <children>
-      <Pane fx:id="newCard" layoutX="1192.0" layoutY="449.0" prefHeight="80.0" prefWidth="80.0" styleClass="btn1" AnchorPane.rightAnchor="8.0">
+      <Pane fx:id="newCardBtn" layoutX="1192.0" layoutY="449.0" prefHeight="80.0" prefWidth="80.0" styleClass="btn1" AnchorPane.rightAnchor="8.0">
          <children>
             <ImageView fitHeight="80.0" fitWidth="80.0" pickOnBounds="true">
                <image>

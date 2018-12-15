@@ -9,6 +9,7 @@ import javafx.scene.layout.Pane;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,9 +20,10 @@ public class GameWindow extends ControllerFXML {
     @FXML
     public AnchorPane root;
     @FXML
-    public Pane newCard;
+    public Pane newCardBtn;
 
     private Pane pane;
+    private Scale scale;
     private int cardsCount = 9;
     private ArrayList<Card> cards = new ArrayList<>();
     private ArrayList<Chip> chips = new ArrayList<>();
@@ -33,25 +35,28 @@ public class GameWindow extends ControllerFXML {
     private int closestFindGlassId;
     private int currentPlayer = -1;
     private Client client;
-    GameRules gameRules;
+    GameRules gameRules = new GameRules();
 
     @FXML
     void initialize() throws FileNotFoundException {
         root.setMinSize(1280, 720);
-        Scale scale = new Scale(root, 1280, 720);
+        scale = new Scale(this, 1280, 720);
         root.getChildren().add(scale);
         scale.toBack();
         pane = scale.getScalePane();
-        //createRoles();
-        //createCards(1);
-        //createChip(new ArrayList<>(Arrays.asList(3, 1, 0, 2)));
         pane.addEventFilter(MouseEvent.MOUSE_CLICKED, new PaneHandler(this));
         root.addEventFilter(MouseEvent.MOUSE_MOVED, new PaneHandler(this));
-        newCard.setOnMouseClicked(this::addNewCard);
+        newCardBtn.setOnMouseClicked(event -> {
+            try {
+                addNewCard(event);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
-    private void test() {
-
+    public Pane getNewCardBtn() {
+        return newCardBtn;
     }
 
     public void clientChips(ArrayList<Integer> chipsOrder) {
@@ -74,22 +79,22 @@ public class GameWindow extends ControllerFXML {
         createCards(1);
     }
 
-    private void createRoles() {
-        int count = 4;
-        int h = 10;
-        ArrayList<Integer> list = new ArrayList<>();
-        for (int i = 0; i < count; i++) { list.add(i); }
-        Collections.shuffle(list);
-        list = new ArrayList<>(Arrays.asList(3, 1, 0, 2));
-        roles.clear();
-        Factory factory = new Factory(this);
-        for (Integer aList : list) { players.add(new Player(aList)); }
-        currentPlayer = 0;
-        roles = factory.chooseActions(count, this);
-        for (Role role : roles) { root.getChildren().add(role.getPane()); }
-        AnchorPane.setRightAnchor(roles.get(players.get(currentPlayer).getRole()).getPane(), (double) h);
-        //newCard.setLayoutY(roles.get(roles.size() - 1).getPane().getLayoutY() + roles.get(roles.size() - 1).getPane().getPrefHeight() + h);
-    }
+//    private void createRoles() {
+//        int count = 4;
+//        int h = 10;
+//        ArrayList<Integer> list = new ArrayList<>();
+//        for (int i = 0; i < count; i++) { list.add(i); }
+//        Collections.shuffle(list);
+//        list = new ArrayList<>(Arrays.asList(3, 1, 0, 2));
+//        roles.clear();
+//        Factory factory = new Factory(this);
+//        for (Integer aList : list) { players.add(new Player(aList)); }
+//        currentPlayer = 0;
+//        roles = factory.chooseActions(count, this);
+//        for (Role role : roles) { root.getChildren().add(role.getPane()); }
+//        AnchorPane.setRightAnchor(roles.get(players.get(currentPlayer).getRole()).getPane(), (double) h);
+//        //newCardBtn.setLayoutY(roles.get(roles.size() - 1).getPane().getLayoutY() + roles.get(roles.size() - 1).getPane().getPrefHeight() + h);
+//    }
 
     public int getNotUsedCard() {
         int i = 0;
@@ -112,37 +117,33 @@ public class GameWindow extends ControllerFXML {
         cards.get(id).rotate(angle);
         pane.getChildren().add(cards.get(id));
         cards.get(id).setVisible(true);
+        cards.get(id).toBack();
 
     }
 
-    private void addNewCard(MouseEvent event) {
-        int n = 0;
-        findGlasses.clear();
-        for (int i = 0; i < 4; i++) {
-            if (chips.get(i).isOnFindGlass) {
-                findGlasses.add(i);
-                n++;
-            }
-        }
-        if (n > 0) {
+    public void getNewCard() {
+        if (findGlasses.size() > 0) {
             int i = getNotUsedCard();
             if (i != -1) {
                 moveCardId = i;
                 isMoveCard = true;
                 cards.get(i).setUsed(true);
                 cards.get(i).setVisible(false);
-                getCards().get(getMoveCard()).setLayoutX(event.getSceneX() - getCards().get(0).getImage().getWidth() / 2);
-                getCards().get(getMoveCard()).setLayoutY(event.getSceneY() - getCards().get(0).getImage().getHeight() / 2);
+//                getCards().get(getMoveCard()).setLayoutX(event.getSceneX() - getCards().get(0).getImage().getWidth() / 2);
+//                getCards().get(getMoveCard()).setLayoutY(event.getSceneY() - getCards().get(0).getImage().getHeight() / 2);
                 pane.getChildren().add(cards.get(i));
-                newCard.setDisable(true);
+                newCardBtn.setDisable(true);
             }
         }
     }
 
-    private void createChip(ArrayList<Integer> chipsOrder) {
+    private void addNewCard(MouseEvent event) throws IOException {
+        client.send("GAME GLACES");
+    }
 
+    private void createChip(ArrayList<Integer> chipsOrder) {
         for (int i = 1; i <= 4; i++) {
-            Chip chip = new Chip("res/pic/mag" + i + ".png", "res/pic/mag" + i + i + ".png", this);
+            Chip chip = new Chip("res/pic/mag" + i + ".png", "res/pic/mag" + i + i + ".png", "res/pic/mag" + i + i + i + ".png", this);
             chip.setImage(new Image(chip.url, 45, 45, true, true));
             chip.setLayoutX(cards.get(0).getLayoutX() + 10);
             chip.setLayoutY(cards.get(0).getLayoutY() + 10);
@@ -158,15 +159,6 @@ public class GameWindow extends ControllerFXML {
             }
         }
         addStartObjects();
-
-//        chips.get(0).setLayoutX(5 + cards.get(0).getLayoutX() + step * 2 + step / 2 - chips.get(0).getImage().getWidth() / 2);
-//        chips.get(0).setLayoutY(5 + cards.get(0).getLayoutY() + step * 2 + step / 2 - chips.get(0).getImage().getHeight() / 2);
-//        chips.get(1).setLayoutX(5 + cards.get(0).getLayoutX() + step * 2 + step / 2 - chips.get(0).getImage().getWidth() / 2);
-//        chips.get(1).setLayoutY(5 + cards.get(0).getLayoutY() + step * 1 + step / 2 - chips.get(0).getImage().getHeight() / 2);
-//        chips.get(2).setLayoutX(5 + cards.get(0).getLayoutX() + step * 1 + step / 2 - chips.get(0).getImage().getWidth() / 2);
-//        chips.get(2).setLayoutY(5 + cards.get(0).getLayoutY() + step * 1 + step / 2 - chips.get(0).getImage().getHeight() / 2);
-//        chips.get(3).setLayoutX(5 + cards.get(0).getLayoutX() + step * 1 + step / 2 - chips.get(0).getImage().getWidth() / 2);
-//        chips.get(3).setLayoutY(5 + cards.get(0).getLayoutY() + step * 2 + step / 2 - chips.get(0).getImage().getHeight() / 2);
     }
 
     private void createCards(int level) throws FileNotFoundException {
@@ -258,5 +250,13 @@ public class GameWindow extends ControllerFXML {
 
     public Client getClient() {
         return client;
+    }
+
+    public AnchorPane getRoot() {
+        return root;
+    }
+
+    public Scale getScale() {
+        return scale;
     }
 }

@@ -46,21 +46,40 @@ public class GameRules {
     }
 
     public void moveReleased(GameWindow gameWindow) throws IOException {
+        gameWindow.getCards().get(gameWindow.getMoveCard()).toBack();
         gameWindow.getClient().addCard(gameWindow.getMoveCard(), (int) gameWindow.getCards().get(gameWindow.getMoveCard()).getLayoutX(), (int) gameWindow.getCards().get(gameWindow.getMoveCard()).getLayoutY(), (int) gameWindow.getCards().get(gameWindow.getMoveCard()).getRotate());
+        gameWindow.setMoveCard(false);
+        gameWindow.getNewCardBtn().setDisable(false);
     }
 
-    public void commandMove (int id, double x, double y, GameWindow gameWindow) {
+    public void commandMove (int id, int x, int y, GameWindow gameWindow) {
         gameWindow.getChips().get(id).setLayoutX(x);
         gameWindow.getChips().get(id).setLayoutY(y);
         gameWindow.getChips().get(id).setDefault();
-    }
-
-    public void commandSelect (int id, GameWindow gameWindow) {
-        gameWindow.getChips().get(id).setClicked();
+        gameWindow.getChips().get(id).setBusy(false);
     }
 
     public void mouseReleased(Point event, GameWindow gameWindow) throws IOException {
-        gameWindow.getClient().sendClick(event.x, event.y);
+        boolean f = false;
+        for (int i = 0; i < 4; i++) {
+            Chip chip = gameWindow.getChips().get(i);
+            if (chip.isSelected) {
+                f = true;
+                Point point = event.getPosition(false, gameWindow);
+                gameWindow.getClient().send("GAME MOVE " + i + " " + (int)point.x + " " + (int)point.y);
+            }
+        }
+        if (!f) {
+            for (int i = 0; i < 4; i++) {
+                Chip chip = gameWindow.getChips().get(i);
+                if (!chip.isBusy && (event.x > chip.getLayoutX()) && (event.x < chip.getLayoutX() + chip.getImage().getWidth()) && (event.y > chip.getLayoutY()) && (event.y < chip.getLayoutY() + chip.getImage().getWidth())) {
+                    chip.setClicked();
+                    gameWindow.getClient().send("GAME BUSY " + i);
+                }
+            }
+        }
+
+//        gameWindow.getClient().sendClick((int)event.x, (int)event.y);
     }
 
     private void rotateCard(GameWindow gameWindow, int x, int y) {

@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.InetAddress;
+import java.util.Random;
 import java.util.Scanner;
 
 public class ClientStarter extends Thread {
@@ -41,6 +42,7 @@ public class ClientStarter extends Thread {
     private void startCommands() throws IOException {
         System.out.println("Client started");
         System.out.println("--------------");
+        commandHandler("n " + new Random().nextInt(100));
 //        commandHandler("nick");
 //        commandHandler("connect 127.0.0.1");
     }
@@ -91,13 +93,13 @@ public class ClientStarter extends Thread {
                 System.out.println("send not ready");
                 break;
             case "start":
-                if (players.readyCount() == players.size()) {
+//                if (players.readyCount() == players.size()) {
                     if (players.getLeader() == client.getPlayer())
                         client.thirdCommand();
                     else
                         System.out.println("you not leader");
-                } else
-                    System.out.println("all not ready");
+//                } else
+//                    System.out.println("all not ready");
                 break;
             case "send":
                 client.send("GAME READY");

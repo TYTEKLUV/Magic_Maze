@@ -1,5 +1,6 @@
 package Controller;
 
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 
@@ -8,12 +9,16 @@ public class Scale extends AnchorPane {
     private Pane scalePane = new Pane();
     private double scale = 0;
     private double scaleAmount = 0.1;
-    public final double WIDTH, HEIGHT;
+    private GameWindow gameWindow;
+    public final double WIDTH;
+    public final double HEIGHT;
+    private double xOffset, yOffset;
 
-    public Scale(AnchorPane root, int WIDTH, int HEIGHT) {
+    public Scale(GameWindow gameWindow, int WIDTH, int HEIGHT) {
+        this.gameWindow = gameWindow;
         this.WIDTH = WIDTH;
         this.HEIGHT = HEIGHT;
-        this.root = root;
+        this.root = gameWindow.getRoot();
         createField();
     }
 
@@ -31,25 +36,24 @@ public class Scale extends AnchorPane {
 
         setStyle("-fx-background-color: #9a977c"); //Синий #4b6d90, Фиолетовый #413843
 
-        moving();
+        mouseDragMoving();
         scaling();
     }
 
-    private void moving() {
-        root.setOnKeyPressed(event -> {
-            switch (event.getCode()) {
-                case W:
-                    scalePane.setLayoutY(scalePane.getLayoutY() + 10);
-                    break;
-                case S:
-                    scalePane.setLayoutY(scalePane.getLayoutY() - 10);
-                    break;
-                case A:
-                    scalePane.setLayoutX(scalePane.getLayoutX() + 10);
-                    break;
-                case D:
-                    scalePane.setLayoutX(scalePane.getLayoutX() - 10);
-                    break;
+    private void mouseDragMoving() {
+        root.setOnMousePressed(event -> {
+            if (event.getButton() == MouseButton.SECONDARY) {
+                xOffset = event.getX();
+                yOffset = event.getY();
+            }
+        });
+
+        root.setOnMouseDragged(event -> {
+            if (event.getButton() == MouseButton.SECONDARY) {
+                scalePane.setLayoutX(scalePane.getLayoutX() + event.getX() - xOffset);
+                xOffset = event.getX();
+                scalePane.setLayoutY(scalePane.getLayoutY() + event.getY() - yOffset);
+                yOffset = event.getY();
             }
         });
     }
