@@ -60,7 +60,7 @@ public class Card extends ImageView {
         return bridges;
     }
 
-    int[][] getMap() {
+    public int[][] getMap() {
         return map;
     }
 

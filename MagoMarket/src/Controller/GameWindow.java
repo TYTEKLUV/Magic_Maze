@@ -79,6 +79,7 @@ public class GameWindow extends ControllerFXML {
         createCards(1);
     }
 
+<<<<<<< HEAD
 //    private void createRoles() {
 //        int count = 4;
 //        int h = 10;
@@ -95,6 +96,24 @@ public class GameWindow extends ControllerFXML {
 //        AnchorPane.setRightAnchor(roles.get(players.get(currentPlayer).getRole()).getPane(), (double) h);
 //        //newCardBtn.setLayoutY(roles.get(roles.size() - 1).getPane().getLayoutY() + roles.get(roles.size() - 1).getPane().getPrefHeight() + h);
 //    }
+=======
+    private void createRoles() {
+        int count = 4;
+        int h = 10;
+        ArrayList<Integer> list = new ArrayList<>();
+        for (int i = 0; i < count; i++) { list.add(i); }
+        Collections.shuffle(list);
+        list = new ArrayList<>(Arrays.asList(3, 1, 0, 2));
+        roles.clear();
+        Factory factory = new Factory(this);
+        for (Integer aList : list) { players.add(new Player(aList)); }
+        currentPlayer = 0;
+        roles = factory.chooseActions(count, this);
+        for (Role role : roles) { root.getChildren().add(role.getPane()); }
+        AnchorPane.setRightAnchor(roles.get(players.get(currentPlayer).getRole()).getPane(), (double) h);
+        //newCardBtn.setLayoutY(roles.get(roles.size() - 1).getPane().getLayoutY() + roles.get(roles.size() - 1).getPane().getPrefHeight() + h);
+    }
+>>>>>>> 9f044ee88ce7b8b62fc10d92c73baff36d54bced
 
     public int getNotUsedCard() {
         int i = 0;
@@ -140,6 +159,11 @@ public class GameWindow extends ControllerFXML {
     private void addNewCard(MouseEvent event) throws IOException {
         client.send("GAME GLACES");
     }
+<<<<<<< HEAD
+=======
+
+    private void createChip(ArrayList<Integer> chipsOrder) {
+>>>>>>> 9f044ee88ce7b8b62fc10d92c73baff36d54bced
 
     private void createChip(ArrayList<Integer> chipsOrder) {
         for (int i = 1; i <= 4; i++) {

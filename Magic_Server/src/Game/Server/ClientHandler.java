@@ -3,6 +3,7 @@ package Game.Server;
 import Game.Model.GameRules;
 import Game.Model.Player;
 import Game.Model.Point;
+import javafx.application.Platform;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -61,11 +62,36 @@ public class ClientHandler extends Thread {
                         room.startGame();
                         break;
                     case "CLICK":
-                        new GameRules().mouseReleased(new Point(command.nextDouble(), command.nextDouble()), room.getGameWindow());
+//                        Platform.runLater(() -> {
+//                            Point point = new Point(command.nextInt(), command.nextInt());
+//                            try {
+//                                new GameRules().mouseReleased(point, room.getGameWindow());
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+//                            int c = point.getCardId(room.getGameWindow());
+//                            if (c != -1)
+//                                System.out.println("click place = " + room.getGameWindow().getCards().get(c).getMap()[(int) point.getPosition(true, room.getGameWindow()).localToMap().y][(int) point.getPosition(true, room.getGameWindow()).localToMap().x]);
+//                        });
                         break;
-                    case "SELECT":
+                    case "BUSY":
+                        room.sendOthers("GAME BUSY " + command.nextInt(), this);
                         break;
                     case "MOVE":
+
+                        Platform.runLater(() -> {
+                            try {
+                                final int id = command.nextInt();
+                                final Point event = new Point(command.nextInt(), command.nextInt());
+                                new GameRules().chipMove(id, event, room.getGameWindow(), player.getRole());
+                                //room.getGameWindow().getGameRules().getArrowRotate(id, event, room.getGameWindow());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        });
+                        break;
+                    case "GLACES":
+                        send("GAME GLACES " + readyGlaces());
                         break;
                     case "CARD":
                         room.addCard(command.nextInt(), command.nextInt(), command.nextInt(), command.nextInt(), this);
@@ -75,11 +101,23 @@ public class ClientHandler extends Thread {
         }
     }
 
+    private String readyGlaces() {
+        StringBuilder result = new StringBuilder();
+        room.getGameWindow().getFindGlasses().clear();
+        for (int i = 0; i < 4; i++) {
+            if (room.getGameWindow().getChips().get(i).isOnFindGlass) {
+                room.getGameWindow().getFindGlasses().add(i);
+                result.append(result.length() == 0 ? "" : " ").append(i);
+            }
+        }
+        return result.toString();
+    }
+
     public void send(String message) throws IOException {
-//        System.out.println(player.getNickname() + " send: " + message);
+        System.out.println(player.getNickname() + " send: " + message);
         out.writeUTF(message);
         out.flush();
-//        System.out.println(player.getNickname() + " send: " + message + " complete");
+        System.out.println(player.getNickname() + " send: " + message + " complete");
     }
 
     private void connect() throws IOException {
@@ -96,6 +134,9 @@ public class ClientHandler extends Thread {
                 send("REMOVE " + room.getPlayers().indexOf(player));
         room.sendOthers("ADD " + room.getPlayers().indexOf(player) + " " + player.getNickname() + " NOT_READY", this);
         System.out.println(player.getNickname() + " connected to room " + room.getName());
+        if (room.getPlayers().size() - 1 == room.getPlayers().indexOf(player)) {
+            room.loadGame();
+        }
     }
 
     public void disconnect() throws IOException {

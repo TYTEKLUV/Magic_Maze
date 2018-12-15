@@ -1,6 +1,5 @@
 package Game.Controller;
 
-import Game.Client.Client;
 import Game.Model.*;
 import javafx.fxml.FXML;
 import javafx.scene.input.MouseEvent;
@@ -9,7 +8,10 @@ import javafx.scene.layout.Pane;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class GameWindow extends ControllerFXML {
@@ -30,7 +32,7 @@ public class GameWindow extends ControllerFXML {
     private int moveCardId;
     private int closestFindGlassId;
     private int currentPlayer = -1;
-    private Client client;
+    private GameRules gameRules = new GameRules();
 
     @FXML
     void initialize() {
@@ -38,6 +40,14 @@ public class GameWindow extends ControllerFXML {
         root.getChildren().add(scale);
         scale.toBack();
         pane = scale.getScalePane();
+    }
+
+    public ArrayList<Role> getRoles() {
+        return roles;
+    }
+
+    public GameRules getGameRules() {
+        return gameRules;
     }
 
     public void clientChips(ArrayList<Integer> chipsOrder) {
@@ -48,26 +58,26 @@ public class GameWindow extends ControllerFXML {
     }
 
     public void create(PlayerList players) throws FileNotFoundException {
+        Factory factory = new Factory(this);
+        roles = factory.chooseActions(players.size(), this);
         this.players = players;
         createCards(1);
     }
 
-//    private void createRoles() {
-//        int count = 4;
-//        int h = 10;
-//        ArrayList<Integer> list = new ArrayList<>();
-//        for (int i = 0; i < count; i++) { list.add(i); }
-//        Collections.shuffle(list);
-//        list = new ArrayList<>(Arrays.asList(3, 1, 0, 2));
-//        roles.clear();
-//        Factory factory = new Factory(this);
-//        for (Integer aList : list) { players.add(new Player(aList)); }
-//        currentPlayer = 0;
-//        roles = factory.chooseActions(count, this);
-//        for (Role role : roles) { root.getChildren().add(role.getPane()); }
-//        AnchorPane.setRightAnchor(roles.get(players.get(currentPlayer).getRole()).getPane(), (double) h);
-//        //newCard.setLayoutY(roles.get(roles.size() - 1).getPane().getLayoutY() + roles.get(roles.size() - 1).getPane().getPrefHeight() + h);
-//    }
+    private void createRoles() {
+        int count = 4;
+        int h = 10;
+        ArrayList<Integer> list = new ArrayList<>();
+        for (int i = 0; i < count; i++) { list.add(i); }
+        Collections.shuffle(list);
+        roles.clear();
+        Factory factory = new Factory(this);
+        currentPlayer = 0;
+        roles = factory.chooseActions(count, this);
+        for (Role role : roles) { root.getChildren().add(role.getPane()); }
+        AnchorPane.setRightAnchor(roles.get(players.get(currentPlayer).getRole()).getPane(), (double) h);
+        //newCard.setLayoutY(roles.get(roles.size() - 1).getPane().getLayoutY() + roles.get(roles.size() - 1).getPane().getPrefHeight() + h);
+    }
 
     public int getNotUsedCard() {
         int i = 0;
@@ -83,13 +93,14 @@ public class GameWindow extends ControllerFXML {
         return i;
     }
 
-    public void sendCard(int id, Point point, int angle) {
+    public void sendCard(int id, Point point, int angle) throws IOException {
         cards.get(id).setLayoutX(point.x);
         cards.get(id).setLayoutY(point.y);
         cards.get(id).setUsed(true);
         cards.get(id).rotate(angle);
         pane.getChildren().add(cards.get(id));
         cards.get(id).setVisible(true);
+        new GameRules().moveReleased(this, point);
     }
 
     private void addNewCard(MouseEvent event) {
@@ -221,9 +232,5 @@ public class GameWindow extends ControllerFXML {
 
     public void setClosestFindGlassId(int closestFindGlassId) {
         this.closestFindGlassId = closestFindGlassId;
-    }
-
-    public Client getClient() {
-        return client;
     }
 }

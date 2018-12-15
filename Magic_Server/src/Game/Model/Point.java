@@ -31,10 +31,11 @@ public class Point {
         return new Point(x, y);
     }
 
-    boolean isOnPortal(Point end, Chip chip, GameWindow gameWindow) {
+    boolean isOnPortal(Chip chip, GameWindow gameWindow) {
         int ind = Integer.parseInt("3" + String.valueOf(gameWindow.getChips().indexOf(chip) + 1));
         final Card card = gameWindow.getCards().get(getCardId(gameWindow));
-        return card.getMap()[(int) (end.y - 1) * 2][(int) (end.x - 1) * 2] == ind;
+        Point point = new Point(x, y).getPosition(true, gameWindow).localToMap();
+        return card.getMap()[(int)point.y][(int) point.x] == ind;
     }
 
     public boolean isOnLine(Point end, GameWindow gameWindow, GameRules gameRules) {
@@ -75,7 +76,7 @@ public class Point {
         return false;
     }
 
-    int getCardId(GameWindow gameWindow) {
+    public int getCardId(GameWindow gameWindow) {
         int n = -1;
         for (int i = 0; i < gameWindow.getCards().size(); i++) {
             Card card = gameWindow.getCards().get(i);
@@ -91,9 +92,28 @@ public class Point {
         return n;
     }
 
-    Point localToMap() {
+    public Point localToMap() {
         x = (x - 1) * 2;
         y = (y - 1) * 2;
         return this;
+    }
+
+    boolean isOnBridge(Chip chip, GameWindow gameWindow) {
+        int bridges = gameWindow.getCards().get(chip.getCardId()).getBridges();
+        String s = String.valueOf(bridges).substring(1);
+        if (bridges != 0) {
+            int count = Integer.parseInt(String.valueOf(s.length())) / 4;
+            for (int i = 0; i < count; i++) {
+                int x1 = Integer.parseInt(String.valueOf(s.charAt(i))) + 1;
+                int y1 = Integer.parseInt(String.valueOf(s.charAt(i + 1))) + 1;
+                int x2 = Integer.parseInt(String.valueOf(s.charAt(i + 2))) + 1;
+                int y2 = Integer.parseInt(String.valueOf(s.charAt(i + 3))) + 1;
+                if ((chip.getPosition().y == x1) && (chip.getPosition().x == y1) && (getPosition(true, gameWindow).y == x2) && (getPosition(true, gameWindow).x == y2) ||
+                        ((chip.getPosition().y == x2) && (chip.getPosition().x == y2) && (getPosition(true, gameWindow).y == x1) && (getPosition(true, gameWindow).x == y1))) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

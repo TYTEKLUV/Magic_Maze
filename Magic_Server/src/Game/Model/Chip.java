@@ -75,7 +75,7 @@ public class Chip extends ImageView {
         return n;
     }
 
-    Point getPosition() { //тек положение чипа
+    public Point getPosition() { //тек положение чипа
         double x, y;
         double width = (gameWindow.getCards().get(0).getWidth()) / 4;
         final double layoutX = gameWindow.getCards().get(getCardId()).getLayoutX();
