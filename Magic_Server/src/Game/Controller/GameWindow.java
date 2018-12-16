@@ -10,7 +10,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Scanner;
 
@@ -33,6 +32,7 @@ public class GameWindow extends ControllerFXML {
     private int closestFindGlassId;
     private int currentPlayer = -1;
     private GameRules gameRules = new GameRules();
+    private boolean weaponsReceived = false;
 
     @FXML
     void initialize() {
@@ -46,9 +46,19 @@ public class GameWindow extends ControllerFXML {
         return roles;
     }
 
+    public boolean isWeaponsReceived() {
+        return weaponsReceived;
+    }
+
+    public void setWeaponsReceived(boolean weaponsReceived) {
+        this.weaponsReceived = weaponsReceived;
+    }
+
     public GameRules getGameRules() {
         return gameRules;
     }
+
+
 
     public void clientChips(ArrayList<Integer> chipsOrder) {
         createChip(chipsOrder);

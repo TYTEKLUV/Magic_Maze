@@ -7,6 +7,24 @@ import java.util.ArrayList;
 
 public class GameRules {
 
+    private boolean isEveryoneLeft(GameWindow gameWindow) {
+        for(int i = 0; i < gameWindow.getChips().size(); i ++) {
+            if (!gameWindow.getChips().get(i).isOnExit){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isWeaponsReceived(GameWindow gameWindow) {
+        for(int i = 0; i < gameWindow.getChips().size(); i ++) {
+            if (!gameWindow.getChips().get(i).isOnWeapon){
+                return false;
+            }
+        }
+        return true;
+    }
+
     private boolean isFloorIsEmpty(Point event, GameWindow gameWindow) {
         Point point = event.getPosition(true, gameWindow);
         for (int i = 0; i < 4; i++) {
@@ -19,7 +37,7 @@ public class GameRules {
         return gameWindow.getCards().get(event.getCardId(gameWindow)).getMap()[(int) point.y][(int) point.x] != 0;
     }
 
-    public boolean roolsCheck (int id, Point event, GameWindow gameWindow, int role) {
+    public boolean rulesCheck(int id, Point event, GameWindow gameWindow, int role) {
         if (portalRule(id, event, gameWindow, role)){
             return true;
         }
@@ -80,7 +98,7 @@ public class GameRules {
                 }
             }
             if ((d.x > 0)&&(d.y <= n)) {
-                if (Integer.parseInt(String.valueOf(arrow.charAt(i))) == 3) {
+                if (Integer.parseInt(String.valueOf(arrow.charAt(i))) == 4) {
                     return true;
                 }
             }
@@ -264,7 +282,7 @@ public class GameRules {
                 if (pointChip.x == point.x && pointChip.y == point.y) {
                     gameWindow.getMain().sendAll("GAME MOVE " + i + " " + (int) point.x + " " + (int) point.y);
                 } else {
-                    if ((isChipMovable(event, chip.getPosition(), event.getPosition(true, gameWindow), chip, gameWindow))&&(roolsCheck(id, event, gameWindow, role))) {
+                    if ((isChipMovable(event, chip.getPosition(), event.getPosition(true, gameWindow), chip, gameWindow))&&(rulesCheck(id, event, gameWindow, role))) {
                         if ((pointCard.y != -1) && (pointCard.x != -1)) {
                             gameWindow.getChips().get(i).setLayoutX(point.x);
                             gameWindow.getChips().get(i).setLayoutY(point.y);
@@ -272,6 +290,15 @@ public class GameRules {
                             gameWindow.getChips().get(i).whereAreUNow();
                             gameWindow.getMain().sendAll("GAME MOVE " + i + " " + (int) point.x + " " + (int) point.y);
                         }
+                    }
+                    if (isWeaponsReceived(gameWindow) && !gameWindow.isWeaponsReceived()) {
+                        System.out.println("TEKAEM PATZANI!");
+                        gameWindow.setWeaponsReceived(true);
+                        //запретить телепорт, разрешить выход
+                    }
+                    else
+                    if (isEveryoneLeft(gameWindow) && gameWindow.isWeaponsReceived()) {
+                        System.out.println("ETO WIN!");
                     }
                     chip.setDefault();
                 }
