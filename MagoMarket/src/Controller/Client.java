@@ -130,6 +130,11 @@ public class Client extends Thread {
                     case "CARD":
                         Platform.runLater(() -> gameWindow.sendCard(command.nextInt(), new Point(command.nextInt(), command.nextInt()), command.nextInt()));
                         break;
+                    case "TIMER":
+                        if (command.next().equals("SWAP")) {
+                            gameWindow.getTimer().swap();
+                        }
+                        break;
                 }
                 break;
             default:

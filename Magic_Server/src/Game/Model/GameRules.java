@@ -37,7 +37,7 @@ public class GameRules {
         return gameWindow.getCards().get(event.getCardId(gameWindow)).getMap()[(int) point.y][(int) point.x] != 0;
     }
 
-    public boolean rulesCheck(int id, Point event, GameWindow gameWindow, int role) {
+    public boolean rulesCheck(int id, Point event, GameWindow gameWindow, int role) throws IOException {
         if (portalRule(id, event, gameWindow, role)){
             return true;
         }
@@ -48,6 +48,11 @@ public class GameRules {
             return true;
         }
         return false;
+    }
+
+    private boolean timeRule(int id, Point event, GameWindow gameWindow) {
+        int c = gameWindow.getChips().get(id).getCardId();
+        return gameWindow.getCards().get(c).getMap()[(int) event.getPosition(true, gameWindow).localToMap().y][(int) event.getPosition(true, gameWindow).localToMap().x] == 40;
     }
 
     private boolean portalRule(int id, Point event, GameWindow gameWindow, int role) {
@@ -289,6 +294,8 @@ public class GameRules {
                             gameWindow.getChips().get(i).toFront();
                             gameWindow.getChips().get(i).whereAreUNow();
                             gameWindow.getMain().sendAll("GAME MOVE " + i + " " + (int) point.x + " " + (int) point.y);
+                            if (timeRule(id, event, gameWindow))
+                                gameWindow.getMain().swapTimer();
                         }
                     }
                     if (isWeaponsReceived(gameWindow) && !gameWindow.isWeaponsReceived()) {

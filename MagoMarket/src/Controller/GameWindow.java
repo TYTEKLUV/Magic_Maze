@@ -36,6 +36,7 @@ public class GameWindow extends ControllerFXML {
     private int currentPlayer = -1;
     private Client client;
     GameRules gameRules = new GameRules();
+    GameTimer timer;
 
     @FXML
     void initialize() throws FileNotFoundException {
@@ -254,6 +255,14 @@ public class GameWindow extends ControllerFXML {
 
     public AnchorPane getRoot() {
         return root;
+    }
+
+    public GameTimer getTimer() {
+        return timer;
+    }
+
+    public void setTimer(GameTimer timer) {
+        this.timer = timer;
     }
 
     public Scale getScale() {

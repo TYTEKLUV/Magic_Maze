@@ -101,6 +101,10 @@ public class Room {
         sendOthers("GAME CARD " + id + " " + x + " " + y + " " + rotate, setter);
     }
 
+    public void swapTimer() throws IOException {
+        sendAll("GAME TIMER SWAP");
+    }
+
     public void loadGame() throws IOException {
         players.resetReady();
         players.rolesRandom();

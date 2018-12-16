@@ -5,7 +5,6 @@ import Controller.GameWindow;
 import java.io.IOException;
 
 public class GameRules {
-
     Point calcD(Point start, Point end) {
         double dx = (Math.abs(end.x - start.x));
         double dy = (Math.abs(end.y - start.y));
@@ -46,6 +45,11 @@ public class GameRules {
     }
 
     public void moveReleased(GameWindow gameWindow) throws IOException {
+        if (gameWindow.getTimer() == null) {
+            gameWindow.setTimer(new GameTimer(gameWindow));
+            gameWindow.getTimer().start();
+        }
+
         gameWindow.getCards().get(gameWindow.getMoveCard()).toBack();
         gameWindow.getClient().addCard(gameWindow.getMoveCard(), (int) gameWindow.getCards().get(gameWindow.getMoveCard()).getLayoutX(), (int) gameWindow.getCards().get(gameWindow.getMoveCard()).getLayoutY(), (int) gameWindow.getCards().get(gameWindow.getMoveCard()).getRotate());
         gameWindow.setMoveCard(false);
@@ -53,6 +57,11 @@ public class GameRules {
     }
 
     public void commandMove (int id, int x, int y, GameWindow gameWindow) {
+        if (gameWindow.getTimer() == null) {
+            gameWindow.setTimer(new GameTimer(gameWindow));
+            gameWindow.getTimer().start();
+        }
+
         gameWindow.getChips().get(id).setLayoutX(x);
         gameWindow.getChips().get(id).setLayoutY(y);
         gameWindow.getChips().get(id).setDefault();
