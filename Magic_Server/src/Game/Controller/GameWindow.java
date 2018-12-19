@@ -54,12 +54,6 @@ public class GameWindow extends ControllerFXML {
         this.weaponsReceived = weaponsReceived;
     }
 
-    public GameRules getGameRules() {
-        return gameRules;
-    }
-
-
-
     public void clientChips(ArrayList<Integer> chipsOrder) {
         createChip(chipsOrder);
     }
@@ -68,25 +62,10 @@ public class GameWindow extends ControllerFXML {
     }
 
     public void create(PlayerList players) throws FileNotFoundException {
-        Factory factory = new Factory(this);
-        roles = factory.chooseActions(players.size(), this);
+        Factory factory = new Factory();
+        roles = factory.chooseActions(players.size());
         this.players = players;
         createCards(1);
-    }
-
-    private void createRoles() {
-        int count = 4;
-        int h = 10;
-        ArrayList<Integer> list = new ArrayList<>();
-        for (int i = 0; i < count; i++) { list.add(i); }
-        Collections.shuffle(list);
-        roles.clear();
-        Factory factory = new Factory(this);
-        currentPlayer = 0;
-        roles = factory.chooseActions(count, this);
-        for (Role role : roles) { root.getChildren().add(role.getPane()); }
-        AnchorPane.setRightAnchor(roles.get(players.get(currentPlayer).getRole()).getPane(), (double) h);
-        //newCard.setLayoutY(roles.get(roles.size() - 1).getPane().getLayoutY() + roles.get(roles.size() - 1).getPane().getPrefHeight() + h);
     }
 
     public int getNotUsedCard() {
@@ -103,7 +82,7 @@ public class GameWindow extends ControllerFXML {
         return i;
     }
 
-    public void sendCard(int id, Point point, int angle) throws IOException {
+    public void sendCard(int id, Point point, int angle) {
         cards.get(id).setLayoutX(point.x);
         cards.get(id).setLayoutY(point.y);
         cards.get(id).setUsed(true);
@@ -113,34 +92,9 @@ public class GameWindow extends ControllerFXML {
         new GameRules().moveReleased(this, point);
     }
 
-    private void addNewCard(MouseEvent event) {
-        int n = 0;
-        findGlasses.clear();
-        for (int i = 0; i < 4; i++) {
-            if (chips.get(i).isOnFindGlass) {
-                findGlasses.add(i);
-                n++;
-            }
-        }
-        if (n > 0) {
-            int i = getNotUsedCard();
-            if (i != -1) {
-                moveCardId = i;
-                isMoveCard = true;
-                cards.get(i).setUsed(true);
-                cards.get(i).setVisible(false);
-                getCards().get(getMoveCard()).setLayoutX(event.getSceneX() - getCards().get(0).getWidth() / 2);
-                getCards().get(getMoveCard()).setLayoutY(event.getSceneY() - getCards().get(0).getWidth() / 2);
-                pane.getChildren().add(cards.get(i));
-                newCard.setDisable(true);
-            }
-        }
-    }
-
     private void createChip(ArrayList<Integer> chipsOrder) {
         for (int i = 1; i <= 4; i++) {
             Chip chip = new Chip("res/pic/mag" + i + ".png", "res/pic/mag" + i + i + ".png", this);
-//            chip.setImage(new Image(chip.url, 45, 45, true, true));
             chip.setLayoutX(cards.get(0).getLayoutX() + 10);
             chip.setLayoutY(cards.get(0).getLayoutY() + 10);
             chips.add(chip);
@@ -168,7 +122,6 @@ public class GameWindow extends ControllerFXML {
             }
             int bridges = input.nextInt();
             Card card = new Card(mas, "res/pic/cards/" + String.valueOf(i) + ".png", bridges);
-//            card.setImage(new Image(card.getUrl(), 300, 300, true, false));
             card.setLayoutX(((Scale) pane.getParent()).WIDTH / 2f - 150);
             card.setLayoutY(((Scale) pane.getParent()).HEIGHT / 2f - 150);
             cards.add(card);
@@ -200,14 +153,6 @@ public class GameWindow extends ControllerFXML {
 //        stage.show();
     }
 
-    public PlayerList getPlayers() {
-        return players;
-    }
-
-    public int getCurrentPlayer() {
-        return currentPlayer;
-    }
-
     public ArrayList<Card> getCards() {
         return cards;
     }
@@ -220,16 +165,8 @@ public class GameWindow extends ControllerFXML {
         return findGlasses;
     }
 
-    public boolean isMoveCard() {
-        return isMoveCard;
-    }
-
     public void setMoveCard(boolean moveCard) {
         this.isMoveCard = moveCard;
-    }
-
-    public int getMoveCard() {
-        return moveCardId;
     }
 
     public Pane getPane() {

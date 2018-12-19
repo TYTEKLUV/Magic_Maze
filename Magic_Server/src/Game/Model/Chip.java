@@ -26,11 +26,6 @@ public class Chip extends ImageView {
         return width;
     }
 
-    void setClicked() {
-        isSelected = true;
-        setImage(new Image(urlSelected, 45, 45, true, true));
-    }
-
     void setDefault() {
         isSelected = false;
         setImage(new Image(url, 45, 45, true, true));
@@ -57,6 +52,12 @@ public class Chip extends ImageView {
                 }
             }
         }
+    }
+
+    void delete() {
+        setVisible(false);
+        gameWindow.getChips().remove(this);
+        gameWindow.getPane().getChildren().remove(this);
     }
 
     int getCardId() {

@@ -61,30 +61,15 @@ public class ClientHandler extends Thread {
                         player.setReady(true);
                         room.startGame();
                         break;
-                    case "CLICK":
-//                        Platform.runLater(() -> {
-//                            Point point = new Point(command.nextInt(), command.nextInt());
-//                            try {
-//                                new GameRules().mouseReleased(point, room.getGameWindow());
-//                            } catch (IOException e) {
-//                                e.printStackTrace();
-//                            }
-//                            int c = point.getCardId(room.getGameWindow());
-//                            if (c != -1)
-//                                System.out.println("click place = " + room.getGameWindow().getCards().get(c).getMap()[(int) point.getPosition(true, room.getGameWindow()).localToMap().y][(int) point.getPosition(true, room.getGameWindow()).localToMap().x]);
-//                        });
-                        break;
                     case "BUSY":
                         room.sendOthers("GAME BUSY " + command.nextInt(), this);
                         break;
                     case "MOVE":
-
                         Platform.runLater(() -> {
                             try {
                                 final int id = command.nextInt();
                                 final Point event = new Point(command.nextInt(), command.nextInt());
                                 new GameRules().chipMove(id, event, room.getGameWindow(), player.getRole());
-                                //room.getGameWindow().getGameRules().getArrowRotate(id, event, room.getGameWindow());
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }

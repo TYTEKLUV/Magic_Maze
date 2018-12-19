@@ -8,12 +8,12 @@ import java.util.ArrayList;
 public class GameRules {
 
     private boolean isEveryoneLeft(GameWindow gameWindow) {
-        for(int i = 0; i < gameWindow.getChips().size(); i ++) {
-            if (!gameWindow.getChips().get(i).isOnExit){
-                return false;
-            }
-        }
-        return true;
+//        for(int i = 0; i < gameWindow.getChips().size(); i ++) {
+//            if (!gameWindow.getChips().get(i).isOnExit){
+//                return false;
+//            }
+//        }
+        return gameWindow.getChips().isEmpty();
     }
 
     private boolean isWeaponsReceived(GameWindow gameWindow) {
@@ -37,14 +37,17 @@ public class GameRules {
         return gameWindow.getCards().get(event.getCardId(gameWindow)).getMap()[(int) point.y][(int) point.x] != 0;
     }
 
-    public boolean rulesCheck(int id, Point event, GameWindow gameWindow, int role) throws IOException {
-        if (portalRule(id, event, gameWindow, role)){
+    public boolean rulesCheck(int id, Point event, GameWindow gameWindow, int role) {
+        if (portalRule(id, event, gameWindow, role)&&(!gameWindow.isWeaponsReceived())){
+            System.out.println("POOORTAL POWER");
             return true;
         }
         if (bridgeRule(id, event, gameWindow, role)) {
+            System.out.println("BRIIIDGE POWER");
             return true;
         }
         if (getArrowRotate(id, event, gameWindow, role)) {
+            System.out.println("ARROW POWER");
             return true;
         }
         return false;
@@ -58,9 +61,9 @@ public class GameRules {
     private boolean portalRule(int id, Point event, GameWindow gameWindow, int role) {
         Chip chip = gameWindow.getChips().get(id);
         if (gameWindow.getRoles().get(role).isPortal()) {
-            if (event.isOnPortal(chip, gameWindow)) {
+//            if (event.isOnPortal(chip, gameWindow)) {
                 return true;
-            }
+//            }
         }
         return false;
     }
@@ -87,22 +90,25 @@ public class GameRules {
         int length = String.valueOf(arrow).length();
         double n = 2.5;
         for (int i = 0; i < length; i ++) {
-            if ((d.x <= n)&&(d.y > 0)) {
+            if ((Math.abs(d.x) <= n)&&(d.y > 0)) {
                 if (Integer.parseInt(String.valueOf(arrow.charAt(i))) == 1) {
                     return true;
                 }
             }
-            if ((d.x < 0)&&(d.y <= n)) {
+            else
+            if ((d.x < 0)&&(Math.abs(d.y) <= n)) {
                 if (Integer.parseInt(String.valueOf(arrow.charAt(i))) == 2) {
                     return true;
                 }
             }
-            if ((d.x <= n)&&(d.y < 0)) {
+            else
+            if ((Math.abs(d.x) <= n)&&(d.y < 0)) {
                 if (Integer.parseInt(String.valueOf(arrow.charAt(i))) == 3) {
                     return true;
                 }
             }
-            if ((d.x > 0)&&(d.y <= n)) {
+            else
+            if ((d.x > 0)&&(Math.abs(d.y) <= n)) {
                 if (Integer.parseInt(String.valueOf(arrow.charAt(i))) == 4) {
                     return true;
                 }
@@ -110,7 +116,6 @@ public class GameRules {
         }
         return false;
     }
-
 
     private void glassRefactor(Point glass, GameWindow gameWindow) {
         glass = glass.getPosition(false, gameWindow);
@@ -214,45 +219,16 @@ public class GameRules {
                 }
                 return true;
             }
-            return event.isOnBridge(chip, gameWindow);
+            if (event.isOnBridge(chip, gameWindow)) {
+                System.out.println("on bridge");
+                return true;
+            }
+
         }
         return false;
     }
 
-    public void mouseMoved(Point event, GameWindow gameWindow) {
-        if (!gameWindow.getCards().get(gameWindow.getMoveCard()).isVisible()) {
-            gameWindow.getCards().get(gameWindow.getMoveCard()).setVisible(true);
-        }
-        double x = 0, y = 0;
-        findClosestGlass(event, gameWindow);
-        String pos = String.valueOf((int) gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getPosition().x) + (int) gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getPosition().y;
-        switch (pos) {
-            case "31":
-                x = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getLayoutX() + gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getWidth() / 4;
-                y = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getLayoutY() - gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getWidth();
-                rotateCard(gameWindow, 6, 2);
-                break;
-            case "43":
-                x = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getLayoutX() + gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getWidth();
-                y = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getLayoutY() + gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getWidth() / 4;
-                rotateCard(gameWindow, 2, 0);
-                break;
-            case "24":
-                x = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getLayoutX() - gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getWidth() / 4;
-                y = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getLayoutY() + gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getWidth();
-                rotateCard(gameWindow, 0, 4);
-                break;
-            case "12":
-                x = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getLayoutX() - gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getWidth();
-                y = gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getLayoutY() - gameWindow.getCards().get(gameWindow.getChips().get(gameWindow.getClosestFindGlassId()).getCardId()).getWidth() / 4;
-                rotateCard(gameWindow, 4, 6);
-                break;
-        }
-        gameWindow.getCards().get(gameWindow.getMoveCard()).setLayoutX(x);
-        gameWindow.getCards().get(gameWindow.getMoveCard()).setLayoutY(y);
-    }
-
-    public void moveReleased(GameWindow gameWindow, Point event) throws IOException {
+    public void moveReleased(GameWindow gameWindow, Point event) {
         findClosestGlass(new Point(event.x + 150, event.y + 150), gameWindow);
         final int closestGlassId = gameWindow.getClosestFindGlassId();
         System.out.println("closestGlassId = " + closestGlassId);
@@ -271,13 +247,8 @@ public class GameRules {
         }
     }
 
-    public void chipBusy(int id, GameWindow gameWindow) throws IOException {
-        gameWindow.getMain().sendAll("GAME BUSY " + id);
-    }
-
     public void chipMove(int id, Point event, GameWindow gameWindow, int role) throws IOException {
         gameWindow.getChips().get(id).isSelected = true;
-
         for (int i = 0; i < 4; i++) {
             Chip chip = gameWindow.getChips().get(i);
             if (chip.isSelected) {
@@ -303,6 +274,10 @@ public class GameRules {
                         gameWindow.setWeaponsReceived(true);
                         //запретить телепорт, разрешить выход
                     }
+                    else if (chip.isOnExit && isWeaponsReceived(gameWindow)) {
+                        chip.delete();
+                        gameWindow.getMain().sendAll("GAME DISAPPEAR " + gameWindow.getChips().indexOf(chip));
+                    }
                     else
                     if (isEveryoneLeft(gameWindow) && gameWindow.isWeaponsReceived()) {
                         System.out.println("ETO WIN!");
@@ -313,72 +288,7 @@ public class GameRules {
         }
     }
 
-//    public void mouseReleased(Point event, GameWindow gameWindow) throws IOException {
-//        boolean f = false;
-//        for (int i = 0; i < 4; i++) {
-//            Chip chip = gameWindow.getChips().get(i);
-//            if (chip.isSelected) {
-//                f = true;
-//                Point pointCard = event.getPosition(true, gameWindow);
-//                Point point = event.getPosition(false, gameWindow);
-//                if (isChipMovable(event, chip.getPosition(), event.getPosition(true, gameWindow), chip, gameWindow)) {
-//                    if ((pointCard.y != -1) && (pointCard.x != -1)) {
-//                        gameWindow.getChips().get(i).setLayoutX(point.x);
-//                        gameWindow.getChips().get(i).setLayoutY(point.y);
-//                        gameWindow.getChips().get(i).toFront();
-//                        gameWindow.getChips().get(i).whereAreUNow();
-//                        gameWindow.getMain().sendAll("GAME MOVE " + i + " " + (int)point.x + " " + (int)point.y);
-//                    }
-//                }
-//                chip.setDefault();
-//            }
-//        }
-//        if (!f) {
-//            for (int i = 0; i < 4; i++) {
-//                Chip chip = gameWindow.getChips().get(i);
-//                if ((event.x > chip.getLayoutX()) && (event.x < chip.getLayoutX() + chip.getWidth()) && (event.y > chip.getLayoutY()) && (event.y < chip.getLayoutY() + chip.getWidth())) {
-//                    chip.setClicked();
-//                    gameWindow.getMain().sendAll("GAME SELECT " + i);
-//                }
-//            }
-//        }
-//    }
-
-    private void rotateCard(GameWindow gameWindow, int x, int y) {
-        while (gameWindow.getCards().get(gameWindow.getMoveCard()).getMap()[x][y] != 20) {
-            gameWindow.getCards().set(gameWindow.getMoveCard(), rotateMap(gameWindow.getCards().get(gameWindow.getMoveCard())));
-        }
-    }
-
-    private Card rotateMap(Card card) {
-        int[][] map = new int[7][7];
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 7; j++) {
-                map[i][j] = card.getMap()[6 - j][i];
-            }
-        }
-        // ---------------------- ТУТ МОСТЫ
-        int b = card.bridges;
-        if (card.bridges != 0) {
-            int bridge = b;
-            b = 0;
-            while (bridge != 0) {
-                int a = bridge % 10000;
-                int a1 = a % 100;
-                a = a / 100;
-                a = 10000 + 1000 * (a % 10) + 100 * (3 - a / 10) + 10 * (a1 % 10) + (3 - a1 / 10);
-                b = b * 100000 + a;
-                bridge = bridge / 100000;
-            }
-        }
-        card.bridges = b;
-        // --------------------- ТУТ МОСТЫ
-        card.setMap(map);
-        card.setRotate(card.getRotate() + 90);
-        return card;
-    }
-
-    public void findClosestGlass(Point event, GameWindow gameWindow) {
+    private void findClosestGlass(Point event, GameWindow gameWindow) {
         double min = gameWindow.getPane().getPrefWidth();
         double x, y;
         for (int i = 0; i < gameWindow.getFindGlasses().size(); i++) {

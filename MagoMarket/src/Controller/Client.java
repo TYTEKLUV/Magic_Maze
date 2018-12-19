@@ -119,6 +119,10 @@ public class Client extends Thread {
                         int id = command.nextInt();
                         gameWindow.gameRules.commandMove(id, command.nextInt(), command.nextInt(), gameWindow);
                         break;
+                    case "DISAPPEAR":
+                        id = command.nextInt();
+                        gameWindow.getChips().get(id).delete();
+                        break;
                     case "ROLES":
                         break;
                     case "GLACES":
