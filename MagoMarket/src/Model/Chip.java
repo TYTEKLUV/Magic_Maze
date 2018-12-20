@@ -43,7 +43,8 @@ public class Chip extends ImageView {
 
     public void delete() {
         setVisible(false);
-        gameWindow.getChips().remove(this);
+        setLayoutX(gameWindow.getStage().getWidth() - 10);
+        setLayoutY(gameWindow.getStage().getHeight()/2 - 200);
         gameWindow.getPane().getChildren().remove(this);
     }
 

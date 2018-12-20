@@ -121,7 +121,7 @@ public class Client extends Thread {
                         break;
                     case "DISAPPEAR":
                         id = command.nextInt();
-                        gameWindow.getChips().get(id).delete();
+                        Platform.runLater(() -> gameWindow.getChips().get(id).delete());
                         break;
                     case "ROLES":
                         break;

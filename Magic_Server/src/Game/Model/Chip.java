@@ -56,8 +56,8 @@ public class Chip extends ImageView {
 
     void delete() {
         setVisible(false);
-        gameWindow.getChips().remove(this);
-        gameWindow.getPane().getChildren().remove(this);
+        setLayoutX(gameWindow.getStage().getWidth() - 10);
+        setLayoutY(gameWindow.getStage().getHeight()/2 - 200);
     }
 
     int getCardId() {
@@ -77,12 +77,14 @@ public class Chip extends ImageView {
     }
 
     public Point getPosition() { //тек положение чипа
-        double x, y;
+        double x = -1, y = -1;
         double width = (gameWindow.getCards().get(0).getWidth()) / 4;
+        if (getCardId()!=-1) {
         final double layoutX = gameWindow.getCards().get(getCardId()).getLayoutX();
         final double layoutY = gameWindow.getCards().get(getCardId()).getLayoutY();
-        x = Math.ceil((getLayoutX() - layoutX) / (width));
-        y = Math.ceil((getLayoutY() - layoutY) / (width));
+            x = Math.ceil((getLayoutX() - layoutX) / (width));
+            y = Math.ceil((getLayoutY() - layoutY) / (width));
+        }
         return new Point(x, y);
     }
 

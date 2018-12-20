@@ -51,12 +51,15 @@ public class OmegaServer extends Application {
         server.start();
         System.out.println("Server started");
         System.out.println("\"help\" to show commands list\n");
-        commandHandler("create TEST_ROOM 2");
+        //commandHandler("create TEST_ROOM 2");
     }
 
     private void commandHandler(String message) throws IOException {
         Scanner command = new Scanner(message);
         switch (command.next()) {
+            case "r":
+                commandHandler("create TEST_ROOM " + command.nextInt());
+                break;
             case "help":
                 for (String aCommandsList : commandsList)
                     System.out.println("| " + aCommandsList);

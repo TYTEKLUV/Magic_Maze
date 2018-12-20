@@ -61,9 +61,9 @@ public class GameRules {
     private boolean portalRule(int id, Point event, GameWindow gameWindow, int role) {
         Chip chip = gameWindow.getChips().get(id);
         if (gameWindow.getRoles().get(role).isPortal()) {
-//            if (event.isOnPortal(chip, gameWindow)) {
+            if (event.isOnPortal(chip, gameWindow)) {
                 return true;
-//            }
+            }
         }
         return false;
     }
@@ -249,7 +249,7 @@ public class GameRules {
 
     public void chipMove(int id, Point event, GameWindow gameWindow, int role) throws IOException {
         gameWindow.getChips().get(id).isSelected = true;
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < gameWindow.getChips().size(); i++) {
             Chip chip = gameWindow.getChips().get(i);
             if (chip.isSelected) {
                 Point pointCard = event.getPosition(true, gameWindow);
@@ -267,16 +267,17 @@ public class GameRules {
                             gameWindow.getMain().sendAll("GAME MOVE " + i + " " + (int) point.x + " " + (int) point.y);
                             if (timeRule(id, event, gameWindow))
                                 gameWindow.getMain().swapTimer();
+                            if (chip.isOnExit ) {
+                                System.out.println("DDD");
+                                gameWindow.getMain().sendAll("GAME DISAPPEAR " + gameWindow.getChips().indexOf(chip));
+                                chip.delete();
+                            }
                         }
                     }
                     if (isWeaponsReceived(gameWindow) && !gameWindow.isWeaponsReceived()) {
                         System.out.println("TEKAEM PATZANI!");
                         gameWindow.setWeaponsReceived(true);
                         //запретить телепорт, разрешить выход
-                    }
-                    else if (chip.isOnExit && isWeaponsReceived(gameWindow)) {
-                        chip.delete();
-                        gameWindow.getMain().sendAll("GAME DISAPPEAR " + gameWindow.getChips().indexOf(chip));
                     }
                     else
                     if (isEveryoneLeft(gameWindow) && gameWindow.isWeaponsReceived()) {
