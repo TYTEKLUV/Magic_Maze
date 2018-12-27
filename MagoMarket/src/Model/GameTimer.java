@@ -6,6 +6,8 @@ import javafx.scene.control.Label;
 import javafx.scene.text.Font;
 
 public class GameTimer {
+    Label message;
+
     Label time;
     int currentTime;
     int maxTime = 180;
@@ -48,5 +50,16 @@ public class GameTimer {
         time.setLayoutY(20);
         time.setFont(Font.font("Consolas", 20));
         gameWindow.getRoot().getChildren().add(time);
+    }
+
+    public void showMessage(String text) {
+        if (message == null) {
+            message = new Label();
+            message.setLayoutX(20);
+            message.setLayoutY(60);
+            message.setFont(Font.font("Consolas", 22));
+            gameWindow.getRoot().getChildren().add(message);
+        }
+        message.setText(text);
     }
 }

@@ -39,15 +39,12 @@ public class GameRules {
 
     public boolean rulesCheck(int id, Point event, GameWindow gameWindow, int role) {
         if (portalRule(id, event, gameWindow, role) && (!gameWindow.isWeaponsReceived())) {
-            System.out.println("POOORTAL POWER");
             return true;
         }
         if (bridgeRule(id, event, gameWindow, role)) {
-            System.out.println("BRIIIDGE POWER");
             return true;
         }
         if (getArrowRotate(id, event, gameWindow, role)) {
-            System.out.println("ARROW POWER");
             return true;
         }
         return false;
@@ -265,10 +262,12 @@ public class GameRules {
                 gameWindow.getMain().sendAll("GAME MOVE " + id + " " + (int) pointChip.x + " " + (int) pointChip.y);
             }
             if (isWeaponsReceived(gameWindow) && !gameWindow.isWeaponsReceived()) {
-                System.out.println("TEKAEM PATZANI!");
+                gameWindow.getMain().sendAll("VYCHODY OTKRYTY");
+                System.out.println("GAME MES TEKAEM PATZANI!");
                 gameWindow.setWeaponsReceived(true);
                 //запретить телепорт, разрешить выход
             } else if (isEveryoneLeft(gameWindow) && gameWindow.isWeaponsReceived()) {
+                gameWindow.getMain().sendAll("GAME MES WE ARE POBYEDILI!!! * CONGRATS *");
                 System.out.println("ETO WIN!");
             }
             chip.setDefault();

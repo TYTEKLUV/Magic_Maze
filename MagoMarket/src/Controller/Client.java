@@ -139,6 +139,9 @@ public class Client extends Thread {
                             gameWindow.getTimer().swap();
                         }
                         break;
+                    case "MES":
+                        Platform.runLater(() -> gameWindow.getTimer().showMessage(command.nextLine()));
+                        break;
                 }
                 break;
             default:
