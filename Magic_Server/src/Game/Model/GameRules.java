@@ -17,8 +17,8 @@ public class GameRules {
     }
 
     private boolean isWeaponsReceived(GameWindow gameWindow) {
-        for(int i = 0; i < gameWindow.getChips().size(); i ++) {
-            if (!gameWindow.getChips().get(i).isOnWeapon){
+        for (int i = 0; i < gameWindow.getChips().size(); i++) {
+            if (!gameWindow.getChips().get(i).isOnWeapon) {
                 return false;
             }
         }
@@ -27,7 +27,7 @@ public class GameRules {
 
     private boolean isFloorIsEmpty(Point event, GameWindow gameWindow) {
         Point point = event.getPosition(true, gameWindow);
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < gameWindow.getChips().size(); i++) {
             final Chip chip = gameWindow.getChips().get(i);
             if ((chip.getPosition().x == point.x) && (chip.getPosition().y == point.y) && (chip.getCardId() == event.getCardId(gameWindow))) {
                 return false;
@@ -38,7 +38,7 @@ public class GameRules {
     }
 
     public boolean rulesCheck(int id, Point event, GameWindow gameWindow, int role) {
-        if (portalRule(id, event, gameWindow, role)&&(!gameWindow.isWeaponsReceived())){
+        if (portalRule(id, event, gameWindow, role) && (!gameWindow.isWeaponsReceived())) {
             System.out.println("POOORTAL POWER");
             return true;
         }
@@ -61,9 +61,7 @@ public class GameRules {
     private boolean portalRule(int id, Point event, GameWindow gameWindow, int role) {
         Chip chip = gameWindow.getChips().get(id);
         if (gameWindow.getRoles().get(role).isPortal()) {
-            if (event.isOnPortal(chip, gameWindow)) {
-                return true;
-            }
+            return event.isOnPortal(chip, gameWindow);
         }
         return false;
     }
@@ -72,9 +70,7 @@ public class GameRules {
     private boolean bridgeRule(int id, Point event, GameWindow gameWindow, int role) {
         Chip chip = gameWindow.getChips().get(id);
         if (gameWindow.getRoles().get(role).isBridge()) {
-            if (event.isOnBridge(chip, gameWindow)) {
-                return true;
-            }
+            return event.isOnBridge(chip, gameWindow);
         }
         return false;
     }
@@ -87,28 +83,22 @@ public class GameRules {
         System.out.println("d " + d.x + " " + d.y);
         System.out.println("arr " + gameWindow.getRoles().get(role).getArrow());
         String arrow = String.valueOf(gameWindow.getRoles().get(role).getArrow());
-        int length = String.valueOf(arrow).length();
+        int length = arrow.length();
         double n = 2.5;
-        for (int i = 0; i < length; i ++) {
-            if ((Math.abs(d.x) <= n)&&(d.y > 0)) {
+        for (int i = 0; i < length; i++) {
+            if ((Math.abs(d.x) <= n) && (d.y > 0)) {
                 if (Integer.parseInt(String.valueOf(arrow.charAt(i))) == 1) {
                     return true;
                 }
-            }
-            else
-            if ((d.x < 0)&&(Math.abs(d.y) <= n)) {
+            } else if ((d.x < 0) && (Math.abs(d.y) <= n)) {
                 if (Integer.parseInt(String.valueOf(arrow.charAt(i))) == 2) {
                     return true;
                 }
-            }
-            else
-            if ((Math.abs(d.x) <= n)&&(d.y < 0)) {
+            } else if ((Math.abs(d.x) <= n) && (d.y < 0)) {
                 if (Integer.parseInt(String.valueOf(arrow.charAt(i))) == 3) {
                     return true;
                 }
-            }
-            else
-            if ((d.x > 0)&&(Math.abs(d.y) <= n)) {
+            } else if ((d.x > 0) && (Math.abs(d.y) <= n)) {
                 if (Integer.parseInt(String.valueOf(arrow.charAt(i))) == 4) {
                     return true;
                 }
@@ -248,44 +238,40 @@ public class GameRules {
     }
 
     public void chipMove(int id, Point event, GameWindow gameWindow, int role) throws IOException {
-        gameWindow.getChips().get(id).isSelected = true;
-        for (int i = 0; i < gameWindow.getChips().size(); i++) {
-            Chip chip = gameWindow.getChips().get(i);
-            if (chip.isSelected) {
-                Point pointCard = event.getPosition(true, gameWindow);
-                Point point = event.getPosition(false, gameWindow);
-                Point pointChip = new Point(chip.getLayoutX(), chip.getLayoutY()).getPosition(false, gameWindow);
-                if (pointChip.x == point.x && pointChip.y == point.y) {
-                    gameWindow.getMain().sendAll("GAME MOVE " + i + " " + (int) point.x + " " + (int) point.y);
-                } else {
-                    if ((isChipMovable(event, chip.getPosition(), event.getPosition(true, gameWindow), chip, gameWindow))&&(rulesCheck(id, event, gameWindow, role))) {
-                        if ((pointCard.y != -1) && (pointCard.x != -1)) {
-                            gameWindow.getChips().get(i).setLayoutX(point.x);
-                            gameWindow.getChips().get(i).setLayoutY(point.y);
-                            gameWindow.getChips().get(i).toFront();
-                            gameWindow.getChips().get(i).whereAreUNow();
-                            gameWindow.getMain().sendAll("GAME MOVE " + i + " " + (int) point.x + " " + (int) point.y);
-                            if (timeRule(id, event, gameWindow))
-                                gameWindow.getMain().swapTimer();
-                            if (chip.isOnExit ) {
-                                System.out.println("DDD");
-                                gameWindow.getMain().sendAll("GAME DISAPPEAR " + gameWindow.getChips().indexOf(chip));
-                                chip.delete();
-                            }
-                        }
+        Chip chip = gameWindow.getChips().get(id);
+        chip.isSelected = true;
+        Point pointCard = event.getPosition(true, gameWindow);
+        Point point = event.getPosition(false, gameWindow);
+        Point pointChip = new Point(chip.getLayoutX(), chip.getLayoutY()).getPosition(false, gameWindow);
+        if (pointChip.x == point.x && pointChip.y == point.y) {
+            gameWindow.getMain().sendAll("GAME MOVE " + id + " " + (int) pointChip.x + " " + (int) pointChip.y);
+        } else {
+            if ((isChipMovable(event, chip.getPosition(), event.getPosition(true, gameWindow), chip, gameWindow)) && (rulesCheck(id, event, gameWindow, role))) {
+                if ((pointCard.y != -1) && (pointCard.x != -1)) {
+                    chip.setLayoutX(point.x);
+                    chip.setLayoutY(point.y);
+                    chip.toFront();
+                    chip.whereAreUNow();
+                    gameWindow.getMain().sendAll("GAME MOVE " + id + " " + (int) point.x + " " + (int) point.y);
+                    if (timeRule(id, event, gameWindow))
+                        gameWindow.getMain().swapTimer();
+                    if (chip.isOnExit && gameWindow.isWeaponsReceived()) {
+                        System.out.println("DDD");
+                        gameWindow.getMain().sendAll("GAME DISAPPEAR " + id);
+                        chip.delete();
                     }
-                    if (isWeaponsReceived(gameWindow) && !gameWindow.isWeaponsReceived()) {
-                        System.out.println("TEKAEM PATZANI!");
-                        gameWindow.setWeaponsReceived(true);
-                        //запретить телепорт, разрешить выход
-                    }
-                    else
-                    if (isEveryoneLeft(gameWindow) && gameWindow.isWeaponsReceived()) {
-                        System.out.println("ETO WIN!");
-                    }
-                    chip.setDefault();
                 }
+            } else {
+                gameWindow.getMain().sendAll("GAME MOVE " + id + " " + (int) pointChip.x + " " + (int) pointChip.y);
             }
+            if (isWeaponsReceived(gameWindow) && !gameWindow.isWeaponsReceived()) {
+                System.out.println("TEKAEM PATZANI!");
+                gameWindow.setWeaponsReceived(true);
+                //запретить телепорт, разрешить выход
+            } else if (isEveryoneLeft(gameWindow) && gameWindow.isWeaponsReceived()) {
+                System.out.println("ETO WIN!");
+            }
+            chip.setDefault();
         }
     }
 

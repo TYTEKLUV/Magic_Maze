@@ -89,7 +89,7 @@ public class ClientHandler extends Thread {
     private String readyGlaces() {
         StringBuilder result = new StringBuilder();
         room.getGameWindow().getFindGlasses().clear();
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < room.getGameWindow().getChips().size(); i++) {
             if (room.getGameWindow().getChips().get(i).isOnFindGlass) {
                 room.getGameWindow().getFindGlasses().add(i);
                 result.append(result.length() == 0 ? "" : " ").append(i);

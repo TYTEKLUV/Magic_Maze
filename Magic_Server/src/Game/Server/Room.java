@@ -1,7 +1,10 @@
 package Game.Server;
 
 import Game.Controller.GameWindow;
-import Game.Model.*;
+import Game.Model.ControllerFXML;
+import Game.Model.Player;
+import Game.Model.PlayerList;
+import Game.Model.Point;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
@@ -155,10 +158,11 @@ public class Room {
         if (index == -1)
             return false;
         else {
-            clients.get(index).disconnect();
+            clients.get(index).close();
             return true;
         }
     }
+
 
     public String kick(String nickname) throws IOException {
         return kick(players.indexOf(nickname)) ? ("| " + nickname + " kicking...") : ("| " + nickname + " not found");
@@ -190,7 +194,7 @@ public class Room {
     }
 
     public GameWindow getGameWindow() {
-        return (GameWindow) gameWindow;
+        return gameWindow;
     }
 
     //endregion

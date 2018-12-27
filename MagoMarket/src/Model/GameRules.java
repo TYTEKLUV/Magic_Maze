@@ -70,7 +70,7 @@ public class GameRules {
 
     public void mouseReleased(Point event, GameWindow gameWindow) throws IOException {
         boolean f = false;
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < gameWindow.getChips().size(); i++) {
             Chip chip = gameWindow.getChips().get(i);
             if (chip.isSelected) {
                 f = true;
@@ -79,7 +79,7 @@ public class GameRules {
             }
         }
         if (!f) {
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < gameWindow.getChips().size(); i++) {
                 Chip chip = gameWindow.getChips().get(i);
                 if (!chip.isBusy && (event.x > chip.getLayoutX()) && (event.x < chip.getLayoutX() + chip.getImage().getWidth()) && (event.y > chip.getLayoutY()) && (event.y < chip.getLayoutY() + chip.getImage().getWidth())) {
                     chip.setClicked();

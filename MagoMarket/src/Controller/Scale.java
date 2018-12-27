@@ -34,7 +34,7 @@ public class Scale extends AnchorPane {
         setRightAnchor(this, (double)0);
         getChildren().add(scalePane);
 
-        setStyle("-fx-background-color: #9a977c"); //Синий #4b6d90, Фиолетовый #413843
+        setStyle("-fx-background-color: #a1a298"); //Синий #4b6d90, Фиолетовый #413843, Песок #9a977c
 
         mouseDragMoving();
         scaling();
