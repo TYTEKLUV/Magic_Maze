@@ -44,10 +44,7 @@ public class GameRules {
         if (bridgeRule(id, event, gameWindow, role)) {
             return true;
         }
-        if (getArrowRotate(id, event, gameWindow, role)) {
-            return true;
-        }
-        return false;
+        return getArrowRotate(id, event, gameWindow, role);
     }
 
     private boolean timeRule(int id, Point event, GameWindow gameWindow) {
@@ -262,13 +259,11 @@ public class GameRules {
                 gameWindow.getMain().sendAll("GAME MOVE " + id + " " + (int) pointChip.x + " " + (int) pointChip.y);
             }
             if (isWeaponsReceived(gameWindow) && !gameWindow.isWeaponsReceived()) {
-                gameWindow.getMain().sendAll("VYCHODY OTKRYTY");
-                System.out.println("GAME MES TEKAEM PATZANI!");
+                gameWindow.getMain().sendAll("GAME MES VYCHODY OTKRYTY");
                 gameWindow.setWeaponsReceived(true);
                 //запретить телепорт, разрешить выход
             } else if (isEveryoneLeft(gameWindow) && gameWindow.isWeaponsReceived()) {
                 gameWindow.getMain().sendAll("GAME MES WE ARE POBYEDILI!!! * CONGRATS *");
-                System.out.println("ETO WIN!");
             }
             chip.setDefault();
         }
