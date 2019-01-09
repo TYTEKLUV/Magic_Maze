@@ -3,6 +3,7 @@ package Controller;
 import Model.Player;
 import Model.Point;
 import javafx.application.Platform;
+import javafx.scene.control.Alert;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -24,6 +25,7 @@ public class Client extends Thread {
     private DataInputStream in;
     private DataOutputStream out;
     GameWindow gameWindow;
+    private Alert alert = new Alert(Alert.AlertType.INFORMATION);
 
     public Client(ClientStarter main, String nickname, String roomName, int newRoomPlayersCount, GameWindow gameWindow) {
         this.main = main;
@@ -162,13 +164,22 @@ public class Client extends Thread {
             send("CONNECT " + player.getNickname() + " " + roomName);
         switch (in.readUTF()) {
             case "ACCEPT":
+                Platform.runLater(() -> main.getGameWindow().getMain().getMainMenu().getStage().setScene(main.getGameWindow().getMain().getRoomMenu().getStage().getScene()));
                 System.out.println("Подключилось к комнате");
                 break;
             case "BUSY":
                 System.out.println("Комната занята");
+                alert.setTitle("Ошибка!");
+                alert.setHeaderText(null);
+                alert.setContentText("Комната занята!");
+                Platform.runLater(() -> alert.showAndWait());
                 close();
                 break;
             case "NOT_FOUND":
+                alert.setTitle("Ошибка!");
+                alert.setHeaderText(null);
+                alert.setContentText("Комната не найдена!");
+                Platform.runLater(() -> alert.showAndWait());
                 System.out.println("Комната не найдена");
                 close();
                 break;

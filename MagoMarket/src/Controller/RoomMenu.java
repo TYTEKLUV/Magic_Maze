@@ -21,6 +21,11 @@ public class RoomMenu extends ControllerFXML{
 
     @FXML
     void Ready(ActionEvent event) {
+        if (readyButton.getText().equals("Готов")){
+            readyButton.setText("Не готов");
+        } else {
+            readyButton.setText("Готов");
+        }
         //сменить статус на готов/не готов
     }
 

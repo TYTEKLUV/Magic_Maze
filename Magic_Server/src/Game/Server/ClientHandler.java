@@ -52,7 +52,7 @@ public class ClientHandler extends Thread {
             case "GAME":
                 switch (command.next()) {
                     case "START":
-                        if (room.getPlayers().getLeader() == player)
+                        if (room.getPlayers().getLeader() == player && room.getPlayers().readyCount() == room.getPlayers().size())
                             room.loadGame();
                         else
                             System.out.println("| " + player.getNickname() + " not leader");
@@ -119,9 +119,9 @@ public class ClientHandler extends Thread {
                 send("REMOVE " + room.getPlayers().indexOf(player));
         room.sendOthers("ADD " + room.getPlayers().indexOf(player) + " " + player.getNickname() + " NOT_READY", this);
         System.out.println(player.getNickname() + " connected to room " + room.getName());
-        if (room.getPlayers().size() - 1 == room.getPlayers().indexOf(player)) {
-            room.loadGame();
-        }
+//        if (room.getPlayers().size() - 1 == room.getPlayers().indexOf(player)) {
+//            room.loadGame();
+//        }
     }
 
     public void disconnect() throws IOException {

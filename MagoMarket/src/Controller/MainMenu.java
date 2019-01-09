@@ -21,7 +21,6 @@ public class MainMenu extends ControllerFXML {
     void StartClick(ActionEvent event) throws IOException {
         if (!nickField.getText().equals("")){
             getMain().getClientStarter().commandHandler("nick " + nickField.getText());
-            getMain().getClientStarter().commandHandler("connect");
             getStage().setScene(getMain().getGameMenu().getStage().getScene());
         } else {
             alert.setTitle("Ошибка!");

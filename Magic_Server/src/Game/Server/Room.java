@@ -28,7 +28,13 @@ public class Room {
         this.name = name;
         server = (Server) Thread.currentThread();
         players.createPlayers(playersCount);
-        gameWindow = (GameWindow) loadFXML(new Stage(), "/View/FieldEditor.fxml", "Magic Maze", 1280, 720, false);
+        Platform.runLater(() -> {
+            try {
+                gameWindow = (GameWindow) loadFXML(new Stage(), "/View/FieldEditor.fxml", "Magic Maze", 1280, 720, false);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     public Room(String name, int playersCount, Server server) throws IOException {

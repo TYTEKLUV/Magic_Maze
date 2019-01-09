@@ -268,4 +268,6 @@ public class GameWindow extends ControllerFXML {
     public Scale getScale() {
         return scale;
     }
+
+
 }

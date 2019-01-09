@@ -22,28 +22,22 @@ public class ClientStarter extends Thread {
     private String nickname;
     private PlayerList players = new PlayerList();
     private GameWindow gameWindow;
+    private String ip = "127.0.0.1";
 
     public ClientStarter(ControllerFXML gameWindow) {
         this.gameWindow = (GameWindow) gameWindow;
-        //showConsole(new Stage());
+//        showConsole(new Stage());
     }
 
     @Override
     public void run() {
-//        Scanner console = new Scanner(System.in);
+        Scanner console = new Scanner(System.in);
         try {
             startCommands();
-//            while (true) commandHandler(console.nextLine());
+
+            while (true) commandHandler(console.nextLine());
         } catch (IOException e) {
             e.printStackTrace();
-        }
-        Scanner input = new Scanner(System.in);
-        while (true) {
-            try {
-                commandHandler(input.nextLine());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -66,18 +60,22 @@ public class ClientStarter extends Thread {
                     if (command.hasNext()) {
                         nickname = command.next();
                         System.out.println("New nickname: " + nickname);
+//                        commandHandler("connect");
                     }
+//                    else {
+//                        System.out.print("Enter nickname: ");
+//                        nickname = new Scanner(System.in).next();
+//                    }
                 else
                     System.out.println("disconnect before change nickname");
                 break;
             case "connect":
+                String roomName = command.next();
                 if (command.hasNext()) {
-//                    client = new Client(this, nickname,"TEST_ROOM", 4, input.next());
-                    client = new Client(this, nickname, "TEST_ROOM", 0, gameWindow, command.next());
+                    client = new Client(this, nickname, roomName, command.nextInt(), gameWindow, ip);
                     client.start();
                 } else {
-//                    client = new Client(this, nickname,"TEST_ROOM", 4);
-                    client = new Client(this, nickname, "TEST_ROOM", 0, gameWindow);
+                    client = new Client(this, nickname, roomName, 0, gameWindow, ip);
                     client.start();
                 }
                 break;
@@ -164,5 +162,13 @@ public class ClientStarter extends Thread {
 
     public int getServerPort() {
         return serverPort;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public GameWindow getGameWindow() {
+        return gameWindow;
     }
 }

@@ -80,4 +80,8 @@ public class Main extends Application {
     public MainMenu getMainMenu() {
         return mainMenu;
     }
+
+    public RoomMenu getRoomMenu() {
+        return roomMenu;
+    }
 }

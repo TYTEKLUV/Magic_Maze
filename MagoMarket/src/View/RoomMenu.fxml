@@ -15,12 +15,12 @@
          </font>
       </Label>
       <ListView fx:id="playersList" layoutX="496.0" layoutY="203.0" prefHeight="157.0" prefWidth="289.0" />
-      <Button fx:id="readyButton" layoutX="528.0" layoutY="377.0" mnemonicParsing="false" onAction="#Ready" text="Готов">
+      <Button fx:id="readyButton" layoutX="496.0" layoutY="377.0" mnemonicParsing="false" onAction="#Ready" text="Готов">
          <font>
             <Font name="Consolas" size="24.0" />
          </font>
       </Button>
-      <Button fx:id="startButton" layoutX="663.0" layoutY="377.0" mnemonicParsing="false" onAction="#Start" text="Старт">
+      <Button fx:id="startButton" layoutX="687.0" layoutY="377.0" mnemonicParsing="false" onAction="#Start" text="Старт">
          <font>
             <Font name="Consolas" size="24.0" />
          </font>
