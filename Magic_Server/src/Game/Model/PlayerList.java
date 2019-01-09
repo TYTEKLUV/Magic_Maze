@@ -78,6 +78,14 @@ public class PlayerList extends ArrayList<Player> {
         return result.toString();
     }
 
+    public int playersCount() {
+        int k = 0;
+        for (Player player : this)
+            if (player.getNickname().equals("NOT_CONNECTED"))
+                k++;
+        return k;
+    }
+
     public int readyCount() {
         int k = 0;
         for (Player player : this)
