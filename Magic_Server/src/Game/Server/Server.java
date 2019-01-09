@@ -52,6 +52,8 @@ public class Server extends Thread {
                 else if ("START".equals(s))
                     break;
             }
+
+            command = new Scanner(in.readUTF());
             roomName = command.next();
             if (roomName.equals("CREATE")) {
                 roomName = command.next();
