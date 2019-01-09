@@ -45,6 +45,15 @@ public class Server extends Thread {
         Scanner command = new Scanner(in.readUTF());
         if (command.next().equals("CONNECT")) {
             nickname = command.next();
+            while (true) {
+                String s = in.readUTF();
+                if ("ROOMS".equals(s))
+                    out.writeUTF(getRoomsStatus());
+                else if ("START".equals(s))
+                    break;
+            }
+
+            command = new Scanner(in.readUTF());
             roomName = command.next();
             if (roomName.equals("CREATE")) {
                 roomName = command.next();
@@ -84,6 +93,16 @@ public class Server extends Thread {
             if (roomName.equals(room.getName()))
                 return room;
         return null;
+    }
+
+    private String getRoomsStatus() {
+        StringBuilder result = new StringBuilder("ROOMS ");
+        for (int i = 0; i < rooms.size(); i++)
+            result.append(rooms.get(i).getName()).append(" ")
+                    .append(rooms.get(i).getPlayers().playersCount()).append(" ")
+                    .append(rooms.get(i).getPlayers().size())
+                    .append(i != rooms.size() ? " " : "");
+        return result.toString();
     }
 
     public ArrayList<Room> getRooms() {
