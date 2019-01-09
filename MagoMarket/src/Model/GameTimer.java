@@ -38,8 +38,11 @@ public class GameTimer {
                 }
                 currentTime--;
             }
-            Platform.runLater(() -> time.setText(""));
-            showMessage("Time ZACONCHILOS'! YOU LOSE!");
+            Platform.runLater(() -> {
+                time.setText("");
+                showMessage("Time ZACONCHILOS'! YOU LOSE!");
+            });
+            
 //            System.out.println("Time down");
         }).start();
     }
