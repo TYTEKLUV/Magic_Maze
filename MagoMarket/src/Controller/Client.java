@@ -64,18 +64,22 @@ public class Client extends Thread {
         switch (command.next()) {
             case "ADD":
                 main.getPlayers().get(command.nextInt()).set(command.next(), command.next().equals("READY"));
+                Platform.runLater(() -> main.getGameWindow().getMain().getRoomMenu().updateList());
                 break;
             case "REMOVE":
                 main.getPlayers().get(command.nextInt()).reset();
+                Platform.runLater(() -> main.getGameWindow().getMain().getRoomMenu().updateList());
                 break;
             case "SET":
                 switch (command.next()) {
                     case "STATUS":
                         main.getPlayers().get(command.nextInt()).setReady(command.next().equals("READY"));
+                        Platform.runLater(() -> main.getGameWindow().getMain().getRoomMenu().updateList());
                         //Обработка кнопки старт
                         break;
                     case "LEADER":
                         main.getPlayers().setLeader(main.getPlayers().get(command.nextInt()));
+                        Platform.runLater(() -> main.getGameWindow().getMain().getRoomMenu().updateList());
                         break;
                     case "ROLES":
                         for (Player player : main.getPlayers())
@@ -110,7 +114,7 @@ public class Client extends Thread {
                         //Настроить интерфейс
                         break;
                     case "START":
-                        Platform.runLater(() -> gameWindow.getStage().show());
+                        Platform.runLater(() -> gameWindow.getMain().getMainMenu().getStage().setScene(gameWindow.getStage().getScene()));
                         //Выключить загрузочный экран
                         //Включить игровое поле
                         break;
@@ -164,7 +168,11 @@ public class Client extends Thread {
             send("CONNECT " + player.getNickname() + " " + roomName);
         switch (in.readUTF()) {
             case "ACCEPT":
-                Platform.runLater(() -> main.getGameWindow().getMain().getMainMenu().getStage().setScene(main.getGameWindow().getMain().getRoomMenu().getStage().getScene()));
+                Platform.runLater(() -> {
+                    main.getGameWindow().getMain().getMainMenu().getStage().setScene(main.getGameWindow().getMain().getRoomMenu().getStage().getScene());
+                    if (newRoomPlayersCount != 0)
+                        main.getGameWindow().getMain().getRoomMenu().getStartButton().setDisable(false);
+                });
                 System.out.println("Подключилось к комнате");
                 break;
             case "BUSY":

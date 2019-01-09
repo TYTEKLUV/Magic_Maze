@@ -55,7 +55,7 @@ public class GameMenu extends ControllerFXML{
     void CreateGame(ActionEvent event) throws IOException {
         System.out.println("Создана");
         getMain().getClientStarter().commandHandler("connect " + roomName.getText() + " " + playersCount.getText());
-        getMain().getMainMenu().getStage().setScene(getMain().getRoomMenu().getStage().getScene());
+//        getMain().getMainMenu().getStage().setScene(getMain().getRoomMenu().getStage().getScene());
         //создать комнату
         //сменить окно
     }

@@ -58,4 +58,8 @@ public class Player {
                 "ROLE(" + role + ") " +
                 (ready ? "READY" : "NOT_READY");
     }
+    public String forList() {
+        return nickname + " " +
+        (ready ? "Ready" : "Not Ready");
+    }
 }
