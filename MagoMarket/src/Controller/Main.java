@@ -11,13 +11,16 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class Main extends Application {
+    private ClientStarter clientStarter;
     private GameWindow gameWindow;
+    private GameMenu gameMenu;
     private MainMenu mainMenu;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         gameWindow = (GameWindow) loadFXML(primaryStage, "../View/FieldEditor.fxml", "Magic Maze", 1280, 720, false);
         mainMenu = (MainMenu) loadFXML(new Stage(), "../View/MainMenu.fxml", "Magic Maze", 1280, 720, true);
+        gameMenu = (GameMenu) loadFXML(new Stage(), "../View/GameMenu.fxml", "Magic Maze", 1280, 720, false);
         createFieldController();
         clientStarter();
     }
@@ -41,7 +44,7 @@ public class Main extends Application {
     }
 
     private void clientStarter() {
-        ClientStarter clientStarter = new ClientStarter(gameWindow);
+        clientStarter = new ClientStarter(gameWindow);
         clientStarter.start();
     }
 
@@ -62,5 +65,17 @@ public class Main extends Application {
                     break;
             }
         });
+    }
+
+    public ClientStarter getClientStarter() {
+        return clientStarter;
+    }
+
+    public GameMenu getGameMenu() {
+        return gameMenu;
+    }
+
+    public MainMenu getMainMenu() {
+        return mainMenu;
     }
 }

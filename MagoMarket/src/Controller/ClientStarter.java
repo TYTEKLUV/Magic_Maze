@@ -25,7 +25,7 @@ public class ClientStarter extends Thread {
 
     public ClientStarter(ControllerFXML gameWindow) {
         this.gameWindow = (GameWindow) gameWindow;
-        showConsole(new Stage());
+        //showConsole(new Stage());
     }
 
     @Override
@@ -37,33 +37,36 @@ public class ClientStarter extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Scanner input = new Scanner(System.in);
+        while (true) {
+            try {
+                commandHandler(input.nextLine());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void startCommands() throws IOException {
         System.out.println("Client started");
         System.out.println("--------------");
-        commandHandler("n " + new Random().nextInt(100));
+//        commandHandler("n " + new Random().nextInt(100));
 //        commandHandler("nick");
 //        commandHandler("connect 127.0.0.1");
     }
 
-    private void commandHandler(String message) throws IOException {
+    public void commandHandler(String message) throws IOException {
         Scanner command = new Scanner(message);
         switch (command.next()) {
             case "ip":
                 System.out.println("| your ip = " + InetAddress.getLocalHost().getHostAddress());
                 break;
-            case "n":
+            case "nick":
                 if (client == null || !client.isAlive())
                     if (command.hasNext()) {
                         nickname = command.next();
                         System.out.println("New nickname: " + nickname);
-                        commandHandler("connect");
                     }
-//                    else {
-//                        System.out.print("Enter nickname: ");
-//                        nickname = new Scanner(System.in).next();
-//                    }
                 else
                     System.out.println("disconnect before change nickname");
                 break;

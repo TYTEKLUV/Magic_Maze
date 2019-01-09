@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.GameMenu">
+   <children>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutY="65.0" text="Magic Maze" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <font>
+            <Font name="Consolas" size="69.0" />
+         </font>
+      </Label>
+      <Button fx:id="createButton" layoutX="1010.0" layoutY="177.0" mnemonicParsing="false" onAction="#CreateGame" text="Создать игру">
+         <font>
+            <Font name="Consolas" size="20.0" />
+         </font>
+      </Button>
+      <Button fx:id="connectButton" layoutX="522.0" layoutY="472.0" mnemonicParsing="false" onAction="#Connect" text="Подключиться к игре">
+         <font>
+            <Font name="Consolas" size="20.0" />
+         </font>
+      </Button>
+      <ListView fx:id="roomsList" layoutX="486.0" layoutY="177.0" prefHeight="283.0" prefWidth="308.0" />
+      <Button fx:id="refreshButton" layoutX="582.0" layoutY="521.0" mnemonicParsing="false" onAction="#Refresh" text="Обновить">
+         <font>
+            <Font name="Consolas" size="20.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
