@@ -2,6 +2,7 @@ package Model;
 
 import Controller.GameWindow;
 import javafx.application.Platform;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.text.Font;
 
@@ -12,9 +13,11 @@ public class GameTimer {
     int currentTime;
     int maxTime = 180;
     private GameWindow gameWindow;
+    Alert alert;
 
     public GameTimer(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
+        Platform.runLater(() -> alert = new Alert(Alert.AlertType.INFORMATION));
     }
 
     public void reset() {
@@ -25,7 +28,7 @@ public class GameTimer {
         currentTime = maxTime;
         Platform.runLater(this::showInLabel);
         new Thread(() -> {
-            while (currentTime != 0) {
+            while (currentTime > 0) {
                 Platform.runLater(() -> time.setText("Time " + currentTime));
 //                System.out.println("Time " + currentTime);
                 try {
@@ -35,7 +38,8 @@ public class GameTimer {
                 }
                 currentTime--;
             }
-            Platform.runLater(() -> time.setText("Time ZACONCHILOS'"));
+            Platform.runLater(() -> time.setText(""));
+            showMessage("Time ZACONCHILOS'! YOU LOSE!");
 //            System.out.println("Time down");
         }).start();
     }
@@ -53,13 +57,23 @@ public class GameTimer {
     }
 
     public void showMessage(String text) {
-        if (message == null) {
-            message = new Label();
-            message.setLayoutX(20);
-            message.setLayoutY(60);
-            message.setFont(Font.font("Consolas", 22));
-            gameWindow.getRoot().getChildren().add(message);
+
+        if (!text.equals(" VYCHODY OTKRYTY")) {
+            alert.setTitle("Окончание игры!");
+            alert.setHeaderText(null);
+            alert.setContentText(text);
+            Platform.runLater(() -> alert.showAndWait());
+            currentTime=0;
+            time.setText("");
+        } else {
+            if (message == null) {
+                message = new Label();
+                message.setLayoutX(20);
+                message.setLayoutY(60);
+                message.setFont(Font.font("Consolas", 22));
+                gameWindow.getRoot().getChildren().add(message);
+            }
+            message.setText(text);
         }
-        message.setText(text);
     }
 }

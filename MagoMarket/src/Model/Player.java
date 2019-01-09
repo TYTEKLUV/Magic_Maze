@@ -59,7 +59,7 @@ public class Player {
                 (ready ? "READY" : "NOT_READY");
     }
     public String forList() {
-        return nickname + " " +
+        return nickname + "    |    " +
         (ready ? "Ready" : "Not Ready");
     }
 }
