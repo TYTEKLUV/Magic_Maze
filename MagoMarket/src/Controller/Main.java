@@ -12,10 +12,12 @@ import java.io.IOException;
 
 public class Main extends Application {
     private GameWindow gameWindow;
+    private MainMenu mainMenu;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         gameWindow = (GameWindow) loadFXML(primaryStage, "../View/FieldEditor.fxml", "Magic Maze", 1280, 720, false);
+        mainMenu = (MainMenu) loadFXML(new Stage(), "../View/MainMenu.fxml", "Magic Maze", 1280, 720, true);
         createFieldController();
         clientStarter();
     }
