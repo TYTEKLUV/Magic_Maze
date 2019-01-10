@@ -14,6 +14,7 @@ public class GameTimer {
     int maxTime = 180;
     private GameWindow gameWindow;
     Alert alert;
+    boolean notWin = true;
 
     public GameTimer(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
@@ -28,7 +29,7 @@ public class GameTimer {
         currentTime = maxTime;
         Platform.runLater(this::showInLabel);
         new Thread(() -> {
-            while (currentTime > 0) {
+            while ((currentTime > 0) && (notWin)) {
                 Platform.runLater(() -> time.setText("Time " + currentTime));
 //                System.out.println("Time " + currentTime);
                 try {
@@ -40,9 +41,11 @@ public class GameTimer {
             }
             Platform.runLater(() -> {
                 time.setText("");
-                showMessage("Time ZACONCHILOS'! YOU LOSE!");
+                if (notWin){
+                    showMessage("Time ZACONCHILOS'! YOU LOSE!");
+                }
             });
-            
+
 //            System.out.println("Time down");
         }).start();
     }
@@ -62,11 +65,18 @@ public class GameTimer {
     public void showMessage(String text) {
 
         if (!text.equals(" VYCHODY OTKRYTY")) {
+            if (text.contains("POBYEDILI")){
+                notWin = false;
+                System.out.println(notWin);
+            }
             alert.setTitle("Окончание игры!");
             alert.setHeaderText(null);
             alert.setContentText(text);
-            Platform.runLater(() -> alert.showAndWait());
-            currentTime=0;
+            Platform.runLater(() -> {
+                alert.showAndWait();
+                time.setVisible(false);
+            });
+
             time.setText("");
         } else {
             if (message == null) {
