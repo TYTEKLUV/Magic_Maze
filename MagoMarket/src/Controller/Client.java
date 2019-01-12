@@ -53,7 +53,6 @@ public class Client extends Thread {
             connect();
             while (true) commandHandler(in.readUTF());
         } catch (Exception e) {
-            //e.printStackTrace();
             System.out.println("disconnect from server");
         }
     }

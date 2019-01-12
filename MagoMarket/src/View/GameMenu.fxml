@@ -6,34 +6,34 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.GameMenu">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" styleClass="rootGame" stylesheets="@../Styles/MenuStyle.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.GameMenu">
    <children>
       <Label alignment="CENTER" contentDisplay="CENTER" layoutY="65.0" text="Magic Maze" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <font>
             <Font name="Consolas" size="69.0" />
          </font>
       </Label>
-      <Button fx:id="createButton" layoutX="561.0" layoutY="307.0" mnemonicParsing="false" onAction="#CreateGame" text="Создать игру">
+      <Button fx:id="createButton" layoutX="561.0" layoutY="307.0" mnemonicParsing="false" onAction="#CreateGame" styleClass="gameBtn" text="Создать игру">
          <font>
             <Font name="Consolas" size="20.0" />
          </font>
       </Button>
-      <Button fx:id="connectButton" layoutX="522.0" layoutY="458.0" mnemonicParsing="false" onAction="#Connect" text="Подключиться к игре">
+      <Button fx:id="connectButton" layoutX="522.0" layoutY="458.0" mnemonicParsing="false" onAction="#Connect" styleClass="gameBtn" text="Подключиться к игре">
          <font>
             <Font name="Consolas" size="20.0" />
          </font>
       </Button>
-      <TextField fx:id="playersCount" alignment="CENTER" layoutX="556.0" layoutY="266.0" prefHeight="28.0" prefWidth="170.0" promptText="Количество игроков">
+      <TextField fx:id="playersCount" alignment="CENTER" layoutX="556.0" layoutY="266.0" prefHeight="28.0" prefWidth="170.0" promptText="Количество игроков" styleClass="gameTextField">
          <font>
             <Font name="Consolas" size="15.0" />
          </font>
       </TextField>
-      <TextField fx:id="roomName" alignment="CENTER" layoutX="565.0" layoutY="226.0" prefHeight="28.0" prefWidth="151.0" promptText="Название комнаты">
+      <TextField fx:id="roomName" alignment="CENTER" layoutX="565.0" layoutY="226.0" prefHeight="28.0" prefWidth="151.0" promptText="Название комнаты" styleClass="gameTextField">
          <font>
             <Font name="Consolas" size="15.0" />
          </font>
       </TextField>
-      <TextField fx:id="roomNameConnect" alignment="CENTER" layoutX="565.0" layoutY="417.0" prefHeight="28.0" prefWidth="151.0" promptText="Название комнаты">
+      <TextField fx:id="roomNameConnect" alignment="CENTER" layoutX="565.0" layoutY="417.0" prefHeight="28.0" prefWidth="151.0" promptText="Название комнаты" styleClass="gameTextField">
          <font>
             <Font name="Consolas" size="15.0" />
          </font>

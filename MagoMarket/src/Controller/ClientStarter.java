@@ -22,7 +22,7 @@ public class ClientStarter extends Thread {
     private String nickname;
     private PlayerList players = new PlayerList();
     private GameWindow gameWindow;
-    private String ip = "127.0.0.1";
+    private String ip = "10.193.27.108";
 
     public ClientStarter(ControllerFXML gameWindow) {
         this.gameWindow = (GameWindow) gameWindow;
